@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:backend)",
+      "Bash(npm run dev:client)",
+      "Bash(npm run dev:admin)",
+      "Bash(npm run dev)",
+      "Bash(npm run install:all)",
+      "Bash(npx vite build*)",
+      "Bash(node server.js)",
+      "Bash(node -e *)",
+      "Bash(cd backend && *)",
+      "Bash(cd frontend-client && *)",
+      "Bash(cd frontend-admin && *)",
+      "Bash(find * -type f *)",
+      "Bash(ls *)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(mkdir -p *)",
+      "Bash(cp -r *)",
+      "Bash(rm -rf node_modules *)"
+    ],
+    "deny": []
+  }
+}

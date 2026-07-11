@@ -1,0 +1,159 @@
+{
+  "nav": {
+    "home": "Home",
+    "chatSim": "Chat Sim",
+    "spotFake": "Spot Fake",
+    "playGame": "Play Game",
+    "brand": "Fraud Awareness Hub",
+    "tagline": "Learn · Detect · Prevent"
+  },
+  "hero": {
+    "title": "Digital Fraud Pattern & Awareness Hub",
+    "warningBanner": "Trending Scam Alert",
+    "warningMessage": "Fake KPay APK links are circulating in Viber groups across Yangon and Mandalay. Never download apps outside official app stores.",
+    "subtitle": "Protecting Myanmar communities from digital banking scams. Learn to identify Fake APKs, phishing links, and social engineering attacks before they steal your money."
+  },
+  "home": {
+    "sectionTitle": "Test Your Awareness",
+    "sectionSubtitle": "Try short, practical challenges based on the scam tactics people encounter every day.",
+    "games": {
+      "phishing": {
+        "title": "Phishing or Not?",
+        "description": "Identify scam messages and sharpen your instincts.",
+        "eyebrow": "Quick quiz"
+      },
+      "simulator": {
+        "title": "Scammer Chat Simulator",
+        "description": "Practise responding safely to a realistic OTP scam.",
+        "eyebrow": "Role-play"
+      },
+      "spotFake": {
+        "title": "Spot the Fake Slip",
+        "description": "Find three warning signs in a fake payment slip.",
+        "eyebrow": "Visual challenge"
+      }
+    }
+  },
+  "game": {
+    "badge": "Interactive safety training",
+    "title": "Phishing",
+    "titleHighlight": "or Not?",
+    "description": "Read messages inspired by real scam tactics, make your call, and learn which details reveal the truth.",
+    "features": {
+      "scenarios": "8 scenarios",
+      "feedback": "Instant feedback",
+      "redFlags": "Practical red flags"
+    },
+    "statusReady": "Training session ready",
+    "noTimer": "Choose carefully—there is no timer"
+  },
+  "simulator": {
+    "title": "Scammer Chat Simulator",
+    "neverShare": "Never share OTPs",
+    "neverShareDesc": "Legitimate banks will never ask for your OTP via chat or phone.",
+    "verifyFirst": "Verify first",
+    "verifyFirstDesc": "Always call your bank directly using the official number on your card.",
+    "liveSimulation": "Live simulation",
+    "doNotShare": "Do not share real information"
+  },
+  "spotFake": {
+    "badge": "Visual challenge",
+    "title": "Spot the",
+    "titleHighlight": "Fake Slip",
+    "description": "This payment slip has 3 red flags hidden in it. Can you find them all? Click on any field that looks suspicious.",
+    "flagsToFind": "3 red flags to find",
+    "clickToIdentify": "Click to identify",
+    "challengeActive": "Challenge active",
+    "clickSuspicious": "Click on suspicious fields"
+  },
+  "phishing": {
+    "loading": "Loading scenarios...",
+    "question": "Question {{current}} of {{total}}",
+    "score": "Score: {{score}}/{{total}}",
+    "from": "From: {{sender}}",
+    "legit": "Legit",
+    "scam": "Scam",
+    "correct": "Correct!",
+    "incorrect": "Incorrect!",
+    "thisMessageIs": "This message is",
+    "aScam": "a SCAM",
+    "legitimate": "LEGITIMATE",
+    "redFlags": "Red Flags:",
+    "nextQuestion": "Next Question",
+    "seeResults": "See Results",
+    "gameComplete": "Game Complete!",
+    "youScored": "You scored",
+    "outOf": "out of",
+    "perfectScore": "Perfect score! You're a fraud detection expert!",
+    "greatJob": "Great job! You have a keen eye for scams.",
+    "keepLearning": "Keep learning! Review the scam patterns to improve your detection skills.",
+    "playAgain": "Play Again"
+  },
+  "chat": {
+    "kbzSecurity": "KBZ Security Team",
+    "typing": "typing...",
+    "online": "Online",
+    "initialMessage": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity.",
+    "pressureMessage": "I understand your concern, but this is very urgent. If you don't verify within 5 minutes, your account will be permanently locked and all funds frozen. We are trying to protect you from fraud.",
+    "goodbyeMessage": "Fine, we have noted your refusal. Your account will be reviewed by our team. Goodbye.",
+    "thankYouMessage": "Thank you for your cooperation. Your account is now being processed and will be verified shortly. You will receive a confirmation SMS within 24 hours.",
+    "scammedTitle": "You Got Scammed!",
+    "scammedDesc": "Never share your OTP with anyone — not even someone claiming to be from your bank. Real banks will NEVER ask for your OTP over the phone or chat.",
+    "safeTitle": "Red Flag Spotted!",
+    "safeDesc": "Great job! You recognized this as a scam. Remember: banks never ask for OTPs via chat or phone. Urgency and threats are classic scammer tactics.",
+    "gameOver": "Game over — click Restart to play again",
+    "placeholder": "Type your reply...",
+    "restart": "Restart",
+    "tip": "Tip: Real banks never ask for your OTP via chat or phone."
+  },
+  "spotGame": {
+    "redFlagsFound": "Red Flags Found:",
+    "examineSlip": "Examine the payment slip below. Click on any field that looks suspicious or inconsistent.",
+    "paymentSuccessful": "Payment Successful",
+    "from": "From",
+    "to": "To",
+    "amount": "Amount",
+    "dateTime": "Date & Time",
+    "transactionId": "Transaction ID",
+    "hintTransactionId": "Real transaction IDs are 10+ characters (e.g., TXN-20260702-84721). This ID is only 5 digits — a sign of a fabricated slip.",
+    "hintAmount": "The amount uses a completely different font size and weight compared to other fields. Real slips have consistent formatting throughout.",
+    "hintDate": "This date is in the future! A transaction slip cannot have a date that hasn't happened yet. This is clearly fabricated.",
+    "simulatedSlip": "This is a simulated payment slip for educational purposes.",
+    "successTitle": "You Successfully Spotted the Fake Slip!",
+    "successDesc": "You found all 3 red flags: inconsistent amount formatting, future date, and unusually short transaction ID. Always double-check payment slips before trusting them!",
+    "checkSlip": "Check Slip",
+    "findMore": "Find {{count}} more red flag",
+    "findMore_plural": "Find {{count}} more red flags",
+    "playAgain": "Play Again"
+  },
+  "scamCard": {
+    "hoverToReveal": "Hover to reveal warning signs",
+    "tapToReveal": "Tap to reveal warning signs",
+    "warningSigns": "Warning signs",
+    "redFlags": "Red Flags",
+    "categories": {
+      "Fake APK": "Fake APK",
+      "Phishing Link": "Phishing Link",
+      "Social Engineering": "Social Engineering"
+    }
+  },
+  "patterns": {
+    "knowTactics": "Know the tactics",
+    "title": "Common Scam Patterns",
+    "subtitle": "Learn to recognize the most common digital scams targeting Myanmar users.",
+    "loading": "Loading patterns...",
+    "all": "All",
+    "allTags": "All tags"
+  },
+  "footer": {
+    "description": "Practical tools that help Myanmar communities recognise digital banking scams before money or personal information is lost.",
+    "practiseSafely": "Practise safely",
+    "phishingQuiz": "Phishing quiz",
+    "chatSimulator": "Chat simulator",
+    "spotFakeSlip": "Spot a fake slip",
+    "remember": "Remember",
+    "bankWarning": "A legitimate bank will never ask for your OTP, PIN, or password through chat or phone.",
+    "copyright": "Digital Fraud Pattern & Awareness Hub. Educational use only.",
+    "adminAccess": "Admin access"
+  }
+}

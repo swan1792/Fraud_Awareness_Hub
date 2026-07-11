@@ -1,0 +1,15 @@
+{
+  "name": "fraud-awareness-hub-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && npm start",
+    "dev:client": "cd frontend-client && npm run dev",
+    "dev:admin": "cd frontend-admin && npm run dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:client\" \"npm run dev:admin\"",
+    "install:all": "cd backend && npm install && cd ../frontend-client && npm install && cd ../frontend-admin && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
