@@ -8,9 +8,9 @@
 
 Decoupled monorepo for the Digital Fraud Pattern & Awareness Hub. Migrated from a single Next.js app into three independent services:
 
-- **backend/** — Express.js REST API with SQLite (port 3001)
-- **frontend-client/** — Public-facing React 19 SPA (Vite, port 5173)
-- **frontend-admin/** — Admin dashboard React 19 SPA (Vite, port 5174)
+- **backend/** — Express.js REST API with SQLite + JWT auth (port 3001)
+- **frontend-client/** — Public-facing React 19 SPA with i18n (Vite, port 5173)
+- **frontend-admin/** — Admin dashboard React 19 SPA with JWT auth (Vite, port 5174)
 
 ## Quick Start
 
@@ -24,13 +24,16 @@ npm run dev:admin      # admin only
 
 ## Architecture Rules
 
-### Backend (Express + SQLite)
+### Backend (Express + SQLite + JWT)
 - All API routes live in `backend/server.js`. Keep it as a single file until it exceeds ~500 lines, then split into `backend/routes/`.
 - Database schema is in `backend/schema.sql`. Any schema change MUST be reflected here first.
 - Seed data lives in the same `schema.sql` file using `INSERT OR IGNORE` to be idempotent.
 - Use `sqlite3` (callback API) — NOT `better-sqlite3` or `sql.js`.
 - CORS must allow origins `http://localhost:5173` and `http://localhost:5174`.
 - API base URL is `http://localhost:3001/api`. Both frontends reference this via the Axios instance in `lib/axios.js`.
+- JWT auth: tokens via `POST /api/auth/login`, middleware checks `Authorization: Bearer` header.
+- Roles: `super_admin` (full access) and `admin` (alert CRUD only).
+- Security: `helmet`, `express-rate-limit`, `express-validator`, `winston` logging.
 
 ### Frontend (React 19 + Vite + Tailwind + shadcn)
 - Both frontends share the same UI components (`components/ui/`) and lib (`lib/`).
@@ -41,12 +44,16 @@ npm run dev:admin      # admin only
 - Routing: React Router v7. No Next.js patterns (no `"use client"`, no `useRouter` from next).
 - Styling: Tailwind CSS 4 utility classes + shadcn/ui primitives. No CSS modules, no styled-components.
 - Path alias: `@/` maps to `src/` (configured in `vite.config.js`).
+- Client has i18n via `i18next` (EN/MY locales in `locales/`). Admin is English-only.
+- Admin has JWT auth via `lib/auth.jsx` (React Context + localStorage). Protected routes use `ProtectedRoute` component.
 
 ### Component Rules
 - Feature components go in `components/features/`.
 - Shared UI primitives go in `components/ui/` (shadcn-generated, do not hand-edit).
 - Layout components go in `components/layout/`.
+- Section-level visual components go in `components/section/` (e.g., `animated-background.jsx`).
 - Page components go in `pages/`.
+- Auth components (e.g., `ProtectedRoute`) go in `components/`.
 - Never import from `@/components/ui/` inside another `@/components/ui/` file (causes circular deps).
 
 ### Data Flow
@@ -56,6 +63,15 @@ SQLite DB → Express API → Axios → TanStack Query → React Component
 - Backend owns the data. Frontends are pure consumers.
 - Static data (scam patterns, game scenarios) is seeded in the DB, not hardcoded in frontend.
 - The only exception: `hubStats` is a simple GET endpoint returning static JSON.
+
+### Auth Flow
+```
+Login Form → POST /api/auth/login → JWT token → localStorage → Axios interceptor → Protected API calls
+```
+- Admin login returns a JWT stored in `localStorage` (`auth_token`).
+- Axios request interceptor attaches `Authorization: Bearer <token>` to all admin requests.
+- 401 responses clear the token and redirect to `/login`.
+- `AuthProvider` (React Context) wraps the admin app, exposing `useAuth()` hook.
 
 ## Code Style
 
@@ -82,10 +98,17 @@ SQLite DB → Express API → Axios → TanStack Query → React Component
 3. Export the new hook from `api.js`
 4. Use the hook in the component
 
+### Add a new protected API endpoint
+1. Add route in `backend/server.js` with `authenticateToken` middleware
+2. Optionally add role check with `requireRole('super_admin')` for admin-only routes
+3. Add TanStack Query hook in `frontend-admin/src/lib/api.js`
+4. The Axios interceptor automatically attaches the JWT token
+
 ### Add a new page
 1. Create page component in `frontend-client/src/pages/` (or `frontend-admin/src/pages/`)
 2. Add route in `frontend-client/src/App.jsx` (or `frontend-admin/src/App.jsx`)
 3. Add nav link in the relevant layout component
+4. For admin pages requiring auth, wrap in `<ProtectedRoute>` in `App.jsx`
 
 ### Add a new Axios interceptor
 1. Edit `lib/axios.js` in the relevant frontend
@@ -105,11 +128,12 @@ SQLite DB → Express API → Axios → TanStack Query → React Component
 
 ## Environment Variables
 
-No `.env` files needed for local development. All config is hardcoded:
+Backend uses `dotenv` with `.env.example` as template. For local development:
 - Backend port: `3001` (in `server.js`)
 - Client port: `5173` (in `vite.config.js`)
 - Admin port: `5174` (in `vite.config.js`)
 - API URL: `http://localhost:3001/api` (in `lib/api.js`)
+- JWT_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD — see `backend/.env.example`
 
 When deploying, these MUST be externalized. Do not hardcode production URLs.
 

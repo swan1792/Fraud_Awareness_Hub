@@ -2,7 +2,7 @@
 
 ## Identity
 
-You are a full-stack developer working on the Fraud Awareness Hub V1 monorepo. You write plain JavaScript (JSX), not TypeScript. You work across backend, client, and admin frontends.
+You are a full-stack developer working on the Fraud Awareness Hub V1 monorepo. You write plain JavaScript (JSX), not TypeScript. You work across backend, client, and admin frontends. The backend has JWT authentication with role-based access control (super_admin, admin). The client frontend supports i18n (English/Myanmar).
 
 ## Core Behaviors
 
@@ -14,33 +14,46 @@ You are a full-stack developer working on the Fraud Awareness Hub V1 monorepo. Y
 
 ## Service Boundaries
 
-- **Backend** owns the database and API. Changes here affect both frontends.
-- **Frontend-client** is read-only for users. No create/edit/delete operations (except game state).
-- **Frontend-admin** has full CRUD. All mutations go through TanStack Query → Axios → Express API.
+- **Backend** owns the database and API. Changes here affect both frontends. Auth middleware (`authenticateToken`, `requireRole`) protects write endpoints.
+- **Frontend-client** is read-only for users. No create/edit/delete operations (except game state). Has i18n support (EN/MY).
+- **Frontend-admin** has full CRUD. All mutations go through TanStack Query → Axios → Express API. Uses JWT auth via `lib/auth.jsx` and `ProtectedRoute`.
 - **Never** put business logic in the frontend that belongs in the backend.
 
 ## File Organization
 
 ```
 backend/
-  server.js          # All Express routes
-  schema.sql         # DB schema + seed data
+  server.js          # All Express routes + auth middleware
+  schema.sql         # DB schema + seed data (4 tables)
+  .env.example       # Environment variable template
 
 frontend-client/src/
-  main.jsx           # Entry point with QueryClientProvider
+  main.jsx           # Entry point with QueryClientProvider + i18n init
   App.jsx            # Router definitions
   index.css          # Tailwind + shadcn theme
-  lib/api.js         # TanStack Query hooks
+  i18n.js            # i18next configuration
+  lib/api.js         # TanStack Query hooks (read-only)
   lib/axios.js       # Axios instance with interceptors
   lib/utils.js       # cn() helper
+  locales/           # en.json, my.json (translation files)
   components/
     ui/              # shadcn primitives (DO NOT hand-edit)
-    features/        # Business logic components
-    layout/          # Header, footer, sidebar
-  pages/             # Route-level components
+    features/        # Business logic components (6 files)
+    layout/          # PublicLayout (header + footer)
+    section/         # AnimatedBackground
+  pages/             # Route-level components (4 pages)
 
 frontend-admin/src/
-  (same structure as client, minus features/)
+  main.jsx           # Entry with QueryClientProvider + AuthProvider
+  App.jsx            # Router with ProtectedRoute
+  lib/api.js         # TanStack Query hooks (reads + mutations)
+  lib/axios.js       # Axios with JWT interceptor
+  lib/auth.jsx       # AuthContext + useAuth hook
+  components/
+    ui/              # shadcn primitives (DO NOT hand-edit)
+    layout/          # AdminLayout (sidebar)
+    ProtectedRoute.jsx  # Auth guard
+  pages/             # LoginPage, DashboardPage, AdminsPage
 ```
 
 ## When Modifying Shared Code
@@ -52,10 +65,12 @@ UI components in `components/ui/` are shared between both frontends. After modif
 ## When Adding New Features
 
 1. Start with the backend: add the API endpoint in `server.js`
-2. Add TanStack Query hook in `lib/api.js`
-3. Build the UI component
-4. Wire it into a page/route
-5. Test the full flow end-to-end
+2. For protected endpoints, add `authenticateToken` middleware and optionally `requireRole()`
+3. Add TanStack Query hook in `lib/api.js`
+4. Build the UI component
+5. Wire it into a page/route
+6. For admin pages, wrap in `<ProtectedRoute>` in `App.jsx`
+7. Test the full flow end-to-end
 
 ## PR Etiquette
 

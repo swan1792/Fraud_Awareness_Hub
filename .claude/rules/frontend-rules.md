@@ -8,7 +8,7 @@
 ## State Management
 - Server state: TanStack React Query in `lib/api.js`.
 - Local state: `useState` / `useReducer` in components.
-- No other state libraries (no Redux, no Zustand, no Jotai, no MobX).
+- Auth state: React Context via `lib/auth.jsx` (admin only). No Redux, no Zustand, no Jotai, no MobX.
 
 ## Data Fetching
 - ONLY through TanStack Query hooks in `lib/api.js`. Never `fetch()` directly.
@@ -16,6 +16,13 @@
 - All API calls go to `http://localhost:3001/api` via the Axios instance.
 - Use `useQuery` for reads, `useMutation` for writes.
 - Always provide `queryKey` and `invalidateQueries` for cache management.
+- Admin Axios interceptor attaches JWT `Authorization: Bearer` header from localStorage.
+
+## Internationalization (Client only)
+- i18next with `react-i18next` and `i18next-browser-languagedetector`.
+- Config in `src/i18n.js`. Translation files in `src/locales/` (en.json, my.json).
+- Use `useTranslation()` hook in components: `const { t } = useTranslation()`.
+- Admin dashboard is English-only — no i18n.
 
 ## Component Guidelines
 - Named exports only: `export function MyComponent() {}`
@@ -31,6 +38,6 @@
 - Both frontends must have identical copies of UI components
 
 ## Client vs Admin Distinction
-- **Client** (`frontend-client`): Read-only views, games, simulations. No CRUD.
-- **Admin** (`frontend-admin`): Full CRUD for scam alerts. Dashboard layout with sidebar.
+- **Client** (`frontend-client`): Read-only views, games, simulations. No CRUD. Has i18n (EN/MY).
+- **Admin** (`frontend-admin`): Full CRUD for scam alerts and admin users. Dashboard layout with sidebar. JWT auth via `ProtectedRoute`.
 - Feature components specific to one frontend go in that frontend's `components/features/`.
