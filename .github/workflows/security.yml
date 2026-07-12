@@ -1,0 +1,54 @@
+name: security
+# Layered security scan for the Fraud Awareness Hub.
+#   - secrets: gitleaks (catches leaked API keys, JWT secrets, DB credentials)
+#   - sast:    semgrep community rules (injection, insecure defaults)
+# Dependency scanning is handled separately by Dependabot (.github/dependabot.yml).
+#
+# Both jobs use `continue-on-error: true` so findings are REPORTED but never block a
+# merge while the team is learning to triage. Enforcement flip:
+#   1. remove `continue-on-error: true` from the job you want to enforce
+#   2. mark that check "required" in the branch-protection ruleset
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  secrets:
+    name: secrets (gitleaks)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true          # remove to enforce
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0             # full history so gitleaks scans past commits too
+      - name: gitleaks (secrets scan)
+        run: |
+          docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.18.4 \
+            detect --source /repo --redact --verbose
+
+  sast:
+    name: sast (semgrep)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    continue-on-error: true          # remove to enforce
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - name: Install semgrep
+        run: python -m pip install --upgrade pip semgrep
+      - name: Run semgrep (community rules)
+        run: semgrep scan --config=auto --error --skip-unknown-extensions .
