@@ -1,9 +1,11 @@
 import { useState } from "react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import { ShieldAlert, LayoutDashboard, Users, LogOut, Menu, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
+import { ShieldAlert, LayoutDashboard, Users, LogOut, Menu, X, Globe } from "lucide-react"
 import { useAuth } from "@/lib/auth"
 
 export function AdminLayout() {
+  const { t, i18n } = useTranslation()
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -13,13 +15,17 @@ export function AdminLayout() {
     navigate('/login')
   }
 
+  const toggleLanguage = () => {
+    i18n.changeLanguage(i18n.language === "en" ? "my" : "en")
+  }
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar */}
       <aside className="w-64 bg-gray-900 text-white p-4 hidden md:flex flex-col">
         <div className="flex items-center gap-2 mb-8">
           <ShieldAlert className="h-6 w-6 text-red-400" />
-          <span className="font-bold text-lg">Admin Panel</span>
+          <span className="font-bold text-lg">{t("nav.brand")}</span>
         </div>
 
         <nav className="space-y-1 flex-1">
@@ -28,7 +34,7 @@ export function AdminLayout() {
             className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm"
           >
             <LayoutDashboard className="h-4 w-4" />
-            Dashboard
+            {t("nav.dashboard")}
           </Link>
           {user?.role === "super_admin" && (
             <Link
@@ -36,21 +42,28 @@ export function AdminLayout() {
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm"
             >
               <Users className="h-4 w-4" />
-              Admin Users
+              {t("nav.adminUsers")}
             </Link>
           )}
         </nav>
 
-        {/* User Info + Logout */}
+        {/* User Info + Language Toggle + Logout */}
         <div className="border-t border-gray-700 pt-4 mt-4">
           <div className="text-sm text-gray-400 truncate mb-2">{user?.email}</div>
           <div className="text-xs text-gray-500 capitalize mb-3">{user?.role?.replace('_', ' ')}</div>
+          <button
+            onClick={toggleLanguage}
+            className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm text-gray-400 w-full mb-1"
+          >
+            <Globe className="h-4 w-4" />
+            {i18n.language === "en" ? "MY" : "EN"}
+          </button>
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm text-gray-400 w-full"
           >
             <LogOut className="h-4 w-4" />
-            Logout
+            {t("nav.logout")}
           </button>
         </div>
       </aside>
@@ -60,11 +73,18 @@ export function AdminLayout() {
         <header className="md:hidden bg-gray-900 text-white p-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-red-400" />
-            <span className="font-bold">Admin Panel</span>
+            <span className="font-bold">{t("nav.brand")}</span>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={toggleLanguage}
+              className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+            >
+              <Globe className="h-3 w-3" />
+              {i18n.language === "en" ? "MY" : "EN"}
+            </button>
             <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-white transition-colors">
-              Logout
+              {t("nav.logout")}
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -84,7 +104,7 @@ export function AdminLayout() {
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm text-gray-300"
             >
               <LayoutDashboard className="h-4 w-4" />
-              Dashboard
+              {t("nav.dashboard")}
             </Link>
             {user?.role === "super_admin" && (
               <Link
@@ -93,7 +113,7 @@ export function AdminLayout() {
                 className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm text-gray-300"
               >
                 <Users className="h-4 w-4" />
-                Admin Users
+                {t("nav.adminUsers")}
               </Link>
             )}
           </nav>

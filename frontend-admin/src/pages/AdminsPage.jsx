@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Plus, Trash2, Users, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -20,6 +21,7 @@ const roleColors = {
 }
 
 export function AdminsPage() {
+  const { t } = useTranslation()
   const { user } = useAuth()
   const { data: admins = [], isLoading } = useAdminsQuery()
   const createAdmin = useCreateAdminMutation()
@@ -68,9 +70,9 @@ export function AdminsPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Admin Users</h1>
+          <h1 className="text-2xl font-bold">{t("admins.title")}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Manage admin accounts for the awareness hub.
+            {t("admins.subtitle")}
           </p>
         </div>
 
@@ -78,13 +80,13 @@ export function AdminsPage() {
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
               <Plus className="h-4 w-4" />
-              Add Admin
+              {t("admins.addAdmin")}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Create Admin User</DialogTitle>
+                <DialogTitle>{t("admins.createAdmin")}</DialogTitle>
                 <DialogDescription>
-                  Add a new admin user. They will have full access except admin management.
+                  {t("admins.createDesc")}
                 </DialogDescription>
               </DialogHeader>
 
@@ -96,39 +98,39 @@ export function AdminsPage() {
 
               <div className="space-y-4 py-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">{t("admins.nameLabel")}</Label>
                   <Input
                     id="name"
-                    placeholder="e.g., John Doe"
+                    placeholder={t("admins.namePlaceholder")}
                     value={newAdmin.name}
                     onChange={(e) => setNewAdmin((prev) => ({ ...prev, name: e.target.value }))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t("admins.emailLabel")}</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@example.com"
+                    placeholder={t("admins.emailPlaceholder")}
                     value={newAdmin.email}
                     onChange={(e) => setNewAdmin((prev) => ({ ...prev, email: e.target.value }))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{t("admins.passwordLabel")}</Label>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Min 6 characters"
+                    placeholder={t("admins.passwordPlaceholder")}
                     value={newAdmin.password}
                     onChange={(e) => setNewAdmin((prev) => ({ ...prev, password: e.target.value }))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
+                  <Label htmlFor="role">{t("admins.roleLabel")}</Label>
                   <Select
                     value={newAdmin.role}
                     onValueChange={(value) => setNewAdmin((prev) => ({ ...prev, role: value }))}
@@ -137,19 +139,19 @@ export function AdminsPage() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="admin">Admin</SelectItem>
-                      <SelectItem value="super_admin">Super Admin</SelectItem>
+                      <SelectItem value="admin">{t("admins.admin")}</SelectItem>
+                      <SelectItem value="super_admin">{t("admins.superAdmin")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <p className="text-xs text-gray-500">
-                    Admin: full access except user management. Super Admin: full access.
+                    {t("admins.roleDesc")}
                   </p>
                 </div>
               </div>
 
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Cancel
+                  {t("admins.cancel")}
                 </Button>
                 <Button
                   onClick={handleCreateAdmin}
@@ -158,10 +160,10 @@ export function AdminsPage() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Creating...
+                      {t("admins.creating")}
                     </>
                   ) : (
-                    "Create Admin"
+                    t("admins.create")
                   )}
                 </Button>
               </DialogFooter>
@@ -174,23 +176,23 @@ export function AdminsPage() {
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-          <span className="ml-2 text-gray-500">Loading admins...</span>
+          <span className="ml-2 text-gray-500">{t("admins.loading")}</span>
         </div>
       ) : admins.length === 0 ? (
         <div className="text-center py-12">
           <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500">No admin users yet.</p>
+          <p className="text-gray-500">{t("admins.noAdmins")}</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg border overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead className="w-[130px]">Role</TableHead>
-                <TableHead className="w-[120px]">Created</TableHead>
-                <TableHead className="w-[80px] text-right">Actions</TableHead>
+                <TableHead>{t("admins.tableName")}</TableHead>
+                <TableHead>{t("admins.tableEmail")}</TableHead>
+                <TableHead className="w-[130px]">{t("admins.tableRole")}</TableHead>
+                <TableHead className="w-[120px]">{t("admins.tableCreated")}</TableHead>
+                <TableHead className="w-[80px] text-right">{t("admins.tableActions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -200,7 +202,7 @@ export function AdminsPage() {
                   <TableCell className="text-sm text-gray-500">{admin.email}</TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={roleColors[admin.role]}>
-                      {admin.role === "super_admin" ? "Super Admin" : "Admin"}
+                      {admin.role === "super_admin" ? t("admins.superAdmin") : t("admins.admin")}
                     </Badge>
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">

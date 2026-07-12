@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { useTranslation } from "react-i18next"
 import { Plus, Trash2, AlertTriangle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,6 +24,7 @@ const categoryColors = {
 const categories = ["Fake APK", "Phishing Link", "Social Engineering"]
 
 export function DashboardPage() {
+  const { t } = useTranslation()
   const { data: alerts = [], isLoading } = useAlertsQuery()
   const createAlert = useCreateAlertMutation()
   const deleteAlert = useDeleteAlertMutation()
@@ -65,44 +67,44 @@ export function DashboardPage() {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Scam Alerts</h1>
+          <h1 className="text-2xl font-bold">{t("dashboard.title")}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Manage and publish scam alerts for the awareness hub.
+            {t("dashboard.subtitle")}
           </p>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
             <Plus className="h-4 w-4" />
-            Create New Alert
+            {t("dashboard.createNew")}
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-              <DialogTitle>Create Scam Alert</DialogTitle>
+              <DialogTitle>{t("dashboard.createAlert")}</DialogTitle>
               <DialogDescription>
-                Add a new scam alert to the awareness hub. Fill in all fields below.
+                {t("dashboard.createDesc")}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor="title">{t("dashboard.titleLabel")}</Label>
                 <Input
                   id="title"
-                  placeholder="e.g., Fake KPay APK Spreading via Viber"
+                  placeholder={t("dashboard.titlePlaceholder")}
                   value={newAlert.title}
                   onChange={(e) => setNewAlert((prev) => ({ ...prev, title: e.target.value }))}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
+                <Label htmlFor="category">{t("dashboard.categoryLabel")}</Label>
                 <Select
                   value={newAlert.category}
                   onValueChange={(value) => setNewAlert((prev) => ({ ...prev, category: value }))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder={t("dashboard.categoryPlaceholder")} />
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((cat) => (
@@ -115,10 +117,10 @@ export function DashboardPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">{t("dashboard.descriptionLabel")}</Label>
                 <Textarea
                   id="description"
-                  placeholder="Describe the scam pattern, how it works, and what users should watch out for..."
+                  placeholder={t("dashboard.descriptionPlaceholder")}
                   rows={4}
                   value={newAlert.description}
                   onChange={(e) => setNewAlert((prev) => ({ ...prev, description: e.target.value }))}
@@ -128,7 +130,7 @@ export function DashboardPage() {
 
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
-                Cancel
+                {t("dashboard.cancel")}
               </Button>
               <Button
                 onClick={handleCreateAlert}
@@ -137,10 +139,10 @@ export function DashboardPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Creating...
+                    {t("dashboard.creating")}
                   </>
                 ) : (
-                  "Create Alert"
+                  t("dashboard.create")
                 )}
               </Button>
             </DialogFooter>
@@ -151,15 +153,15 @@ export function DashboardPage() {
       {/* Stats Bar */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg border p-4">
-          <p className="text-sm text-gray-500">Total Alerts</p>
+          <p className="text-sm text-gray-500">{t("dashboard.totalAlerts")}</p>
           <p className="text-2xl font-bold">{alerts.length}</p>
         </div>
         <div className="bg-white rounded-lg border p-4">
-          <p className="text-sm text-gray-500">Categories</p>
+          <p className="text-sm text-gray-500">{t("dashboard.categories")}</p>
           <p className="text-2xl font-bold">{categories.length}</p>
         </div>
         <div className="bg-white rounded-lg border p-4">
-          <p className="text-sm text-gray-500">Latest Update</p>
+          <p className="text-sm text-gray-500">{t("dashboard.latestUpdate")}</p>
           <p className="text-2xl font-bold">
             {alerts.length > 0 ? alerts[0].date : "—"}
           </p>
@@ -170,23 +172,23 @@ export function DashboardPage() {
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-          <span className="ml-2 text-gray-500">Loading alerts...</span>
+          <span className="ml-2 text-gray-500">{t("dashboard.loading")}</span>
         </div>
       ) : alerts.length === 0 ? (
         <div className="text-center py-12">
           <AlertTriangle className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500">No scam alerts yet.</p>
-          <p className="text-sm text-gray-400">Click "Create New Alert" to add one.</p>
+          <p className="text-gray-500">{t("dashboard.noAlerts")}</p>
+          <p className="text-sm text-gray-400">{t("dashboard.noAlertsHint")}</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg border overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead className="w-[150px]">Category</TableHead>
-                <TableHead className="w-[120px]">Date</TableHead>
-                <TableHead className="w-[80px] text-right">Actions</TableHead>
+                <TableHead>{t("dashboard.tableTitle")}</TableHead>
+                <TableHead className="w-[150px]">{t("dashboard.tableCategory")}</TableHead>
+                <TableHead className="w-[120px]">{t("dashboard.tableDate")}</TableHead>
+                <TableHead className="w-[80px] text-right">{t("dashboard.tableActions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
