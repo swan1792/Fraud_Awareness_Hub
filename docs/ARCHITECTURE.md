@@ -56,12 +56,12 @@ Fraud_Awarness_Hub_V1/
 │   └── package.json
 ├── frontend-client/
 │   ├── src/
-│   │   ├── main.jsx       # Entry + Redux Provider
+│   │   ├── main.jsx       # Entry + QueryClientProvider
 │   │   ├── App.jsx        # React Router
 │   │   ├── index.css      # Tailwind + shadcn theme
 │   │   ├── lib/
 │   │   │   ├── api.js     # TanStack Query hooks
-│   │   │   ├── store.js   # Redux store
+│   │   │   ├── axios.js   # Axios instance with interceptors
 │   │   │   └── utils.js   # cn() helper
 │   │   ├── components/
 │   │   │   ├── ui/        # shadcn primitives
