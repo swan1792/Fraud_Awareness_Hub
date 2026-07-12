@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, useCallback } from 'react'
+import apiClient from './axios'
 
 const AuthContext = createContext(null)
-
-const API_BASE = 'http://localhost:3001/api'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
@@ -12,16 +11,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('auth_token'))
 
   const login = useCallback(async (email, password) => {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    })
-    if (!res.ok) {
-      const data = await res.json()
-      throw new Error(data.error || 'Login failed')
-    }
-    const data = await res.json()
+    const { data } = await apiClient.post('/auth/login', { email, password })
     localStorage.setItem('auth_token', data.token)
     localStorage.setItem('auth_user', JSON.stringify(data.user))
     setToken(data.token)
