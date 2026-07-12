@@ -1,0 +1,11 @@
+# Enforce LF line endings for files that must be consistent across platforms
+*.json text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf
+*.sql text eol=lf
+
+# Lockfiles — always LF, no diff noise
+package-lock.json text eol=lf
