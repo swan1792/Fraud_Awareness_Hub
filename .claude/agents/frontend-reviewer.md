@@ -14,7 +14,7 @@ You are a React frontend reviewer for the Fraud Awareness Hub. Review JSX + Tail
 - [ ] No TypeScript (plain JSX only)
 - [ ] Named exports (no default exports)
 - [ ] Imports use `@/` alias
-- [ ] RTK Query hooks used for data fetching (no direct fetch)
+- [ ] TanStack Query hooks used for data fetching (no direct fetch)
 - [ ] React Router v7 patterns (no Next.js)
 - [ ] No `useSelector`/`useDispatch` (use TanStack Query)
 

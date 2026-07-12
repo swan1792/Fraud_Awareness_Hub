@@ -1,6 +1,6 @@
 ---
 name: add-api-endpoint
-description: Add a new API endpoint to the backend with proper validation, error handling, and RTK Query hooks
+description: Add a new API endpoint to the backend with proper validation, error handling, and TanStack Query hooks
 ---
 
 # Add API Endpoint
@@ -19,7 +19,7 @@ Use this skill when adding new API endpoints to the Fraud Awareness Hub backend.
    - Return proper HTTP status codes (200, 201, 400, 404, 500)
    - Use `toCamel()` helper for response formatting
    - Log with `logger.info()` / `logger.error()`
-4. **Add RTK Query hooks** in `frontend-client/src/lib/api.js` (and `frontend-admin/src/lib/api.js` if admin needs it)
+4. **Add TanStack Query hooks** in `frontend-client/src/lib/api.js` (and `frontend-admin/src/lib/api.js` if admin needs it)
 5. **Export the new hooks** from `api.js`
 6. **Use the hooks** in components
 
@@ -40,13 +40,15 @@ app.get('/api/items',
 )
 ```
 
-## Example RTK Query Hook
+## Example TanStack Query Hook
 
 ```javascript
+import apiClient from './axios'
+
 export function useItemsQuery() {
   return useQuery({
     queryKey: ['items'],
-    queryFn: () => apiFetch('/items'),
+    queryFn: () => apiClient.get('/items').then((res) => res.data),
   })
 }
 ```
@@ -56,4 +58,4 @@ export function useItemsQuery() {
 - Don't use `console.log` — use `logger` instead
 - Don't expose raw error messages to clients
 - Don't skip input validation
-- Don't forget to add `providesTags` / `invalidatesTags` for cache management
+- Don't forget to add `invalidateQueries` for cache management after mutations
