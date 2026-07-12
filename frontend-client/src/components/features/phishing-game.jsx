@@ -16,13 +16,13 @@ import { Badge } from "@/components/ui/badge"
 import { useScenariosQuery } from "@/lib/api"
 
 const channelConfig = {
-  SMS: { icon: Phone, bg: "bg-green-100 text-green-800", label: "SMS" },
-  Viber: { icon: MessageSquare, bg: "bg-purple-100 text-purple-800", label: "Viber" },
-  Email: { icon: Mail, bg: "bg-blue-100 text-blue-800", label: "Email" },
+  SMS: { icon: Phone, bg: "bg-green-100 text-green-800" },
+  Viber: { icon: MessageSquare, bg: "bg-purple-100 text-purple-800" },
+  Email: { icon: Mail, bg: "bg-blue-100 text-blue-800" },
 }
 
 export function PhishingGame() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { data: allScenarios = [], isLoading } = useScenariosQuery()
   const scenarios = useMemo(() => [...allScenarios].sort(() => Math.random() - 0.5), [allScenarios])
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -32,6 +32,22 @@ export function PhishingGame() {
 
   const scenario = scenarios[currentIndex]
   const channel = scenario ? channelConfig[scenario.channel] : null
+
+  // Get translated scenario content, falling back to API data
+  const getTranslatedScenario = (s) => {
+    if (!s) return s
+    const key = `gameScenarios.${s.id}`
+    const sender = t(`${key}.sender`, s.sender)
+    const message = t(`${key}.message`, s.message)
+    const explanation = t(`${key}.explanation`, s.explanation)
+    let redFlags = s.redFlags
+    try {
+      const translated = i18n.getResource(i18n.language, 'translation', `${key}.redFlags`)
+      if (Array.isArray(translated)) redFlags = translated
+    } catch (e) { /* use API fallback */ }
+    return { ...s, sender, message, explanation, redFlags }
+  }
+  const displayScenario = getTranslatedScenario(scenario)
 
   const handleAnswer = useCallback(
     (answer) => {
@@ -117,14 +133,14 @@ export function PhishingGame() {
           <div className="flex items-center gap-2">
             <Badge variant="secondary" className={channel.bg}>
               <channel.icon className="h-3 w-3 mr-1" />
-              {channel.label}
+              {t(`phishing.channels.${scenario.channel}`, scenario.channel)}
             </Badge>
-            <span className="text-sm text-gray-500">{t("phishing.from", { sender: scenario.sender })}</span>
+            <span className="text-sm text-gray-500">{t("phishing.from", { sender: displayScenario.sender })}</span>
           </div>
         </CardHeader>
         <CardContent>
           <div className="bg-gray-50 rounded-lg p-4 border">
-            <p className="text-sm leading-relaxed">{scenario.message}</p>
+            <p className="text-sm leading-relaxed">{displayScenario.message}</p>
           </div>
         </CardContent>
       </Card>
@@ -157,14 +173,14 @@ export function PhishingGame() {
           </div>
 
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-            <p className="text-sm text-blue-800">{scenario.explanation}</p>
+            <p className="text-sm text-blue-800">{displayScenario.explanation}</p>
           </div>
 
-          {scenario.isScam && scenario.redFlags.length > 0 && (
+          {displayScenario.isScam && displayScenario.redFlags.length > 0 && (
             <div className="bg-red-50 rounded-lg p-4 border border-red-200">
               <p className="text-xs font-semibold text-red-800 mb-2">{t("phishing.redFlags")}</p>
               <ul className="space-y-1">
-                {scenario.redFlags.map((flag, i) => (
+                {displayScenario.redFlags.map((flag, i) => (
                   <li key={i} className="text-xs text-red-700 flex items-start gap-1">
                     <span className="text-red-500 mt-0.5">&bull;</span>
                     {flag}
