@@ -1,0 +1,14 @@
+I want to add localization (i18n) to this "Fraud Awareness Hub" website. The current site is entirely in English, and I want to add Burmese (မြန်မာဘာသာ) as a second language option. 
+Do it in Dev branch.
+Please perform the following steps to implement this:
+
+1. **Analyze the Stack**: Scan the repository structure, configuration files, and package.json to determine the framework being used (e.g., Next.js, React, Vanilla HTML/JS, Vite, etc.).
+2. **Setup i18n Infrastructure**: 
+   - Install and configure the most appropriate localization library for this stack (e.g., `next-intl`, `react-i18next`, or a robust JSON-based routing setup if it's vanilla).
+   - Create the necessary locale files or folders (e.g., `locales/en.json` and `locales/my.json` or `mm.json`).
+3. **Extract English Strings**: Scan the components, pages, and UI elements. Extract all hardcoded English text strings related to fraud awareness, alerts, guides, buttons, and headers, and move them into the English translation file. Replace the hardcoded text in the code with the i18n translation hooks/keys.
+4. **Generate Burmese Translations**: Translate all the extracted strings into natural, accurate Burmese. Ensure you use modern standard Burmese Unicode. 
+5. **Implement Language Switcher**: Add a clean, accessible language toggle UI component (English | မြန်မာ) in the navigation header or footer so users can easily switch languages. Ensure the language preference persists (e.g., via cookies, localStorage, or URL routing).
+6. **Font & Styling Adjustments**: Ensure that when the Burmese language is active, the UI uses a font family that renders Burmese Unicode cleanly (like Pyidaungsu, Padauk, or system-ui sans-serif fallback) and check that line-heights or button sizes don't break due to script heights.
+
+Please review the codebase first and let me know your plan before you start rewriting files.
