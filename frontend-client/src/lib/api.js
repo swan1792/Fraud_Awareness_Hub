@@ -1,37 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
-
-const API_BASE = 'http://localhost:3001/api'
-
-async function apiFetch(path) {
-  const res = await fetch(`${API_BASE}${path}`)
-  if (!res.ok) throw new Error(`API error: ${res.status}`)
-  return res.json()
-}
+import apiClient from './axios'
 
 export function useStatsQuery() {
   return useQuery({
     queryKey: ['stats'],
-    queryFn: () => apiFetch('/stats'),
+    queryFn: () => apiClient.get('/stats').then((res) => res.data),
   })
 }
 
 export function usePatternsQuery() {
   return useQuery({
     queryKey: ['patterns'],
-    queryFn: () => apiFetch('/patterns'),
+    queryFn: () => apiClient.get('/patterns').then((res) => res.data),
   })
 }
 
 export function useScenariosQuery() {
   return useQuery({
     queryKey: ['scenarios'],
-    queryFn: () => apiFetch('/scenarios'),
+    queryFn: () => apiClient.get('/scenarios').then((res) => res.data),
   })
 }
 
 export function useAlertsQuery() {
   return useQuery({
     queryKey: ['alerts'],
-    queryFn: () => apiFetch('/alerts'),
+    queryFn: () => apiClient.get('/alerts').then((res) => res.data),
   })
 }

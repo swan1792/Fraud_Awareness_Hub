@@ -30,13 +30,14 @@ npm run dev:admin      # admin only
 - Seed data lives in the same `schema.sql` file using `INSERT OR IGNORE` to be idempotent.
 - Use `sqlite3` (callback API) — NOT `better-sqlite3` or `sql.js`.
 - CORS must allow origins `http://localhost:5173` and `http://localhost:5174`.
-- API base URL is `http://localhost:3001/api`. Both frontends reference this via RTK Query.
+- API base URL is `http://localhost:3001/api`. Both frontends reference this via the Axios instance in `lib/axios.js`.
 
 ### Frontend (React 19 + Vite + Tailwind + shadcn)
 - Both frontends share the same UI components (`components/ui/`) and lib (`lib/`).
 - UI components are plain JSX (not TypeScript) — use `.jsx` extension.
-- State management: Redux Toolkit + RTK Query. No other state libraries.
-- Data fetching: ONLY through RTK Query endpoints defined in `lib/api.js`. Never fetch directly.
+- Server state: TanStack React Query for caching, invalidation, loading states.
+- HTTP client: Axios with interceptors configured in `lib/axios.js`. Never use raw `fetch`.
+- Data fetching: ONLY through TanStack Query hooks in `lib/api.js`. Never fetch directly in components.
 - Routing: React Router v7. No Next.js patterns (no `"use client"`, no `useRouter` from next).
 - Styling: Tailwind CSS 4 utility classes + shadcn/ui primitives. No CSS modules, no styled-components.
 - Path alias: `@/` maps to `src/` (configured in `vite.config.js`).
@@ -50,7 +51,7 @@ npm run dev:admin      # admin only
 
 ### Data Flow
 ```
-SQLite DB → Express API → RTK Query → React Component
+SQLite DB → Express API → Axios → TanStack Query → React Component
 ```
 - Backend owns the data. Frontends are pure consumers.
 - Static data (scam patterns, game scenarios) is seeded in the DB, not hardcoded in frontend.
@@ -77,7 +78,7 @@ SQLite DB → Express API → RTK Query → React Component
 
 ### Add a new API endpoint
 1. Add route in `backend/server.js`
-2. Add RTK Query endpoint in `frontend-client/src/lib/api.js` (and `frontend-admin/src/lib/api.js` if admin needs it)
+2. Add TanStack Query hook in `frontend-client/src/lib/api.js` (and `frontend-admin/src/lib/api.js` if admin needs it)
 3. Export the new hook from `api.js`
 4. Use the hook in the component
 
@@ -85,6 +86,11 @@ SQLite DB → Express API → RTK Query → React Component
 1. Create page component in `frontend-client/src/pages/` (or `frontend-admin/src/pages/`)
 2. Add route in `frontend-client/src/App.jsx` (or `frontend-admin/src/App.jsx`)
 3. Add nav link in the relevant layout component
+
+### Add a new Axios interceptor
+1. Edit `lib/axios.js` in the relevant frontend
+2. Add request or response interceptor to the `apiClient`
+3. Common use cases: auth headers, error normalization, request logging, retry logic
 
 ### Add a new shadcn component
 1. Copy an existing component from `frontend-client/src/components/ui/` as reference
@@ -94,7 +100,7 @@ SQLite DB → Express API → RTK Query → React Component
 ### Modify database schema
 1. Update `backend/schema.sql` — add columns/tables with migration-safe SQL
 2. Update `server.js` endpoints that use the changed tables
-3. Update RTK Query types in `lib/api.js` if response shape changed
+3. Update TanStack Query hooks in `lib/api.js` if response shape changed
 4. Delete `backend/fraud_hub.db` and restart to re-seed
 
 ## Environment Variables
@@ -119,6 +125,6 @@ No test framework configured yet. When adding tests:
 - Do NOT use Next.js patterns (no `page.tsx`, no `layout.tsx` convention, no `useRouter` from next)
 - Do NOT add TypeScript — keep it plain JS/JSX for V1
 - Do NOT install new UI libraries — stick with shadcn/ui + Tailwind
-- Do NOT hardcode API URLs in components — always use the RTK Query base URL
+- Do NOT hardcode API URLs in components — always use the Axios instance from `lib/axios.js`
 - Do NOT commit `node_modules/`, `dist/`, or `*.db` files
 - Do NOT modify shadcn `components/ui/` files directly — regenerate if needed

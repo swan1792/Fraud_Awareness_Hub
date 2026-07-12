@@ -26,4 +26,4 @@ db.all('SELECT ...', [], (err, rows) => {
 ## Adding New Endpoints
 1. Add SQL query in `server.js`
 2. Use the `toCamel()` helper for response formatting
-3. Add corresponding RTK Query endpoint in both frontends' `lib/api.js`
+3. Add corresponding TanStack Query hook in both frontends' `lib/api.js`

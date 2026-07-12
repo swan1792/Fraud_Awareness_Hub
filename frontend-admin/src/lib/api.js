@@ -1,31 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-
-const API_BASE = 'http://localhost:3001/api'
-
-async function apiFetch(path, options = {}) {
-  const token = localStorage.getItem('auth_token')
-  const headers = { ...options.headers }
-  if (token) headers['Authorization'] = `Bearer ${token}`
-  if (options.body && !headers['Content-Type']) headers['Content-Type'] = 'application/json'
-
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers })
-  if (res.status === 401) {
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('auth_user')
-    window.location.href = '/login'
-    throw new Error('Session expired')
-  }
-  if (!res.ok) {
-    const data = await res.json().catch(() => ({}))
-    throw new Error(data.error || `API error: ${res.status}`)
-  }
-  return res.json()
-}
+import apiClient from './axios'
 
 export function useAlertsQuery() {
   return useQuery({
     queryKey: ['alerts'],
-    queryFn: () => apiFetch('/alerts'),
+    queryFn: () => apiClient.get('/alerts').then((res) => res.data),
   })
 }
 
@@ -34,10 +13,7 @@ export function useCreateAlertMutation() {
 
   return useMutation({
     mutationFn: (body) =>
-      apiFetch('/alerts', {
-        method: 'POST',
-        body: JSON.stringify(body),
-      }),
+      apiClient.post('/alerts', body).then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['alerts'] })
     },
@@ -49,7 +25,7 @@ export function useDeleteAlertMutation() {
 
   return useMutation({
     mutationFn: (id) =>
-      apiFetch(`/alerts/${id}`, { method: 'DELETE' }),
+      apiClient.delete(`/alerts/${id}`).then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['alerts'] })
     },
@@ -61,7 +37,7 @@ export function useDeleteAlertMutation() {
 export function useAdminsQuery() {
   return useQuery({
     queryKey: ['admins'],
-    queryFn: () => apiFetch('/auth/admins'),
+    queryFn: () => apiClient.get('/auth/admins').then((res) => res.data),
   })
 }
 
@@ -70,10 +46,7 @@ export function useCreateAdminMutation() {
 
   return useMutation({
     mutationFn: (body) =>
-      apiFetch('/auth/admins', {
-        method: 'POST',
-        body: JSON.stringify(body),
-      }),
+      apiClient.post('/auth/admins', body).then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admins'] })
     },
@@ -85,7 +58,7 @@ export function useDeleteAdminMutation() {
 
   return useMutation({
     mutationFn: (id) =>
-      apiFetch(`/auth/admins/${id}`, { method: 'DELETE' }),
+      apiClient.delete(`/auth/admins/${id}`).then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admins'] })
     },
