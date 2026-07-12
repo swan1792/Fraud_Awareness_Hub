@@ -22,7 +22,7 @@ export function ScammerChatSimulator() {
     setScammerTyping(true)
     const delay = 1000 + Math.random() * 1000
     setTimeout(() => {
-      setMessages((prev) => [...prev, { id: `scammer-${Date.now()}`, role: "scammer", text }])
+      setMessages((prev) => [...prev, { id: `scammer-${Date.now()}`, role: "scammer", text, time: new Date().toLocaleTimeString() }])
       setScammerTyping(false)
     }, delay)
   }, [])
@@ -62,7 +62,7 @@ export function ScammerChatSimulator() {
   const handleSend = useCallback(() => {
     const trimmed = userInput.trim()
     if (!trimmed || outcome !== null) return
-    setMessages((prev) => [...prev, { id: `user-${Date.now()}`, role: "user", text: trimmed }])
+    setMessages((prev) => [...prev, { id: `user-${Date.now()}`, role: "user", text: trimmed, time: new Date().toLocaleTimeString() }])
     setUserInput("")
     processUserMessage(trimmed)
   }, [userInput, outcome, processUserMessage])
@@ -114,6 +114,7 @@ export function ScammerChatSimulator() {
                 }`}
               >
                 {msg.text}
+                {msg.time && <p className={`text-[10px] mt-1 ${msg.role === "user" ? "text-blue-200" : "text-gray-400"}`}>{msg.time}</p>}
               </div>
             </div>
           ))}

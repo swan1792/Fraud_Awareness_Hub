@@ -187,20 +187,6 @@ export function SpotTheFakeGame() {
           </div>
         )}
 
-        {gameState === "playing" && (
-          <Button
-            onClick={() => { if (foundAnomalies.size === anomalyIds.length) setGameState("success") }}
-            variant="outline"
-            className="w-full"
-            disabled={foundAnomalies.size < anomalyIds.length}
-          >
-            <Eye className="h-4 w-4 mr-2" />
-            {foundAnomalies.size === anomalyIds.length
-              ? t("spotGame.checkSlip")
-              : t("spotGame.findMore", { count: remainingCount })}
-          </Button>
-        )}
-
         {gameState === "success" && (
           <Button onClick={handleRestart} className="w-full">
             <RotateCcw className="h-4 w-4 mr-2" />

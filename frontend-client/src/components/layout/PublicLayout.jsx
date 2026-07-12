@@ -197,8 +197,9 @@ export function PublicLayout() {
             </div>
           </div>
 
-          <div className="pt-6 text-xs text-zinc-500">
+          <div className="pt-6 text-xs text-zinc-500 flex flex-wrap items-center justify-between gap-2">
             <p>&copy; {new Date().getFullYear()} {t("footer.copyright")}</p>
+            <a href="http://localhost:5174" className="text-zinc-600 hover:text-white transition-colors">{t("footer.adminAccess")}</a>
           </div>
         </div>
       </footer>
