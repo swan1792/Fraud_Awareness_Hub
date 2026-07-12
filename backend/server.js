@@ -25,6 +25,11 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@fraudhub.com'
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@123'
 
+if (NODE_ENV === 'production') {
+  if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET is required in production')
+  if (!process.env.ADMIN_PASSWORD) throw new Error('ADMIN_PASSWORD is required in production')
+}
+
 // ─── Logger ───────────────────────────────────────────────────
 const logger = winston.createLogger({
   level: NODE_ENV === 'production' ? 'info' : 'debug',
