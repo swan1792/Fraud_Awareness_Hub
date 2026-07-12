@@ -39,23 +39,31 @@ export function MyComponent({ prop1, prop2 }) {
 }
 ```
 
-## API Pattern (RTK Query)
+## API Pattern (TanStack Query + Axios)
 ```js
+// In lib/axios.js
+import axios from 'axios'
+const apiClient = axios.create({ baseURL: 'http://localhost:3001/api' })
+export default apiClient
+
 // In lib/api.js
-export const fraudApi = createApi({
-  reducerPath: 'fraudApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api' }),
-  endpoints: (builder) => ({
-    getItems: builder.query({
-      query: () => '/items',
-      providesTags: ['Item'],
-    }),
-    createItem: builder.mutation({
-      query: (body) => ({ url: '/items', method: 'POST', body }),
-      invalidatesTags: ['Item'],
-    }),
-  }),
-})
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import apiClient from './axios'
+
+export function useItemsQuery() {
+  return useQuery({
+    queryKey: ['items'],
+    queryFn: () => apiClient.get('/items').then((res) => res.data),
+  })
+}
+
+export function useCreateItemMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (body) => apiClient.post('/items', body).then((res) => res.data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['items'] }),
+  })
+}
 ```
 
 ## CSS Classes

@@ -13,12 +13,12 @@ Fraud_Awarness_Hub_V1/
 ├── frontend-client/          # Public-facing React 19 app (Vite, port 5173)
 │   └── src/
 │       ├── components/       # UI + feature components
-│       ├── lib/              # RTK Query API, store, utils
+│       ├── lib/              # TanStack Query API, Axios, utils
 │       └── pages/            # Route pages
 ├── frontend-admin/           # Admin dashboard React 19 app (Vite, port 5174)
 │   └── src/
 │       ├── components/       # UI + admin layout
-│       ├── lib/              # RTK Query API, store, utils
+│       ├── lib/              # TanStack Query API, Axios, utils
 │       └── pages/            # Dashboard page
 └── package.json              # Root scripts with concurrently
 ```
@@ -67,5 +67,5 @@ npm run dev:admin      # Admin app on :5174
 ## Tech Stack
 
 - **Backend**: Express.js, SQLite3 (via `sqlite` and `sqlite3` packages), CORS
-- **Frontend**: React 19, Vite 6, Tailwind CSS 4, shadcn/ui, Redux Toolkit + RTK Query, React Router 7
+- **Frontend**: React 19, Vite 6, Tailwind CSS 4, shadcn/ui, TanStack React Query, Axios, React Router 7
 - **UI Primitives**: @base-ui/react

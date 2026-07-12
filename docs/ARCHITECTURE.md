@@ -13,8 +13,8 @@ Migrated from a single Next.js app into a decoupled monorepo with three independ
 | Layer | Choice | Port |
 |---|---|---|
 | Backend API | Express.js + SQLite3 | 3001 |
-| Client (Public) | React 19 + Vite + Tailwind 4 + shadcn/ui + RTK Query | 5173 |
-| Admin Dashboard | React 19 + Vite + Tailwind 4 + shadcn/ui + RTK Query | 5174 |
+| Client (Public) | React 19 + Vite + Tailwind 4 + shadcn/ui + TanStack Query + Axios | 5173 |
+| Admin Dashboard | React 19 + Vite + Tailwind 4 + shadcn/ui + TanStack Query + Axios | 5174 |
 
 ## System Diagram
 
@@ -26,7 +26,7 @@ Migrated from a single Next.js app into a decoupled monorepo with three independ
 │  Port 5173           │     │  Port 5174            │
 └──────────┬───────────┘     └──────────┬────────────┘
            │                            │
-           │     RTK Query (fetch)      │
+           │     Axios → TanStack Query │
            │                            │
            └────────────┬───────────────┘
                         │
@@ -60,7 +60,7 @@ Fraud_Awarness_Hub_V1/
 │   │   ├── App.jsx        # React Router
 │   │   ├── index.css      # Tailwind + shadcn theme
 │   │   ├── lib/
-│   │   │   ├── api.js     # RTK Query endpoints
+│   │   │   ├── api.js     # TanStack Query hooks
 │   │   │   ├── store.js   # Redux store
 │   │   │   └── utils.js   # cn() helper
 │   │   ├── components/
@@ -142,7 +142,7 @@ Fraud_Awarness_Hub_V1/
 
 1. **Decoupled services** — Backend and frontends are fully independent. Each can be developed, deployed, and scaled separately.
 2. **SQLite over PostgreSQL** — Zero-config for local dev. No Docker needed. Can migrate to PostgreSQL later by swapping the driver.
-3. **RTK Query over raw fetch** — Automatic caching, invalidation, loading states. No manual cache management.
+3. **TanStack Query + Axios** — Automatic caching, invalidation, loading states via TanStack Query. Axios interceptors handle auth, error normalization, and cross-cutting concerns.
 4. **Plain JSX over TypeScript** — Faster iteration for educational project. Types documented via JSDoc where helpful.
 5. **Shared UI components** — Both frontends use identical shadcn primitives. Keep in sync manually.
 

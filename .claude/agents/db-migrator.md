@@ -23,7 +23,7 @@ You are a database migration specialist for the Fraud Awareness Hub. Handle sche
 5. **Update `server.js`**:
    - Update affected endpoints
    - Update `toCamel()` if new columns need conversion
-   - Update RTK Query hooks if response shape changed
+   - Update TanStack Query hooks if response shape changed
 6. **Update frontend `lib/api.js`** if needed
 7. **Document the migration** in commit message
 
