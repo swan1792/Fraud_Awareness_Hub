@@ -127,4 +127,8 @@
   html {
     @apply font-sans;
   }
+  html[lang="my"] body {
+    font-family: "Padauk", "Pyidaungsu", system-ui, sans-serif;
+    line-height: 1.8;
+  }
 }

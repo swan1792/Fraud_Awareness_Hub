@@ -65,7 +65,7 @@ export function ScamPatternsGrid() {
               <SelectContent>
                 <SelectItem value="all">{t("patterns.all")}</SelectItem>
                 {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                  <SelectItem key={cat} value={cat}>{t(`scamCard.categories.${cat}`, cat)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -93,7 +93,7 @@ export function ScamPatternsGrid() {
                     : "bg-white/80 text-gray-600 shadow-sm backdrop-blur-sm hover:bg-gray-100"
                 }`}
               >
-                {cat}
+                {t(`scamCard.categories.${cat}`, cat)}
               </button>
             ))}
           </div>

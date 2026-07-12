@@ -1,0 +1,90 @@
+name: ci
+# CI for Fraud Awareness Hub V1 monorepo.
+# Builds all three services: backend, frontend-client, frontend-admin.
+# Every step is guarded so a fresh repo stays GREEN until you add the matching
+# script/deps — then the check starts enforcing.
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+  workflow_dispatch:
+
+# Kill superseded runs on the same branch/PR (saves Actions minutes).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: backend
+        run: npm ci || npm install
+
+      - name: Start server (health check)
+        working-directory: backend
+        run: |
+          node server.js &
+          sleep 3
+          curl -f http://localhost:3001/api/health || (echo "Health check failed" && exit 1)
+          kill %1 || true
+
+  client:
+    name: frontend-client
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend-client/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend-client
+        run: npm ci || npm install
+
+      - name: Build
+        working-directory: frontend-client
+        run: npm run build
+
+  admin:
+    name: frontend-admin
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend-admin/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend-admin
+        run: npm ci || npm install
+
+      - name: Build
+        working-directory: frontend-admin
+        run: npm run build

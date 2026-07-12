@@ -1,0 +1,59 @@
+# Dependabot — opens PRs when a dependency has a known vulnerability or a newer
+# version. Enable "Dependabot alerts" in Settings > Code security too.
+version: 2
+updates:
+  # Root monorepo (concurrently)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+  # Backend
+  - package-ecosystem: "npm"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+  # Client frontend
+  - package-ecosystem: "npm"
+    directory: "/frontend-client"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+  # Admin frontend
+  - package-ecosystem: "npm"
+    directory: "/frontend-admin"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+
+  # GitHub Actions themselves
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
