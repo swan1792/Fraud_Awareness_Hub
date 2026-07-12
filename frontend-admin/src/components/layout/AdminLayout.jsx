@@ -1,10 +1,12 @@
+import { useState } from "react"
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import { ShieldAlert, LayoutDashboard, AlertTriangle, Users, LogOut } from "lucide-react"
+import { ShieldAlert, LayoutDashboard, Users, LogOut, Menu, X } from "lucide-react"
 import { useAuth } from "@/lib/auth"
 
 export function AdminLayout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleLogout = () => {
     logout()
@@ -27,13 +29,6 @@ export function AdminLayout() {
           >
             <LayoutDashboard className="h-4 w-4" />
             Dashboard
-          </Link>
-          <Link
-            to="/dashboard"
-            className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm"
-          >
-            <AlertTriangle className="h-4 w-4" />
-            Scam Alerts
           </Link>
           {user?.role === "super_admin" && (
             <Link
@@ -67,10 +62,42 @@ export function AdminLayout() {
             <ShieldAlert className="h-5 w-5 text-red-400" />
             <span className="font-bold">Admin Panel</span>
           </div>
-          <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-white transition-colors">
-            Logout
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={handleLogout} className="text-xs text-gray-400 hover:text-white transition-colors">
+              Logout
+            </button>
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="grid size-8 place-items-center rounded-md hover:bg-gray-800 transition-colors"
+            >
+              {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
+          </div>
         </header>
+
+        {/* Mobile Nav Dropdown */}
+        {mobileOpen && (
+          <nav className="md:hidden bg-gray-900 border-t border-gray-700 p-3 space-y-1">
+            <Link
+              to="/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm text-gray-300"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              Dashboard
+            </Link>
+            {user?.role === "super_admin" && (
+              <Link
+                to="/admins"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm text-gray-300"
+              >
+                <Users className="h-4 w-4" />
+                Admin Users
+              </Link>
+            )}
+          </nav>
+        )}
 
         <main className="flex-1 bg-gray-50">
           <Outlet />
