@@ -6,16 +6,16 @@
 - Vite dev server ports: client = 5173, admin = 5174.
 
 ## State Management
-- Global state: Redux Toolkit store in `lib/store.js`.
-- Server state: RTK Query in `lib/api.js`.
+- Server state: TanStack React Query in `lib/api.js`.
 - Local state: `useState` / `useReducer` in components.
-- No other state libraries (no Zustand, no Jotai, no MobX).
+- No other state libraries (no Redux, no Zustand, no Jotai, no MobX).
 
 ## Data Fetching
-- ONLY through RTK Query hooks. Never `fetch()` or `axios` directly.
-- All API calls go to `http://localhost:3001/api`.
-- Use `useGetQuery` for reads, `useCreateMutation` / `useDeleteMutation` for writes.
-- Always provide `providesTags` and `invalidatesTags` for cache management.
+- ONLY through TanStack Query hooks in `lib/api.js`. Never `fetch()` directly.
+- HTTP client: Axios instance in `lib/axios.js` with interceptors for auth and error handling.
+- All API calls go to `http://localhost:3001/api` via the Axios instance.
+- Use `useQuery` for reads, `useMutation` for writes.
+- Always provide `queryKey` and `invalidateQueries` for cache management.
 
 ## Component Guidelines
 - Named exports only: `export function MyComponent() {}`
