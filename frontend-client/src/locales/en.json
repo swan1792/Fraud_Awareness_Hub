@@ -1,4 +1,8 @@
 {
+  "meta": {
+    "title": "Digital Fraud Pattern & Awareness Hub",
+    "description": "Protecting Myanmar from digital banking scams. Learn to identify Fake APKs, phishing links, and social engineering attacks."
+  },
   "nav": {
     "home": "Home",
     "chatSim": "Chat Sim",
@@ -67,6 +71,11 @@
     "clickSuspicious": "Click on suspicious fields"
   },
   "phishing": {
+    "channels": {
+      "SMS": "SMS",
+      "Viber": "Viber",
+      "Email": "Email"
+    },
     "loading": "Loading scenarios...",
     "question": "Question {{current}} of {{total}}",
     "score": "Score: {{score}}/{{total}}",
@@ -155,5 +164,140 @@
     "bankWarning": "A legitimate bank will never ask for your OTP, PIN, or password through chat or phone.",
     "copyright": "Digital Fraud Pattern & Awareness Hub. Educational use only.",
     "adminAccess": "Admin access"
+  },
+  "dialog": {
+    "close": "Close"
+  },
+  "scamPatterns": {
+    "fake-kpay-apk": {
+      "title": "Fake KPay APK",
+      "description": "Scammers send links to download a fake KPay app that steals your login credentials and OTP codes.",
+      "redFlags": [
+        "Download link from unknown Viber/Telegram groups",
+        "App asks for excessive permissions",
+        "Misspelled app name (e.g., 'KPayy' or 'K-Pay')"
+      ],
+      "example": "Download the new KPay Pro APK here: http://kpay-update.xyz/download.apk"
+    },
+    "kbz-otp-phishing": {
+      "title": "KBZ Bank OTP Scam",
+      "description": "A fake SMS or message claiming your KBZ account is locked, asking you to click a link and enter your OTP.",
+      "redFlags": [
+        "Urgent language like 'Account will be locked in 24 hours'",
+        "URL is not kbzbank.com",
+        "Asks for OTP — banks never ask for this"
+      ],
+      "example": "Your KBZ account is locked. Verify now: http://kbz-verify.net/auth"
+    },
+    "wave-money-refund": {
+      "title": "Wave Money Refund Scam",
+      "description": "Caller pretends to be from Wave Money support and claims you're owed a refund, then asks for your PIN.",
+      "redFlags": [
+        "Unsolicited call claiming you have a refund",
+        "Asks for your PIN or OTP over the phone",
+        "Creates urgency: 'Refund expires in 1 hour'"
+      ],
+      "example": "Hello, this is Wave Money support. You have a 50,000 MMK refund. Please share your PIN to process it."
+    },
+    "viber-investment": {
+      "title": "Viber Investment Group",
+      "description": "A Viber group promising guaranteed returns on crypto or forex trading, targeting Myanmar users with fake testimonials.",
+      "redFlags": [
+        "Promises of guaranteed high returns (e.g., '50% per week')",
+        "Pressure to recruit friends for bonuses",
+        "Fake screenshots of profits from 'members'"
+      ],
+      "example": "Join our VIP trading group! Guaranteed 30% profit weekly. Send 100,000 MMK to start. Limited spots!"
+    },
+    "delivery-scam": {
+      "title": "Parcel Delivery Phishing",
+      "description": "Fake delivery notification claiming you have a package stuck at customs, requesting a 'clearance fee' via mobile payment.",
+      "redFlags": [
+        "You didn't order anything",
+        "Asks for payment via mobile wallet before delivery",
+        "Generic message with no tracking details"
+      ],
+      "example": "Your parcel is held at customs. Pay 15,000 MMK clearance fee via Wave Money: http://parcel-mm.com/pay"
+    },
+    "gov-subsidy": {
+      "title": "Government Subsidy Scam",
+      "description": "Fake government website claiming to offer COVID-19 or disaster relief subsidies, collecting personal and financial data.",
+      "redFlags": [
+        "Domain is not a .gov.mm site",
+        "Asks for bank account details to 'deposit subsidy'",
+        "Poor grammar and unofficial logos"
+      ],
+      "example": "Apply for 200,000 MMK government relief: http://gov-mm-relief.com/register"
+    }
+  },
+  "gameScenarios": {
+    "game-1": {
+      "sender": "KBZ-Bank",
+      "message": "Your KBZ account is temporarily locked due to unusual activity. Verify your identity immediately: http://kbz-secure-login.com/verify",
+      "explanation": "KBZ Bank will never send verification links via SMS. The URL 'kbz-secure-login.com' is not the official kbzbank.com domain.",
+      "redFlags": [
+        "Fake urgency: 'temporarily locked'",
+        "Suspicious URL not matching official domain",
+        "Banks never ask you to verify via SMS links"
+      ]
+    },
+    "game-2": {
+      "sender": "Ma Sandar",
+      "message": "Hey! I just got 50,000 MMK free from this government program. Register here before it ends today: http://myanmar-relief.org",
+      "explanation": "This is a classic social engineering attack. Government programs use official .gov.mm domains, and real programs don't require urgent registration via Viber links.",
+      "redFlags": [
+        "Pressure to act quickly ('before it ends today')",
+        "Non-government domain (.org instead of .gov.mm)",
+        "Unsolicited message from a contact about money"
+      ]
+    },
+    "game-3": {
+      "sender": "Wave Money <support@wavemoney.com.mm>",
+      "message": "Dear customer, your Wave Money account has been credited with 100,000 MMK from a recent transfer. Log in to view: https://www.wavemoney.com.mm/login",
+      "explanation": "This message uses the official Wave Money domain and directs you to the real website rather than asking for credentials in the message itself.",
+      "redFlags": []
+    },
+    "game-4": {
+      "sender": "KPay Official",
+      "message": "KPay system maintenance notice: All users must update their app now or lose access. Download the latest version: http://kpay-maintenance.apk",
+      "explanation": "Legitimate apps update through official app stores (Google Play, App Store), not through direct APK download links shared on Viber.",
+      "redFlags": [
+        "Direct APK download link instead of app store",
+        "Creates panic with 'lose access' threat",
+        "Sender name 'KPay Official' on Viber is not verified"
+      ]
+    },
+    "game-5": {
+      "sender": "+959-123-456-789",
+      "message": "Your OTP for Wave Money transfer is 847256. Do not share this code with anyone. - Wave Money",
+      "explanation": "This is a standard OTP message. Note that it warns you NOT to share the code — a real OTP message will never ask you to share it with anyone.",
+      "redFlags": []
+    },
+    "game-6": {
+      "sender": "Myanmar Post <delivery@myanmar-post-service.com>",
+      "message": "Your package (ID: MMK-29481) is held at Yangon customs. Pay 25,000 MMK processing fee via KBZPay to release: http://customs-fee-mm.com",
+      "explanation": "Myanmar Post uses the official domain myanmarpost.mm. Real customs fees are paid at the post office, not through third-party payment links.",
+      "redFlags": [
+        "Non-official email domain",
+        "Asks for payment via mobile wallet link",
+        "Suspicious URL for customs payment"
+      ]
+    },
+    "game-7": {
+      "sender": "U Aung Kyaw",
+      "message": "Congratulations! You've been selected for a special investment opportunity. Guaranteed 200% return in 7 days. Send 50,000 MMK to start. This offer expires in 2 hours!",
+      "explanation": "No legitimate investment guarantees returns. The extreme urgency ('2 hours') and unrealistic returns ('200% in 7 days') are classic scam tactics.",
+      "redFlags": [
+        "Guaranteed high returns are always a scam",
+        "Extreme artificial urgency",
+        "Asks for money upfront via message"
+      ]
+    },
+    "game-8": {
+      "sender": "KBZ Bank <noreply@kbzbank.com>",
+      "message": "Dear valued customer, KBZ Bank will never ask for your password, PIN, or OTP via email, SMS, or phone. If you receive suspicious messages, please call our hotline at 01-234-5678. Stay safe!",
+      "explanation": "This is a genuine security awareness message from KBZ Bank. It uses the official domain and does NOT ask for any personal information — instead, it warns you about scams.",
+      "redFlags": []
+    }
   }
 }
