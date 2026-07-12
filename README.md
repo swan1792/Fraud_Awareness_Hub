@@ -13,12 +13,12 @@ Fraud_Awarness_Hub_V1/
 ├── frontend-client/          # Public-facing React 19 app (Vite, port 5173)
 │   └── src/
 │       ├── components/       # UI + feature components
-│       ├── lib/              # RTK Query API, store, utils
+│       ├── lib/              # TanStack Query hooks, Axios, utils
 │       └── pages/            # Route pages
 ├── frontend-admin/           # Admin dashboard React 19 app (Vite, port 5174)
 │   └── src/
 │       ├── components/       # UI + admin layout
-│       ├── lib/              # RTK Query API, store, utils
+│       ├── lib/              # TanStack Query hooks, Axios, utils
 │       └── pages/            # Dashboard page
 └── package.json              # Root scripts with concurrently
 ```
@@ -40,6 +40,8 @@ npm run dev:admin      # Admin app on :5174
 
 ## API Endpoints (backend on port 3001)
 
+### Scam Alerts
+
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | /api/alerts | List all scam alerts |
@@ -47,16 +49,42 @@ npm run dev:admin      # Admin app on :5174
 | POST | /api/alerts | Create alert |
 | PUT | /api/alerts/:id | Update alert |
 | DELETE | /api/alerts/:id | Delete alert |
+
+### Scam Patterns
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | GET | /api/patterns | List all scam patterns |
 | GET | /api/patterns/:id | Get single pattern |
+
+### Game Scenarios
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | GET | /api/scenarios | List game scenarios |
 | GET | /api/scenarios/:id | Get single scenario |
+
+### Stats
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
 | GET | /api/stats | Get hub stats |
+
+### Authentication (Admin)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/auth/login | Admin login |
+| POST | /api/auth/register | Register admin (super_admin only) |
+| GET | /api/auth/admins | List all admins |
+| POST | /api/auth/admins | Create admin (super_admin only) |
+| DELETE | /api/auth/admins/:id | Delete admin (super_admin only) |
 
 ## Route Mapping (Next.js → React Router)
 
 ### frontend-client (port 5173)
-- `/` → Landing page (Hero + ScamPatternsGrid + CTA)
+- `/` → Landing page (Hero + ScamPatternsGrid + ScamAlertsSection + CTA)
+- `/alerts` → Scam alerts page with category filter
 - `/game` → Phishing or Not? game
 - `/simulator` → Scammer Chat Simulator
 - `/spot-fake` → Spot the Fake Slip game
@@ -66,6 +94,6 @@ npm run dev:admin      # Admin app on :5174
 
 ## Tech Stack
 
-- **Backend**: Express.js, SQLite3 (via `sqlite` and `sqlite3` packages), CORS
-- **Frontend**: React 19, Vite 6, Tailwind CSS 4, shadcn/ui, Redux Toolkit + RTK Query, React Router 7
+- **Backend**: Express.js, SQLite3 (via `sqlite` and `sqlite3` packages), CORS, bcrypt
+- **Frontend**: React 19, Vite 6, Tailwind CSS 4, shadcn/ui, TanStack React Query, Axios, React Router 7, i18next
 - **UI Primitives**: @base-ui/react
