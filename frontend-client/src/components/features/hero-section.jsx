@@ -1,10 +1,12 @@
 import { useTranslation } from "react-i18next"
 import { AlertTriangle, ShieldCheck } from "lucide-react"
-import { useStatsQuery } from "@/lib/api"
+import { useStatsQuery, useAlertsQuery } from "@/lib/api"
 
 export function HeroSection() {
   const { t } = useTranslation()
   const { data: hubStats = [] } = useStatsQuery()
+  const { data: alerts = [] } = useAlertsQuery()
+  const latestAlert = alerts[0]
 
   return (
     <section className="relative overflow-hidden text-red-950">
@@ -42,10 +44,10 @@ export function HeroSection() {
           <AlertTriangle className="size-10 sm:size-14 text-red-500 mt-0.5" />
           <div className="min-w-0 flex-1">
             <h2 className="font-semibold text-lg sm:text-2xl text-red-500">
-              {t("hero.warningBanner")}
+              {latestAlert?.title || t("hero.warningBanner")}
             </h2>
             <p className="text-slate-300 mt-1 text-sm sm:text-base">
-              {t("hero.warningMessage")}
+              {latestAlert?.description || t("hero.warningMessage")}
             </p>
           </div>
         </div>
