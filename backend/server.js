@@ -81,17 +81,19 @@ db.run('PRAGMA journal_mode = WAL')
 db.run('PRAGMA foreign_keys = ON')
 
 function initDb() {
-  const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8')
-  db.exec(schema, (err) => {
-    if (err) {
-      logger.error('Database initialization failed:', err.message)
-    } else {
-      logger.info('Database initialized successfully')
-    }
+  return new Promise((resolve, reject) => {
+    const schema = fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8')
+    db.exec(schema, (err) => {
+      if (err) {
+        logger.error('Database initialization failed:', err.message)
+        reject(err)
+      } else {
+        logger.info('Database initialized successfully')
+        resolve()
+      }
+    })
   })
 }
-
-initDb()
 
 // ─── Helpers ──────────────────────────────────────────────────
 function toCamel(row) {
@@ -168,8 +170,6 @@ function seedAdmin() {
     )
   })
 }
-
-seedAdmin()
 
 // ─── Health Check ─────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
@@ -451,9 +451,18 @@ app.use((err, req, res, _next) => {
 })
 
 // ─── Start Server ─────────────────────────────────────────────
-const server = app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT} [${NODE_ENV}]`)
-})
+let server
+initDb()
+  .then(() => seedAdmin())
+  .then(() => {
+    server = app.listen(PORT, () => {
+      logger.info(`Server running on port ${PORT} [${NODE_ENV}]`)
+    })
+  })
+  .catch((err) => {
+    logger.error('Failed to start server:', err.message)
+    process.exit(1)
+  })
 
 // ─── Graceful Shutdown ────────────────────────────────────────
 function shutdown(signal) {
