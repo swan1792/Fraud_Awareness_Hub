@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tag } from "lucide-react"
-import { usePatternsQuery } from "@/lib/api"
+import { useAlertsQuery } from "@/lib/api"
 import { ScamCard } from "./scam-card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -9,7 +9,7 @@ const categories = ["Fake APK", "Phishing Link", "Social Engineering"]
 
 export function ScamPatternsGrid() {
   const { t } = useTranslation()
-  const { data: patterns = [], isLoading } = usePatternsQuery()
+  const { data: patterns = [], isLoading } = useAlertsQuery()
   const [activeFilter, setActiveFilter] = useState(null)
 
   const filteredPatterns = activeFilter

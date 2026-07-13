@@ -4,7 +4,7 @@ import apiClient from './axios'
 export function useAlertsQuery() {
   return useQuery({
     queryKey: ['alerts'],
-    queryFn: () => apiClient.get('/alerts').then((res) => res.data),
+    queryFn: () => apiClient.get('/alerts?all=true').then((res) => res.data),
   })
 }
 
@@ -26,6 +26,18 @@ export function useDeleteAlertMutation() {
   return useMutation({
     mutationFn: (id) =>
       apiClient.delete(`/alerts/${id}`).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+    },
+  })
+}
+
+export function useUpdateAlertStatusMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, status }) =>
+      apiClient.put(`/alerts/${id}/status`, { status }).then((res) => res.data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['alerts'] })
     },

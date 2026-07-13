@@ -14,9 +14,12 @@ CREATE TABLE IF NOT EXISTS admin_users (
 CREATE TABLE IF NOT EXISTS scam_alerts (
   id TEXT PRIMARY KEY,
   title TEXT NOT NULL,
+  title_my TEXT,
   category TEXT NOT NULL CHECK(category IN ('Fake APK', 'Phishing Link', 'Social Engineering')),
   description TEXT NOT NULL,
-  date TEXT NOT NULL
+  description_my TEXT,
+  date TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'published' CHECK(status IN ('draft', 'published'))
 );
 
 -- Scam Patterns (read-only reference data)
@@ -42,11 +45,11 @@ CREATE TABLE IF NOT EXISTS game_scenarios (
 );
 
 -- Seed: scam_alerts
-INSERT OR IGNORE INTO scam_alerts (id, title, category, description, date) VALUES
-('alert-001', 'Fake KPay APK Spreading via Viber', 'Fake APK', 'A malicious APK disguised as a KPay update is being shared in Viber groups across Yangon. The app steals login credentials and OTP codes.', '2026-07-01'),
-('alert-002', 'KBZ Bank OTP Phishing SMS', 'Phishing Link', 'Mass SMS campaign targeting KBZ customers with fake ''account locked'' messages containing phishing links to kbz-verify.net.', '2026-06-28'),
-('alert-003', 'Wave Money Refund Phone Scam', 'Social Engineering', 'Scammers calling Wave Money users claiming they have a pending refund, then asking for PIN codes to ''process'' the refund.', '2026-06-25'),
-('alert-004', 'Fake Government Relief Website', 'Phishing Link', 'A website at gov-mm-relief.com is collecting personal and bank account details by impersonating a government subsidy program.', '2026-06-20');
+INSERT OR IGNORE INTO scam_alerts (id, title, title_my, category, description, description_my, date, status) VALUES
+('alert-001', 'Fake KPay APK Spreading via Viber', 'Viber တွင် ဖြန့်ဝေနေသော KPay APK အတု', 'Fake APK', 'A malicious APK disguised as a KPay update is being shared in Viber groups across Yangon. The app steals login credentials and OTP codes.', 'KPay update အဖြစ် ထိုးဖောက်ထားသော malware APK တစ်ခုကို ရန်ကုန်တစ်ဝိုက်ရှိ Viber ဂရုပ်များတွင် ဖြန့်ဝေနေပါသည်။ အဆိုပါ app သည် login credentials နှင့် OTP codes များကို ခိုးယူပါသည်။', '2026-07-01', 'published'),
+('alert-002', 'KBZ Bank OTP Phishing SMS', 'KBZ Bank OTP phishing SMS', 'Phishing Link', 'Mass SMS campaign targeting KBZ customers with fake ''account locked'' messages containing phishing links to kbz-verify.net.', 'KBZ ဖောက်သည်များကို ပစ်မှတ်ထား၍ ''account locked'' မက်ဆေ့ခ်ျအတုများဖြင့် kbz-verify.net သို့ phishing link များ ပါဝင်သော SMS စည်းရုံးလှုပ်ရှားမှုကြီး ဖြစ်ပေါ်နေပါသည်။', '2026-06-28', 'published'),
+('alert-003', 'Wave Money Refund Phone Scam', 'Wave Money ငွေပြန်အမ်းခေါ်ဆိုမှု လိမ်လည်မှု', 'Social Engineering', 'Scammers calling Wave Money users claiming they have a pending refund, then asking for PIN codes to ''process'' the refund.', 'လိမ်လည်သူများသည် Wave Money သုံးစွဲသူများကို ခေါ်ဆို၍ ငွေပြန်အမ်းရန်ရှိနေကြောင်း ပြောဆိုပြီး ငွေပြန်အမ်းရန် PIN codes ကို တောင်းခံပါသည်။', '2026-06-25', 'published'),
+('alert-004', 'Fake Government Relief Website', 'အစိုးရ ကယ်ဆယ်ရေးဝက်ဘ်ဆိုက်အတု', 'Phishing Link', 'A website at gov-mm-relief.com is collecting personal and bank account details by impersonating a government subsidy program.', 'gov-mm-relief.com ရှိ ဝက်ဘ်ဆိုက်တစ်ခုသည် အစိုးရအကူအညီထောက်ပံ့ရေးအစီအစဉ်အဖြစ် ထိုးဖောက်၍ ကိုယ်ရေးအချက်အလက်နှင့် ဘဏ်အကောင်ထည်များကို စုဆောင်းနေပါသည်။', '2026-06-20', 'published');
 
 -- Seed: scam_patterns
 INSERT OR IGNORE INTO scam_patterns (id, title, category, description, red_flags, example, icon) VALUES

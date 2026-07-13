@@ -21,6 +21,12 @@ const iconMap = {
   landmark: Landmark,
 }
 
+const categoryIcons = {
+  "Fake APK": Download,
+  "Phishing Link": Link,
+  "Social Engineering": Phone,
+}
+
 const categoryColors = {
   "Fake APK": "bg-orange-100 text-orange-800",
   "Phishing Link": "bg-blue-100 text-blue-800",
@@ -42,20 +48,41 @@ const categoryGlows = {
 export function ScamCard({ pattern }) {
   const { t, i18n } = useTranslation()
   const [isFlipped, setIsFlipped] = useState(false)
-  const Icon = iconMap[pattern.icon] || AlertTriangle
+  const Icon = iconMap[pattern.icon] || categoryIcons[pattern.category] || AlertTriangle
   const gradient = categoryGradients[pattern.category] || "from-red-500 to-orange-500"
   const glow = categoryGlows[pattern.category] || "group-hover:shadow-red-200/70"
   const categoryLabel = t(`scamCard.categories.${pattern.category}`, pattern.category)
 
-  // Get translated pattern content, falling back to API data
+  // Check if this is an alert (has titleMy/descriptionMy) or a pattern (has redFlags/icon)
+  const isAlert = !pattern.redFlags && !pattern.icon
+  const lang = i18n.language
+
+  // Check if Myanmar translation is available for alerts
+  const hasMyanmar = isAlert && !!(pattern.titleMy || pattern.descriptionMy)
+
+  // For alerts: use language-specific fields, fall back to English
+  // For patterns: use i18n translation keys, fall back to API data
   const patternKey = `scamPatterns.${pattern.id}`
-  const title = t(`${patternKey}.title`, pattern.title)
-  const description = t(`${patternKey}.description`, pattern.description)
+  const title = isAlert
+    ? (lang === "my" && pattern.titleMy ? pattern.titleMy : pattern.title)
+    : t(`${patternKey}.title`, pattern.title)
+  const description = isAlert
+    ? (lang === "my" && pattern.descriptionMy ? pattern.descriptionMy : pattern.description)
+    : t(`${patternKey}.description`, pattern.description)
+
   let redFlags = pattern.redFlags
-  try {
-    const translated = i18n.getResource(i18n.language, 'translation', `${patternKey}.redFlags`)
-    if (Array.isArray(translated)) redFlags = translated
-  } catch (e) { /* use API fallback */ }
+  if (!isAlert) {
+    try {
+      const translated = i18n.getResource(i18n.language, 'translation', `${patternKey}.redFlags`)
+      if (Array.isArray(translated)) redFlags = translated
+    } catch (e) { /* use API fallback */ }
+  }
+
+  // For alerts (no redFlags), split description into warning points
+  const hasRedFlags = Array.isArray(redFlags) && redFlags.length > 0
+  const warningPoints = !hasRedFlags
+    ? description.split(/[.!?]+/).filter((s) => s.trim().length > 10).slice(0, 3)
+    : []
 
   const handleTap = useCallback(() => {
     setIsFlipped((prev) => !prev)
@@ -92,6 +119,11 @@ export function ScamCard({ pattern }) {
             <div className="mt-5 sm:mt-7">
               <h3 className="text-lg sm:text-xl font-bold tracking-tight text-gray-950">{title}</h3>
               <p className="mt-2 sm:mt-3 text-sm sm:text-[15px] leading-6 sm:leading-7 text-gray-600">{description}</p>
+              {isAlert && lang === "my" && !hasMyanmar && (
+                <p className="mt-2 text-xs text-amber-600 bg-amber-50 rounded-md px-2 py-1 inline-block">
+                  Myanmar text is not available
+                </p>
+              )}
             </div>
 
             {/* Tap instruction (mobile) + Hover instruction (desktop) */}
@@ -123,13 +155,13 @@ export function ScamCard({ pattern }) {
                 </div>
               </div>
               <span className="rounded-full bg-red-100 px-2 sm:px-2.5 py-1 text-xs font-bold text-red-700">
-                {redFlags.length}
+                {hasRedFlags ? redFlags.length : warningPoints.length}
               </span>
             </div>
 
-            {/* Red flags */}
+            {/* Red flags or Warning points */}
             <ul className="mt-4 sm:mt-5 space-y-2 sm:space-y-3">
-              {redFlags.map((flag, index) => (
+              {(hasRedFlags ? redFlags : warningPoints).map((flag, index) => (
                 <li
                   key={`${flag}-${index}`}
                   className="flex items-start gap-2 sm:gap-3 rounded-xl border border-red-500 bg-red-50/70 px-3 py-2.5 sm:px-3.5 sm:py-3"
@@ -137,7 +169,7 @@ export function ScamCard({ pattern }) {
                   <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-red-500 text-[10px] sm:text-[11px] font-bold text-white">
                     {index + 1}
                   </span>
-                  <span className="text-xs sm:text-sm font-medium leading-5 text-red-950">{flag}</span>
+                  <span className="text-xs sm:text-sm font-medium leading-5 text-red-950">{flag.trim()}</span>
                 </li>
               ))}
             </ul>
