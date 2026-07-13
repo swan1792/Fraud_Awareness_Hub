@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import {
   MessageSquare,
@@ -24,7 +24,15 @@ const channelConfig = {
 export function PhishingGame() {
   const { t, i18n } = useTranslation()
   const { data: allScenarios = [], isLoading } = useScenariosQuery()
-  const scenarios = useMemo(() => [...allScenarios].sort(() => Math.random() - 0.5), [allScenarios])
+  const scenariosRef = useRef([])
+
+  useEffect(() => {
+    if (allScenarios.length > 0) {
+      scenariosRef.current = [...allScenarios].sort(() => Math.random() - 0.5)
+    }
+  }, [allScenarios])
+
+  const scenarios = scenariosRef.current
   const [currentIndex, setCurrentIndex] = useState(0)
   const [gameState, setGameState] = useState("playing")
   const [score, setScore] = useState(0)

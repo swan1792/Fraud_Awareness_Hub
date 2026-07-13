@@ -2,8 +2,9 @@ import { useState, useCallback } from "react"
 import { useTranslation } from "react-i18next"
 import { CheckCircle2, AlertTriangle, RotateCcw, Eye, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SPOT_FAKE_ANOMALY_IDS } from "@/lib/game-data"
 
-const anomalyIds = ["transaction-id", "amount", "date"]
+const anomalyIds = SPOT_FAKE_ANOMALY_IDS
 
 export function SpotTheFakeGame() {
   const { t } = useTranslation()
