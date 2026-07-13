@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react"
-import { Plus, Trash2, AlertTriangle, Loader2 } from "lucide-react"
+import { Plus, Pencil, Trash2, AlertTriangle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -13,6 +13,7 @@ import { useToast } from "@/lib/use-toast"
 import {
   useAlertsQuery,
   useCreateAlertMutation,
+  useUpdateAlertMutation,
   useDeleteAlertMutation,
 } from "@/lib/api"
 
@@ -27,13 +28,22 @@ const categories = ["Fake APK", "Phishing Link", "Social Engineering"]
 export function DashboardPage() {
   const { data: alerts = [], isLoading } = useAlertsQuery()
   const createAlert = useCreateAlertMutation()
+  const updateAlert = useUpdateAlertMutation()
   const deleteAlert = useDeleteAlertMutation()
   const { toasts, toast, dismiss } = useToast()
 
+  // Create dialog state
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newAlert, setNewAlert] = useState({ title: "", category: "", description: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Edit dialog state
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [editingAlert, setEditingAlert] = useState(null)
+  const [editForm, setEditForm] = useState({ title: "", category: "", description: "" })
+  const [isUpdating, setIsUpdating] = useState(false)
+
+  // Delete dialog state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [alertToDelete, setAlertToDelete] = useState(null)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -56,6 +66,32 @@ export function DashboardPage() {
       setIsSubmitting(false)
     }
   }, [newAlert, createAlert, toast])
+
+  const handleEditClick = useCallback((alert) => {
+    setEditingAlert(alert)
+    setEditForm({ title: alert.title, category: alert.category, description: alert.description })
+    setIsEditDialogOpen(true)
+  }, [])
+
+  const handleUpdateAlert = useCallback(async () => {
+    if (!editForm.title || !editForm.category || !editForm.description) return
+    setIsUpdating(true)
+    try {
+      await updateAlert.mutateAsync({
+        id: editingAlert.id,
+        title: editForm.title,
+        category: editForm.category,
+        description: editForm.description,
+      })
+      setIsEditDialogOpen(false)
+      setEditingAlert(null)
+      toast({ title: "Alert updated", variant: "success" })
+    } catch (error) {
+      toast({ title: "Failed to update alert", description: error.message, variant: "error" })
+    } finally {
+      setIsUpdating(false)
+    }
+  }, [editForm, editingAlert, updateAlert, toast])
 
   const handleDeleteClick = useCallback((alert) => {
     setAlertToDelete(alert)
@@ -203,7 +239,7 @@ export function DashboardPage() {
                 <TableHead>Title</TableHead>
                 <TableHead className="w-[150px]">Category</TableHead>
                 <TableHead className="w-[120px]">Date</TableHead>
-                <TableHead className="w-[80px] text-right">Actions</TableHead>
+                <TableHead className="w-[100px] text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -222,15 +258,25 @@ export function DashboardPage() {
                   </TableCell>
                   <TableCell className="text-sm text-gray-500">{alert.date}</TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteClick(alert)}
-                      disabled={isDeleting}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center justify-end gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditClick(alert)}
+                        className="text-gray-600 hover:text-gray-700 hover:bg-gray-50"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteClick(alert)}
+                        disabled={isDeleting}
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -238,6 +284,79 @@ export function DashboardPage() {
           </Table>
         </div>
       )}
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Alert</DialogTitle>
+            <DialogDescription>
+              Update the scam alert details below.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-title">Title</Label>
+              <Input
+                id="edit-title"
+                placeholder="e.g., Fake KPay APK Spreading via Viber"
+                value={editForm.title}
+                onChange={(e) => setEditForm((prev) => ({ ...prev, title: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-category">Category</Label>
+              <Select
+                value={editForm.category}
+                onValueChange={(value) => setEditForm((prev) => ({ ...prev, category: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-description">Description</Label>
+              <Textarea
+                id="edit-description"
+                placeholder="Describe the scam pattern, how it works, and what users should watch out for..."
+                rows={4}
+                value={editForm.description}
+                onChange={(e) => setEditForm((prev) => ({ ...prev, description: e.target.value }))}
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} disabled={isUpdating}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateAlert}
+              disabled={!editForm.title || !editForm.category || !editForm.description || isUpdating}
+            >
+              {isUpdating ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Updating...
+                </>
+              ) : (
+                "Save Changes"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
