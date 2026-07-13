@@ -95,6 +95,8 @@ export class PhoneUI extends Phaser.Scene {
       { id: "notebook", name: "Notebook", icon: "📝", color: 0x795548 },
       { id: "map", name: "Map", icon: "🗺️", color: 0x009688 },
       { id: "evidence", name: "Evidence", icon: "🔍", color: 0xf44336 },
+      { id: "save", name: "Save", icon: "💾", color: 0x607d8b },
+      { id: "load", name: "Load", icon: "📂", color: 0x3f51b5 },
     ]
 
     const cols = 3
@@ -154,6 +156,8 @@ export class PhoneUI extends Phaser.Scene {
       case "notebook": this.showNotebook(screenX, screenY + 20, screenW, screenH - 30); break
       case "map": this.showMap(screenX, screenY + 20, screenW, screenH - 30); break
       case "evidence": this.showEvidence(screenX, screenY + 20, screenW, screenH - 30); break
+      case "save": this.showSave(screenX, screenY + 20, screenW, screenH - 30); break
+      case "load": this.showLoad(screenX, screenY + 20, screenW, screenH - 30); break
     }
   }
 
@@ -688,6 +692,232 @@ export class PhoneUI extends Phaser.Scene {
       })
 
     this.currentScreen.add([bg, title])
+  }
+
+  // ─── SAVE APP ───
+  showSave(x, y, w, h) {
+    this.currentScreen = this.add.container(0, 0)
+
+    const bg = this.add.graphics()
+    bg.fillStyle(0x1a1a1a, 1)
+    bg.fillRoundedRect(x, y, w, h - 40, 8)
+
+    const title = this.add.text(x + 10, y + 8, "💾 Save Game", {
+      font: "bold 13px Arial",
+      color: "#607d8b",
+    })
+
+    fetch("http://localhost:3001/api/saves")
+      .then(res => res.json())
+      .then(saves => {
+        if (saves.length === 0) {
+          const empty = this.add.text(x + w / 2, y + 60, "No save slots available", {
+            font: "10px Arial", color: "#888888",
+          }).setOrigin(0.5)
+          this.currentScreen.add(empty)
+          return
+        }
+
+        saves.forEach((save, i) => {
+          const sy = y + 35 + i * 55
+          if (sy > y + h - 60) return
+
+          const card = this.add.graphics()
+          const isEmpty = !save.hasData
+          card.fillStyle(isEmpty ? 0x222233 : 0x1a2a3a, 0.9)
+          card.fillRoundedRect(x + 5, sy, w - 10, 48, 8)
+          card.lineStyle(isEmpty ? 1 : 2, isEmpty ? 0x444444 : 0x607d8b)
+          card.strokeRoundedRect(x + 5, sy, w - 10, 48, 8)
+
+          const slotName = this.add.text(x + 15, sy + 6, save.slotName, {
+            font: "bold 10px Arial", color: "#ffffff",
+          })
+
+          const info = this.add.text(x + 15, sy + 22, isEmpty ? "Empty Slot" : `Lv.${save.level} • ${save.location} • ${Math.floor((save.playTime || 0) / 60)}m`, {
+            font: "8px Arial", color: isEmpty ? "#666666" : "#aaaaaa",
+          })
+
+          const time = this.add.text(x + w - 15, sy + 6, save.hasData ? save.updatedAt?.split("T")[0] : "", {
+            font: "8px Arial", color: "#666666",
+          }).setOrigin(1, 0)
+
+          // Save button
+          const saveBtn = this.add.text(x + w - 30, sy + 30, "💾 Save", {
+            font: "bold 9px Arial", color: "#607d8b",
+            backgroundColor: "#222233", padding: { x: 6, y: 3 },
+          }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true })
+
+          saveBtn.on("pointerdown", () => {
+            this.doSave(save.slotNumber)
+          })
+
+          this.currentScreen.add([card, slotName, info, time, saveBtn])
+        })
+      })
+      .catch(() => {
+        const err = this.add.text(x + w / 2, y + 60, "Failed to load saves", {
+          font: "10px Arial", color: "#ff4444",
+        }).setOrigin(0.5)
+        this.currentScreen.add(err)
+      })
+
+    this.currentScreen.add([bg, title])
+  }
+
+  doSave(slotNumber) {
+    const saveData = { currentLocation: "neighborhood", timestamp: new Date().toISOString() }
+    fetch("http://localhost:3001/api/saves", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slotNumber, saveData }),
+    })
+    .then(res => res.json())
+    .then(result => {
+      const { width, height } = this.cameras.main
+      const toast = this.add.text(width / 2, height / 2, "✅ Game Saved!", {
+        font: "bold 14px Arial", color: "#4caf50",
+        backgroundColor: "#000000aa", padding: { x: 12, y: 8 },
+      }).setOrigin(0.5)
+      this.currentScreen?.add(toast)
+      this.time.delayedCall(1500, () => toast.destroy())
+    })
+    .catch(err => {
+      console.error("Save failed:", err)
+      const { width, height } = this.cameras.main
+      const toast = this.add.text(width / 2, height / 2, "❌ Save Failed!", {
+        font: "bold 14px Arial", color: "#ff4444",
+        backgroundColor: "#000000aa", padding: { x: 12, y: 8 },
+      }).setOrigin(0.5)
+      this.currentScreen?.add(toast)
+      this.time.delayedCall(1500, () => toast.destroy())
+    })
+  }
+
+  // ─── LOAD APP ───
+  showLoad(x, y, w, h) {
+    this.currentScreen = this.add.container(0, 0)
+
+    const bg = this.add.graphics()
+    bg.fillStyle(0x1a1a1a, 1)
+    bg.fillRoundedRect(x, y, w, h - 40, 8)
+
+    const title = this.add.text(x + 10, y + 8, "📂 Load Game", {
+      font: "bold 13px Arial",
+      color: "#3f51b5",
+    })
+
+    fetch("http://localhost:3001/api/saves")
+      .then(res => res.json())
+      .then(saves => {
+        const loadData = saves.filter(s => s.hasData)
+
+        if (loadData.length === 0) {
+          const empty = this.add.text(x + w / 2, y + 60, "No saved games found.\nSave your progress first!", {
+            font: "10px Arial", color: "#888888", align: "center",
+          }).setOrigin(0.5)
+          this.currentScreen.add(empty)
+          return
+        }
+
+        loadData.forEach((save, i) => {
+          const sy = y + 35 + i * 65
+          if (sy > y + h - 70) return
+
+          const card = this.add.graphics()
+          card.fillStyle(0x1a2a3a, 0.9)
+          card.fillRoundedRect(x + 5, sy, w - 10, 58, 8)
+          card.lineStyle(2, 0x3f51b5)
+          card.strokeRoundedRect(x + 5, sy, w - 10, 58, 8)
+
+          const slotName = this.add.text(x + 15, sy + 6, save.slotName, {
+            font: "bold 11px Arial", color: "#ffffff",
+          })
+
+          const info = this.add.text(x + 15, sy + 22, `Level ${save.level} • ${save.location}`, {
+            font: "9px Arial", color: "#aaaaaa",
+          })
+
+          const time = this.add.text(x + 15, sy + 36, `Saved: ${save.updatedAt?.split("T")[0] || "Unknown"}`, {
+            font: "8px Arial", color: "#666666",
+          })
+
+          // Load button
+          const loadBtn = this.add.text(x + w - 30, sy + 20, "📂 Load", {
+            font: "bold 10px Arial", color: "#3f51b5",
+            backgroundColor: "#1a1a2e", padding: { x: 8, y: 4 },
+          }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true })
+
+          loadBtn.on("pointerdown", () => {
+            this.doLoad(save.id)
+          })
+
+          // Delete button
+          const delBtn = this.add.text(x + w - 30, sy + 42, "🗑️ Delete", {
+            font: "8px Arial", color: "#ff4444",
+          }).setOrigin(1, 0.5).setInteractive({ useHandCursor: true })
+
+          delBtn.on("pointerdown", () => {
+            this.doDeleteSave(save.id)
+          })
+
+          this.currentScreen.add([card, slotName, info, time, loadBtn, delBtn])
+        })
+      })
+      .catch(() => {
+        const err = this.add.text(x + w / 2, y + 60, "Failed to load saves", {
+          font: "10px Arial", color: "#ff4444",
+        }).setOrigin(0.5)
+        this.currentScreen.add(err)
+      })
+
+    this.currentScreen.add([bg, title])
+  }
+
+  doLoad(saveId) {
+    const { width, height } = this.cameras.main
+    const loading = this.add.text(width / 2, height / 2, "Loading...", {
+      font: "bold 14px Arial", color: "#ffffff",
+      backgroundColor: "#000000aa", padding: { x: 12, y: 8 },
+    }).setOrigin(0.5)
+    this.currentScreen?.add(loading)
+
+    fetch(`http://localhost:3001/api/saves/${saveId}/load`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    })
+    .then(res => res.json())
+    .then(result => {
+      loading.setText("✅ Game Loaded!")
+      loading.setColor("#4caf50")
+      this.time.delayedCall(1000, () => {
+        loading.destroy()
+        this.close()
+        // Restart the world scene to apply loaded state
+        window.location.reload()
+      })
+    })
+    .catch(err => {
+      console.error("Load failed:", err)
+      loading.setText("❌ Load Failed!")
+      loading.setColor("#ff4444")
+      this.time.delayedCall(1500, () => loading.destroy())
+    })
+  }
+
+  doDeleteSave(saveId) {
+    fetch(`http://localhost:3001/api/saves/${saveId}`, { method: "DELETE" })
+      .then(res => res.json())
+      .then(() => {
+        // Refresh the load screen
+        this.closeApp()
+        const { width, height } = this.cameras.main
+        const phoneW = Math.min(320, width - 40)
+        const phoneH = Math.min(500, height - 40)
+        const phoneX = (width - phoneW) / 2
+        const phoneY = (height - phoneH) / 2
+        this.showLoad(phoneX + 8, phoneY + 60, phoneW - 16, phoneH - 90)
+      })
+      .catch(err => console.error("Delete save failed:", err))
   }
 
   open() {

@@ -614,3 +614,26 @@ INSERT OR IGNORE INTO player_stats (id, player_id, level, xp, xp_to_next, total_
  '["Newcomer"]',
  '[]',
  datetime('now'), datetime('now'));
+
+-- ─── Fraud City: Save/Load System ────────────────────────────
+
+CREATE TABLE IF NOT EXISTS save_slots (
+  id TEXT PRIMARY KEY,
+  player_id TEXT NOT NULL DEFAULT 'player-1',
+  slot_name TEXT NOT NULL,
+  slot_number INTEGER NOT NULL,
+  save_data TEXT NOT NULL, -- JSON with full game state
+  level INTEGER DEFAULT 1,
+  play_time INTEGER DEFAULT 0,
+  location TEXT DEFAULT 'neighborhood',
+  thumbnail TEXT, -- JSON with summary for display
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  UNIQUE(player_id, slot_number)
+);
+
+-- Seed: empty save slots
+INSERT OR IGNORE INTO save_slots (id, player_id, slot_name, slot_number, save_data, level, play_time, location, created_at, updated_at) VALUES
+('save-1', 'player-1', 'Slot 1', 1, '{}', 1, 0, 'neighborhood', datetime('now'), datetime('now')),
+('save-2', 'player-1', 'Slot 2', 2, '{}', 1, 0, 'neighborhood', datetime('now'), datetime('now')),
+('save-3', 'player-1', 'Slot 3', 3, '{}', 1, 0, 'neighborhood', datetime('now'), datetime('now'));
