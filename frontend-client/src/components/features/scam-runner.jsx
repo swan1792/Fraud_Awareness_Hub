@@ -659,7 +659,27 @@ export function ScamRunner() {
     playBGM()
   }, [])
 
+  const [paused, setPaused] = useState(false)
+
+  const handlePause = useCallback(() => {
+    if (gameRef.current) gameRef.current.paused = true
+    stopBGM()
+    setPaused(true)
+  }, [])
+
+  const handleResume = useCallback(() => {
+    if (gameRef.current) gameRef.current.paused = false
+    playBGM()
+    setPaused(false)
+  }, [])
+
+  const handleRestart = useCallback(() => {
+    setPaused(false)
+    handleStart()
+  }, [handleStart])
+
   const handleExit = useCallback(() => {
+    setPaused(false)
     if (gameRef.current) gameRef.current.state = 'idle'
     if (animRef.current) cancelAnimationFrame(animRef.current)
     stopBGM()
@@ -966,21 +986,54 @@ export function ScamRunner() {
   }
 
   return (
-    <div className="flex flex-col items-center py-2">
-      <button
-        onClick={handleExit}
-        className="mb-2 px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-      >
-        ✕ {t('game.runner.exit', 'Exit')}
-      </button>
-      <canvas
-        ref={canvasRef}
-        width={CW}
-        height={CH}
-        className="rounded-2xl border border-zinc-200/50 shadow-2xl max-w-full"
-        style={{ touchAction: 'none', maxHeight: '72vh' }}
-      />
+    <div className="flex justify-center py-2 relative">
+      <div className="relative">
+        <button
+          onClick={handlePause}
+          className="absolute -top-0 right-0 z-30 px-3 py-1.5 text-xs font-bold text-white bg-red-500 hover:bg-red-600 rounded-bl-xl rounded-tr-2xl transition-colors shadow-lg"
+        >
+          ⏸ {t('game.runner.pause', 'Pause')}
+        </button>
+        <canvas
+          ref={canvasRef}
+          width={CW}
+          height={CH}
+          className="rounded-2xl border border-zinc-200/50 shadow-2xl max-w-full"
+          style={{ touchAction: 'none', maxHeight: '72vh' }}
+        />
+      </div>
       <ScamPopup scam={scamPopup} onContinue={handleContinue} t={t} />
+      {paused && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-xs w-full overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div className="px-6 pt-6 pb-4 text-center">
+              <div className="text-4xl mb-3">⏸️</div>
+              <h3 className="text-xl font-bold text-gray-900">{t('game.runner.paused', 'Game Paused')}</h3>
+              <p className="text-sm text-gray-500 mt-1">{t('game.runner.pausedMsg', 'Take a break or keep running!')}</p>
+            </div>
+            <div className="px-6 pb-6 space-y-2.5">
+              <button
+                onClick={handleResume}
+                className="w-full py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-cyan-500/25 active:scale-[0.97]"
+              >
+                ▶ {t('game.runner.continue', 'Continue')}
+              </button>
+              <button
+                onClick={handleRestart}
+                className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-amber-500/25 active:scale-[0.97]"
+              >
+                🔄 {t('game.runner.restart', 'Restart')}
+              </button>
+              <button
+                onClick={handleExit}
+                className="w-full py-3 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 font-bold rounded-2xl text-sm transition-all active:scale-[0.97]"
+              >
+                🚪 {t('game.runner.exit', 'Exit')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
