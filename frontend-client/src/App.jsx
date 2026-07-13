@@ -4,6 +4,7 @@ import { HomePage } from "@/pages/HomePage"
 import { GamePage } from "@/pages/GamePage"
 import { SimulatorPage } from "@/pages/SimulatorPage"
 import { SpotFakePage } from "@/pages/SpotFakePage"
+import { NotFoundPage } from "@/pages/NotFoundPage"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/game" element={<GamePage />} />
           <Route path="/simulator" element={<SimulatorPage />} />
           <Route path="/spot-fake" element={<SpotFakePage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

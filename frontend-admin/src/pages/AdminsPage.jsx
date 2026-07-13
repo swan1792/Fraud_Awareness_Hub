@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/lib/auth"
+import { Toaster } from "@/components/ui/toast"
+import { useToast } from "@/lib/use-toast"
 import {
   useAdminsQuery,
   useCreateAdminMutation,
@@ -24,11 +26,16 @@ export function AdminsPage() {
   const { data: admins = [], isLoading } = useAdminsQuery()
   const createAdmin = useCreateAdminMutation()
   const deleteAdmin = useDeleteAdminMutation()
+  const { toasts, toast, dismiss } = useToast()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newAdmin, setNewAdmin] = useState({ name: "", email: "", password: "", role: "admin" })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState("")
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [adminToDelete, setAdminToDelete] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const isSuperAdmin = user?.role === "super_admin"
 
@@ -45,23 +52,34 @@ export function AdminsPage() {
       })
       setNewAdmin({ name: "", email: "", password: "", role: "admin" })
       setIsDialogOpen(false)
+      toast({ title: "Admin created", variant: "success" })
     } catch (err) {
       setError(err.message)
+      toast({ title: "Failed to create admin", description: err.message, variant: "error" })
     } finally {
       setIsSubmitting(false)
     }
-  }, [newAdmin, createAdmin])
+  }, [newAdmin, createAdmin, toast])
 
-  const handleDeleteAdmin = useCallback(
-    async (id) => {
-      try {
-        await deleteAdmin.mutateAsync(id)
-      } catch (err) {
-        console.error("Failed to delete admin:", err)
-      }
-    },
-    [deleteAdmin]
-  )
+  const handleDeleteClick = useCallback((admin) => {
+    setAdminToDelete(admin)
+    setDeleteDialogOpen(true)
+  }, [])
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!adminToDelete) return
+    setIsDeleting(true)
+    try {
+      await deleteAdmin.mutateAsync(adminToDelete.id)
+      toast({ title: "Admin deleted", variant: "success" })
+    } catch (err) {
+      toast({ title: "Failed to delete admin", description: err.message, variant: "error" })
+    } finally {
+      setIsDeleting(false)
+      setDeleteDialogOpen(false)
+      setAdminToDelete(null)
+    }
+  }, [adminToDelete, deleteAdmin, toast])
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -211,7 +229,8 @@ export function AdminsPage() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDeleteAdmin(admin.id)}
+                        onClick={() => handleDeleteClick(admin)}
+                        disabled={isDeleting}
                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -224,6 +243,39 @@ export function AdminsPage() {
           </Table>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Delete Admin</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{adminToDelete?.name}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={isDeleting}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Toaster toasts={toasts} dismiss={dismiss} />
     </div>
   )
 }
