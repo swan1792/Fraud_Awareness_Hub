@@ -32,6 +32,18 @@ export function useDeleteAlertMutation() {
   })
 }
 
+export function useUpdateAlertMutation() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, ...body }) =>
+      apiClient.put(`/alerts/${id}`, body).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['alerts'] })
+    },
+  })
+}
+
 // ─── Admin Users (super_admin only) ─────────────────────────
 
 export function useAdminsQuery() {
