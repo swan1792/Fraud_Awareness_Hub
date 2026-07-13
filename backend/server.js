@@ -430,13 +430,40 @@ app.get('/api/scenarios/:id', (req, res) => {
   })
 })
 
-// ─── Hub Stats (static) ──────────────────────────────────────
+// ─── Hub Stats (dynamic) ─────────────────────────────────────
 app.get('/api/stats', (req, res) => {
-  res.json([
-    { label: 'Scam Types Documented', value: '47+' },
-    { label: 'Red Flags Identified', value: '120+' },
-    { label: 'Awareness Articles', value: '35' },
-  ])
+  const stats = {}
+  let completed = 0
+  const total = 3
+
+  function done() {
+    completed++
+    if (completed === total) {
+      res.json([
+        { label: 'Scam Patterns', value: String(stats.patterns || 0) },
+        { label: 'Game Scenarios', value: String(stats.scenarios || 0) },
+        { label: 'Scam Alerts', value: String(stats.alerts || 0) },
+      ])
+    }
+  }
+
+  db.get('SELECT COUNT(*) as count FROM scam_patterns', [], (err, row) => {
+    if (err) logger.error('Stats query error (patterns):', err.message)
+    stats.patterns = row?.count || 0
+    done()
+  })
+
+  db.get('SELECT COUNT(*) as count FROM game_scenarios', [], (err, row) => {
+    if (err) logger.error('Stats query error (scenarios):', err.message)
+    stats.scenarios = row?.count || 0
+    done()
+  })
+
+  db.get('SELECT COUNT(*) as count FROM scam_alerts', [], (err, row) => {
+    if (err) logger.error('Stats query error (alerts):', err.message)
+    stats.alerts = row?.count || 0
+    done()
+  })
 })
 
 // ─── 404 Handler ──────────────────────────────────────────────
