@@ -1,0 +1,39 @@
+name: Lint Branch & Commits
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check branch name
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ ! "$BRANCH" =~ ^(feat|fix|chore)\/[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+            echo "❌ Branch '$BRANCH' must match feat/*, fix/*, or chore/*"
+            echo "   Examples: feat/add-login, fix/rate-limit, chore/update-deps"
+            exit 1
+          fi
+          echo "✅ Branch name valid: $BRANCH"
+
+  commit-messages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages
+        run: |
+          FAIL=0
+          while read -r msg; do
+            if [[ ! "$msg" =~ ^(feat|fix|docs|build|style|refactor|test|chore|ci):\ .+ ]]; then
+              echo "❌ Invalid commit message: $msg"
+              echo "   Expected format: <type>: <description>"
+              echo "   Types: feat, fix, docs, build, style, refactor, test, chore, ci"
+              FAIL=1
+            fi
+          done < <(git log --format=%s ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+          exit $FAIL
