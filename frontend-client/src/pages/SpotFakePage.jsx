@@ -1,10 +1,14 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { FileSearch, Eye, AlertTriangle } from "lucide-react"
+import { FileSearch, Eye, AlertTriangle, QrCode, MousePointerClick } from "lucide-react"
 import { SpotTheFakeGame } from "@/components/features/spot-the-fake-game"
+import { QrReceiptVerifier } from "@/components/features/qr-receipt-verifier"
 import { AnimatedBackground } from "@/components/section/animated-background"
+import { cn } from "@/lib/utils"
 
 export function SpotFakePage() {
   const { t } = useTranslation()
+  const [activeTab, setActiveTab] = useState("click")
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -45,6 +49,35 @@ export function SpotFakePage() {
 
       <section className="relative z-20 -mt-12 px-4 pb-20 md:-mt-16 md:pb-28">
         <div className="mx-auto max-w-2xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-[0_30px_90px_-35px_rgba(9,9,12,0.35)]">
+          {/* Tab Toggle */}
+          <div className="flex border-b border-zinc-100 bg-zinc-50/80">
+            <button
+              onClick={() => setActiveTab("click")}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 px-4 py-3 text-xs font-medium transition-colors",
+                activeTab === "click"
+                  ? "text-orange-600 border-b-2 border-orange-500 bg-orange-50/50"
+                  : "text-zinc-500 hover:text-zinc-700"
+              )}
+            >
+              <MousePointerClick className="h-3.5 w-3.5" />
+              {t("spotFake.tabClickGame")}
+            </button>
+            <button
+              onClick={() => setActiveTab("qr")}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-2 px-4 py-3 text-xs font-medium transition-colors",
+                activeTab === "qr"
+                  ? "text-orange-600 border-b-2 border-orange-500 bg-orange-50/50"
+                  : "text-zinc-500 hover:text-zinc-700"
+              )}
+            >
+              <QrCode className="h-3.5 w-3.5" />
+              {t("spotFake.tabQrScan")}
+            </button>
+          </div>
+
+          {/* Tab Header Info */}
           <div className="flex items-center justify-between border-b border-zinc-100 bg-zinc-50/80 px-5 py-3 text-xs text-zinc-500">
             <div className="flex items-center gap-2">
               <span className="relative flex size-2">
@@ -53,9 +86,14 @@ export function SpotFakePage() {
               </span>
               {t("spotFake.challengeActive")}
             </div>
-            <span className="hidden sm:inline">{t("spotFake.clickSuspicious")}</span>
+            <span className="hidden sm:inline">
+              {activeTab === "click" ? t("spotFake.clickSuspicious") : t("spotFake.scanReceipt")}
+            </span>
           </div>
-          <SpotTheFakeGame />
+
+          {/* Tab Content */}
+          {activeTab === "click" && <SpotTheFakeGame />}
+          {activeTab === "qr" && <QrReceiptVerifier />}
         </div>
       </section>
     </div>

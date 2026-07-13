@@ -113,7 +113,10 @@
     "flagsToFind": "3 red flags to find",
     "clickToIdentify": "Click to identify",
     "challengeActive": "Challenge active",
-    "clickSuspicious": "Click on suspicious fields"
+    "clickSuspicious": "Click on suspicious fields",
+    "tabClickGame": "Click to Find",
+    "tabQrScan": "Scan QR Receipt",
+    "scanReceipt": "Upload a receipt to verify"
   },
   "phishing": {
     "channels": {
@@ -179,6 +182,36 @@
     "findMore": "Find {{count}} more red flag",
     "findMore_plural": "Find {{count}} more red flags",
     "playAgain": "Play Again"
+  },
+  "qrVerifier": {
+    "awarenessTitle": "What to Check on Any Receipt",
+    "checkAmount": "Check the Amount",
+    "checkAmountDesc": "Verify the amount matches what you expected to send or receive.",
+    "checkDateTime": "Check Date & Time",
+    "checkDateTimeDesc": "Ensure the timestamp is correct and recent.",
+    "checkTxnNo": "Check Transaction Number",
+    "checkTxnNoDesc": "Compare the transaction number on the receipt with your banking app.",
+    "verifyInApp": "Verify in Your Banking App",
+    "verifyInAppDesc": "A receipt alone does NOT prove payment. Always open your banking or KPay app to confirm the money was actually received.",
+    "uploadTitle": "Upload Receipt Image",
+    "uploadHint": "Drag & drop or click to select. Supports JPG, PNG.",
+    "scanReceipt": "Scan QR & Verify",
+    "scanning": "Scanning receipt...",
+    "qrData": "QR Code Data",
+    "ocrData": "Printed Text (OCR)",
+    "txnFromQR": "Transaction # from QR",
+    "txnFromOCR": "Transaction # from Receipt",
+    "notFound": "Not found",
+    "showRaw": "Show raw QR content",
+    "showFullText": "Show full OCR text",
+    "qrError": "No QR code detected in the image. Please upload a receipt with a visible QR code.",
+    "ocrError": "Could not extract text from the image. Please try a clearer photo.",
+    "matchTitle": "Transaction Numbers Match!",
+    "matchDesc": "The transaction number from the QR code matches the printed text on the receipt. This is a good sign, but always verify in your banking app.",
+    "mismatchTitle": "Transaction Numbers Do NOT Match!",
+    "mismatchDesc": "The transaction number from the QR code is different from what's printed on the receipt. This receipt may be tampered with. Do not trust it.",
+    "finalWarning": "Always check your banking app to ensure the money was actually received. A receipt alone does not prove payment.",
+    "uploadNew": "Upload New Receipt"
   },
   "scamCard": {
     "hoverToReveal": "Hover to reveal warning signs",
