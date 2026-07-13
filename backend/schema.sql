@@ -30,6 +30,20 @@ CREATE TABLE IF NOT EXISTS scam_patterns (
   icon TEXT NOT NULL
 );
 
+-- Adventure Scenarios (branching story game)
+CREATE TABLE IF NOT EXISTS adventure_scenarios (
+  id TEXT PRIMARY KEY,
+  act INTEGER NOT NULL,
+  scene INTEGER NOT NULL,
+  channel TEXT NOT NULL CHECK(channel IN ('SMS', 'Viber', 'Email')),
+  sender TEXT NOT NULL,
+  message TEXT NOT NULL,
+  choices TEXT NOT NULL, -- JSON array of 3 choice objects
+  correct_index INTEGER NOT NULL,
+  explanation TEXT NOT NULL, -- JSON array of 3 explanations (one per choice)
+  red_flags TEXT NOT NULL -- JSON array
+);
+
 -- Game Scenarios (read-only reference data)
 CREATE TABLE IF NOT EXISTS game_scenarios (
   id TEXT PRIMARY KEY,
@@ -56,6 +70,33 @@ INSERT OR IGNORE INTO scam_patterns (id, title, category, description, red_flags
 ('viber-investment', 'Viber Investment Group', 'Social Engineering', 'A Viber group promising guaranteed returns on crypto or forex trading, targeting Myanmar users with fake testimonials.', '["Promises of guaranteed high returns (e.g., ''50% per week'')","Pressure to recruit friends for bonuses","Fake screenshots of profits from ''members''"]', 'Join our VIP trading group! Guaranteed 30% profit weekly. Send 100,000 MMK to start. Limited spots!', 'users'),
 ('delivery-scam', 'Parcel Delivery Phishing', 'Phishing Link', 'Fake delivery notification claiming you have a package stuck at customs, requesting a ''clearance fee'' via mobile payment.', '["You didn''t order anything","Asks for payment via mobile wallet before delivery","Generic message with no tracking details"]', 'Your parcel is held at customs. Pay 15,000 MMK clearance fee via Wave Money: http://parcel-mm.com/pay', 'package'),
 ('gov-subsidy', 'Government Subsidy Scam', 'Phishing Link', 'Fake government website claiming to offer COVID-19 or disaster relief subsidies, collecting personal and financial data.', '["Domain is not a .gov.mm site","Asks for bank account details to ''deposit subsidy''","Poor grammar and unofficial logos"]', 'Apply for 200,000 MMK government relief: http://gov-mm-relief.com/register', 'landmark');
+
+-- Seed: adventure_scenarios (6 branching story scenarios)
+INSERT OR IGNORE INTO adventure_scenarios (id, act, scene, channel, sender, message, choices, correct_index, explanation, red_flags) VALUES
+('adv-1-1', 1, 1, 'SMS', 'KBZ Bank', 'URGENT: Your KBZ account has been locked due to suspicious activity. You must verify within 2 hours or your account will be permanently suspended. Click here: http://kbz-secure-verify.com/login',
+'["Click the link and enter your login details to verify", "Ignore it — KBZ Bank never locks accounts via SMS links", "Call KBZ Bank hotline to ask if this is real"]', 1,
+'["You entered your credentials on a fake website. The scammers now have your login details and can access your real account.", "Correct! KBZ Bank never sends verification links via SMS. The URL is not kbzbank.com — it is a phishing site.", "Good instinct to verify, but the link is already a red flag. Always check the sender domain first before clicking anything."]',
+'["Fake urgency (2-hour deadline)", "Suspicious URL not matching kbzbank.com", "Banks never ask you to verify via SMS links"]'),
+('adv-1-2', 1, 2, 'Viber', 'Ma Khin (Friend)', 'Hey! I just got 100,000 MMK free from this government relief program. Register here before it ends today! http://gov-relief-mm.org/register — Mya helped me sign up too!',
+'["Register right away — you don''t want to miss free money", "Ask your friend if this is really from the government", "Ignore it — government programs use official .gov.mm websites"]', 2,
+'["You signed up on a fake website and gave away your personal information and bank details. This is a phishing scam.", "Good to verify with your friend, but they may have been scammed too. Always check if the website is an official .gov.mm domain.", "Correct! The domain is .org, not .gov.mm. Real government programs are announced officially, not through Viber forwarded messages."]',
+'["Pressure to act quickly (\"before it ends today\")", "Non-government domain (.org instead of .gov.mm)", "Forwarded message chain — common in scam distribution"]'),
+('adv-2-1', 2, 1, 'Email', 'Myanmar Supplies Co. <invoices@myanmarsupplies.co>', 'Dear Sir/Madam, please find attached invoice #INV-2026-0847 for office supplies delivered on July 10. Amount: 850,000 MMK. Payment due within 3 days. KBZ Account: 1234567890123456.',
+'["Pay the invoice immediately — you don''t want to be late", "Forward to your accounts team to verify before paying", "Check if you actually ordered anything from this company recently"]', 2,
+'["You paid 850,000 MMK to scammers. The invoice was fake — you never received any supplies.", "Good practice to verify with your team, but step 1 is confirming the order existed.", "Correct! Always verify that you actually placed an order before paying any invoice. Scammers send fake invoices hoping companies pay without questioning."]',
+'["You never ordered from this company", "Urgency pressure (3-day deadline)", "Generic greeting (\"Dear Sir/Madam\") instead of your name"]'),
+('adv-2-2', 2, 2, 'SMS', 'Telenor Myanmar', 'Congratulations! Your number has won 5,000,000 MMK in the Telenor Lucky Draw! Claim your prize now by calling +959-888-777-666 or visiting http://telenor-prize-mm.com. You have 24 hours to claim!',
+'["Call the number to claim your prize — 5 million is a lot of money!", "Visit the website to see if it is real", "Ignore it — you never entered any lucky draw"]', 2,
+'["You called a premium-rate scam number and they kept you on the line to charge fees, then asked for your NRC details to \"verify\" your identity.", "The website is designed to steal your personal information. It looks official but is not the real Telenor site.", "Correct! You never entered a lucky draw, so you cannot have won. Legitimate prizes don''t require you to call or visit a website — they contact you directly."]',
+'["You never entered any lucky draw", "Urgency (24-hour deadline)", "Fake prize to lure victims", "Non-official website domain"]'),
+('adv-3-1', 3, 1, 'Viber', 'Nay Chi (new friend)', 'Hi! We chatted on Facebook last week. I work at a trading company and we have a special program — invest 200,000 MMK and get 50% return in just 5 days! I started with 100K and already earned 50K. Want me to show you how? Trust me, this is real.',
+'["Invest 200,000 MMK — the returns sound amazing and your friend recommends it", "Ask to meet in person or see official company documents first", "Block and report — guaranteed returns and urgency are classic scam signs"]', 2,
+'["You transferred 200,000 MMK to a scammer''s account. \"Nay Chi\" disappears after receiving your money. This is a romance/investment scam.", "Asking for documentation is smart, but scammers can forge documents. The red flags are already clear.", "Correct! \"Guaranteed returns\" do not exist in legitimate investing. The pressure, fake testimonials, and urgency are all scam tactics."]',
+'["Guaranteed high returns (50% in 5 days) — impossible in legitimate investing", "Asks for money transfer to personal account", "Creates urgency and social proof with fake earnings"]'),
+('adv-3-2', 3, 2, 'Email', 'KBZ Bank Security <security@kbzbank-alerts.com>', 'Dear KBZ customer, we detected an unauthorized login attempt on your account from an unknown device in Mandalay. For your protection, please verify your identity by replying with the OTP sent to your phone. If you do not respond within 1 hour, your account will be frozen for 30 days.',
+'["Reply with the OTP quickly — you don''t want your account frozen", "Forward the email to KBZ Bank''s official support to verify", "Ignore it — KBZ Bank will never ask for your OTP via email"]', 2,
+'["You gave scammers your OTP. They used it to access your KBZ account and transfer out your money. Never share OTPs with anyone — even if the request seems urgent.", "Good idea to verify, but the email is already suspicious. The domain is kbzbank-alerts.com, not kbzbank.com.", "Correct! Banks NEVER ask for OTPs via email, SMS, or phone. The fake urgency (1-hour deadline) and non-official domain are clear red flags."]',
+'["Banks never ask for OTPs via email", "Fake urgency (1-hour deadline)", "Non-official domain (kbzbank-alerts.com instead of kbzbank.com)", "Threatening account freeze to create panic"]');
 
 -- Seed: game_scenarios
 INSERT OR IGNORE INTO game_scenarios (id, channel, sender, message, is_scam, explanation, red_flags) VALUES

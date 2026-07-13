@@ -22,6 +22,13 @@ export function useScenariosQuery() {
   })
 }
 
+export function useAdventureScenariosQuery() {
+  return useQuery({
+    queryKey: ['adventureScenarios'],
+    queryFn: () => apiClient.get('/adventure/scenarios').then((res) => res.data),
+  })
+}
+
 export function useAlertsQuery() {
   return useQuery({
     queryKey: ['alerts'],

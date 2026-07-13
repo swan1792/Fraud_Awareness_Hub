@@ -110,6 +110,11 @@ function toCamel(row) {
     message: row.message,
     isScam: row.is_scam ? true : false,
     explanation: row.explanation,
+    // Adventure scenario fields
+    act: row.act,
+    scene: row.scene,
+    choices: row.choices ? JSON.parse(row.choices) : undefined,
+    correctIndex: row.correct_index,
   }
 }
 
@@ -426,6 +431,29 @@ app.get('/api/scenarios/:id', (req, res) => {
       return res.status(500).json({ error: 'Internal server error' })
     }
     if (!row) return res.status(404).json({ error: 'Scenario not found' })
+    res.json(toCamel(row))
+  })
+})
+
+// ─── Adventure Scenarios (read-only) ──────────────────────────
+
+app.get('/api/adventure/scenarios', (req, res) => {
+  db.all('SELECT * FROM adventure_scenarios ORDER BY act, scene', [], (err, rows) => {
+    if (err) {
+      logger.error('GET /api/adventure/scenarios error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    res.json(rows.map(toCamel))
+  })
+})
+
+app.get('/api/adventure/scenarios/:id', (req, res) => {
+  db.get('SELECT * FROM adventure_scenarios WHERE id = ?', [req.params.id], (err, row) => {
+    if (err) {
+      logger.error('GET /api/adventure/scenarios/:id error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (!row) return res.status(404).json({ error: 'Adventure scenario not found' })
     res.json(toCamel(row))
   })
 })

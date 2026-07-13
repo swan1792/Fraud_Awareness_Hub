@@ -22,9 +22,9 @@
     "sectionSubtitle": "Try short, practical challenges based on the scam tactics people encounter every day.",
     "games": {
       "phishing": {
-        "title": "Phishing or Not?",
-        "description": "Identify scam messages and sharpen your instincts.",
-        "eyebrow": "Quick quiz"
+        "title": "Scam Runner",
+        "description": "Run through the digital city and dodge scam pop-ups.",
+        "eyebrow": "Side-scroller"
       },
       "simulator": {
         "title": "Scammer Chat Simulator",
@@ -40,16 +40,33 @@
   },
   "game": {
     "badge": "Interactive safety training",
-    "title": "Phishing",
-    "titleHighlight": "or Not?",
-    "description": "Read messages inspired by real scam tactics, make your call, and learn which details reveal the truth.",
+    "title": "Scam",
+    "titleHighlight": "Runner",
+    "description": "Run through the digital city! Collect safe messages and dodge scam pop-ups. Jump over obstacles to stay safe.",
     "features": {
-      "scenarios": "8 scenarios",
-      "feedback": "Instant feedback",
-      "redFlags": "Practical red flags"
+      "scenarios": "5 scam types",
+      "feedback": "Real-time action",
+      "redFlags": "Red flag tips"
     },
-    "statusReady": "Training session ready",
-    "noTimer": "Choose carefully—there is no timer"
+    "statusReady": "Game ready",
+    "noTimer": "No timer — just run!",
+    "runner": {
+      "title": "Scam Runner",
+      "intro": "Run through the digital city! Collect safe messages (green) and dodge scam pop-ups (red). Jump over obstacles to stay safe.",
+      "controls": "Controls",
+      "start": "Start Running",
+      "gameOver": "Game Over",
+      "finalScore": "Your score: ",
+      "great": "Amazing! You really know how to spot scams!",
+      "good": "Good job! Keep practicing to improve.",
+      "learn": "Keep learning! Review the scam patterns to improve.",
+      "playAgain": "Play Again",
+      "popup": {
+        "redFlags": "Red Flags",
+        "howToAvoid": "How to Protect Yourself",
+        "continue": "Continue Running →"
+      }
+    }
   },
   "simulator": {
     "title": "Scammer Chat Simulator",

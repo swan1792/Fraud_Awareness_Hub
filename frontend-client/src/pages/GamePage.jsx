@@ -1,40 +1,36 @@
-import { useTranslation } from "react-i18next"
-import { Gamepad2, ScanSearch, ShieldCheck, Zap } from "lucide-react"
-import { PhishingGame } from "@/components/features/phishing-game"
-import { AnimatedBackground } from "@/components/section/animated-background"
+import { useTranslation } from 'react-i18next'
+import { Gamepad2, ScanSearch, ShieldCheck, Zap, Trophy, Coins } from 'lucide-react'
+import { ScamRunner } from '@/components/features/scam-runner'
+import { AnimatedBackground } from '@/components/section/animated-background'
 
 export function GamePage() {
   const { t } = useTranslation()
 
   const gameFeatures = [
-    { label: t("game.features.scenarios"), icon: Gamepad2 },
-    { label: t("game.features.feedback"), icon: Zap },
-    { label: t("game.features.redFlags"), icon: ScanSearch },
+    { label: t('game.features.scenarios'), icon: Gamepad2 },
+    { label: t('game.features.feedback'), icon: Zap },
+    { label: t('game.features.redFlags'), icon: ScanSearch },
   ]
 
   return (
     <div className="min-h-screen bg-zinc-50">
       <section className="relative isolate overflow-hidden text-white">
         <AnimatedBackground />
-
-        <div className="relative z-10 mx-auto max-w-6xl px-4 pt-32 pb-24 md:pt-40 md:pb-32">
+        <div className="relative z-10 mx-auto max-w-6xl px-4 pt-32 pb-20 md:pt-40 md:pb-24">
           <div className="max-w-3xl">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-cyan-200 uppercase backdrop-blur-xl">
               <ShieldCheck className="size-4" />
-              {t("game.badge")}
+              {t('game.badge')}
             </div>
-
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl">
-              {t("game.title")}{" "}
+              {t('game.title')}{' '}
               <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
-                {t("game.titleHighlight")}
+                {t('game.titleHighlight')}
               </span>
             </h1>
-
             <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 md:text-xl md:leading-8">
-              {t("game.description")}
+              {t('game.description')}
             </p>
-
             <div className="mt-8 flex flex-wrap gap-3">
               {gameFeatures.map((feature) => (
                 <div
@@ -50,19 +46,30 @@ export function GamePage() {
         </div>
       </section>
 
-      <section className="relative z-20 -mt-12 px-4 pb-20 md:-mt-16 md:pb-28">
-        <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-[0_30px_90px_-35px_rgba(9,9,12,0.35)]">
-          <div className="flex items-center justify-between border-b border-zinc-100 bg-zinc-50/80 px-5 py-3 text-xs text-zinc-500 sm:px-7">
-            <div className="flex items-center gap-2">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-              </span>
-              {t("game.statusReady")}
+      <section className="relative z-20 -mt-8 px-4 pb-20 md:-mt-12 md:pb-28">
+        <div className="mx-auto max-w-3xl">
+          <div className="overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-[0_30px_90px_-35px_rgba(9,9,12,0.35)]">
+            <div className="flex items-center justify-between border-b border-zinc-100 bg-gradient-to-r from-zinc-50/90 to-zinc-100/60 px-5 py-3 text-xs text-zinc-500 sm:px-7">
+              <div className="flex items-center gap-2">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                </span>
+                {t('game.statusReady')}
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="hidden sm:inline-flex items-center gap-1 text-amber-600 font-medium">
+                  <Coins className="size-3.5" />
+                  Collect coins
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-red-500 font-medium">
+                  <Trophy className="size-3.5" />
+                  Dodge scams
+                </span>
+              </div>
             </div>
-            <span className="hidden sm:inline">{t("game.noTimer")}</span>
+            <ScamRunner />
           </div>
-          <PhishingGame />
         </div>
       </section>
     </div>
