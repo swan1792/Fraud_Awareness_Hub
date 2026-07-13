@@ -40,12 +40,22 @@ const categoryGlows = {
 }
 
 export function ScamCard({ pattern }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isFlipped, setIsFlipped] = useState(false)
   const Icon = iconMap[pattern.icon] || AlertTriangle
   const gradient = categoryGradients[pattern.category] || "from-red-500 to-orange-500"
   const glow = categoryGlows[pattern.category] || "group-hover:shadow-red-200/70"
   const categoryLabel = t(`scamCard.categories.${pattern.category}`, pattern.category)
+
+  // Get translated pattern content, falling back to API data
+  const patternKey = `scamPatterns.${pattern.id}`
+  const title = t(`${patternKey}.title`, pattern.title)
+  const description = t(`${patternKey}.description`, pattern.description)
+  let redFlags = pattern.redFlags
+  try {
+    const translated = i18n.getResource(i18n.language, 'translation', `${patternKey}.redFlags`)
+    if (Array.isArray(translated)) redFlags = translated
+  } catch (e) { /* use API fallback */ }
 
   const handleTap = useCallback(() => {
     setIsFlipped((prev) => !prev)
@@ -80,8 +90,8 @@ export function ScamCard({ pattern }) {
 
             {/* Main information */}
             <div className="mt-5 sm:mt-7">
-              <h3 className="text-lg sm:text-xl font-bold tracking-tight text-gray-950">{pattern.title}</h3>
-              <p className="mt-2 sm:mt-3 text-sm sm:text-[15px] leading-6 sm:leading-7 text-gray-600">{pattern.description}</p>
+              <h3 className="text-lg sm:text-xl font-bold tracking-tight text-gray-950">{title}</h3>
+              <p className="mt-2 sm:mt-3 text-sm sm:text-[15px] leading-6 sm:leading-7 text-gray-600">{description}</p>
             </div>
 
             {/* Tap instruction (mobile) + Hover instruction (desktop) */}
@@ -113,13 +123,13 @@ export function ScamCard({ pattern }) {
                 </div>
               </div>
               <span className="rounded-full bg-red-100 px-2 sm:px-2.5 py-1 text-xs font-bold text-red-700">
-                {pattern.redFlags.length}
+                {redFlags.length}
               </span>
             </div>
 
             {/* Red flags */}
             <ul className="mt-4 sm:mt-5 space-y-2 sm:space-y-3">
-              {pattern.redFlags.map((flag, index) => (
+              {redFlags.map((flag, index) => (
                 <li
                   key={`${flag}-${index}`}
                   className="flex items-start gap-2 sm:gap-3 rounded-xl border border-red-500 bg-red-50/70 px-3 py-2.5 sm:px-3.5 sm:py-3"

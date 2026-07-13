@@ -1,9 +1,38 @@
+# Dependencies
 node_modules/
+
+# Build output
 dist/
+build/
+.next/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Database
 *.db
 *.db-shm
 *.db-wal
-.env
-.env.local
-.DS_Store
+
+# Logs
 *.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python (if used for scripts/tools)
+__pycache__/
+*.py[cod]
+.venv/
+venv/

@@ -1,0 +1,14 @@
+# CODEOWNERS — auto-requests a reviewer when a PR touches matching paths.
+# Replace the placeholders with real @github-usernames once your team is set.
+#
+# Syntax: <path>   <@owner> [<@owner2> ...]
+# More specific lines win. Every PR still needs 1 approval from a non-author.
+
+# Default owner for everything (fallback):
+# *                     @team-anchor
+
+# Split ownership across members so reviews rotate naturally:
+# /backend/             @backend-dev
+# /frontend-client/     @frontend-dev
+# /frontend-admin/      @frontend-dev
+# /.github/             @team-anchor
