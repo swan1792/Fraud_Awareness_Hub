@@ -603,6 +603,19 @@ export function ScamRunner() {
       if (e.code === 'ArrowLeft' || e.code === 'KeyA') keysRef.current.left = false
       if (e.code === 'ArrowRight' || e.code === 'KeyD') keysRef.current.right = false
     }
+    window.addEventListener('keydown', kd); window.addEventListener('keyup', ku)
+    return () => {
+      window.removeEventListener('keydown', kd); window.removeEventListener('keyup', ku)
+      stopBGM()
+    }
+  }, [])
+
+  // Touch events — bind when canvas is available (not on idle)
+  useEffect(() => {
+    if (gameState !== 'playing') return
+    const cv = canvasRef.current
+    if (!cv) return
+
     const ts = (e) => { touchRef.current.startX = e.touches[0].clientX; touchRef.current.swiping = true }
     const tm = (e) => {
       if (!touchRef.current.swiping) return
@@ -614,15 +627,15 @@ export function ScamRunner() {
     }
     const te = () => { touchRef.current.swiping = false; keysRef.current.left = false; keysRef.current.right = false }
 
-    window.addEventListener('keydown', kd); window.addEventListener('keyup', ku)
-    const cv = canvasRef.current
-    if (cv) { cv.addEventListener('touchstart', ts, { passive: true }); cv.addEventListener('touchmove', tm, { passive: true }); cv.addEventListener('touchend', te, { passive: true }) }
+    cv.addEventListener('touchstart', ts, { passive: true })
+    cv.addEventListener('touchmove', tm, { passive: true })
+    cv.addEventListener('touchend', te, { passive: true })
     return () => {
-      window.removeEventListener('keydown', kd); window.removeEventListener('keyup', ku)
-      if (cv) { cv.removeEventListener('touchstart', ts); cv.removeEventListener('touchmove', tm); cv.removeEventListener('touchend', te) }
-      stopBGM()
+      cv.removeEventListener('touchstart', ts)
+      cv.removeEventListener('touchmove', tm)
+      cv.removeEventListener('touchend', te)
     }
-  }, [])
+  }, [gameState])
 
   const handleStart = useCallback(() => {
     gameRef.current = {
