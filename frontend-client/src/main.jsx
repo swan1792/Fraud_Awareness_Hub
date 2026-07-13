@@ -1,6 +1,7 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { GameProvider } from "./contexts/GameContext"
 import App from "./App.jsx"
 import i18n from "./i18n"
 import "./index.css"
@@ -27,7 +28,9 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <GameProvider>
+        <App />
+      </GameProvider>
     </QueryClientProvider>
   </StrictMode>
 )

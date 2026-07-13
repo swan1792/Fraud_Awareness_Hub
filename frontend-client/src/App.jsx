@@ -13,6 +13,8 @@ function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/game" element={<GamePage />} />
+          <Route path="/game/actionshooter" element={<GamePage mode="shooter" />} />
+          <Route path="/game/fraudcity" element={<GamePage mode="rpg" />} />
           <Route path="/simulator" element={<SimulatorPage />} />
           <Route path="/spot-fake" element={<SpotFakePage />} />
           <Route path="*" element={<NotFoundPage />} />
