@@ -10,6 +10,6 @@
     "install:all": "cd backend && npm install && cd ../frontend-client && npm install && cd ../frontend-admin && npm install"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^10.0.3"
   }
 }
