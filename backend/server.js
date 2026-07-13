@@ -44,11 +44,10 @@ const logger = winston.createLogger({
 })
 
 // ─── Express App ──────────────────────────────────────────────
+// nosemgrep: javascript.express.security.audit.express-check-csurf-middleware-usage
+// CSRF middleware is not needed — this is a JWT-based API using Authorization headers,
+// not cookie-based auth. CORS policy already restricts cross-origin access.
 const app = express()
-
-// NOTE: CSRF middleware not used — this is a JWT-based API (tokens in localStorage,
-// sent via Authorization header). CSRF attacks only affect cookie-based auth.
-// CORS policy already restricts cross-origin access.
 
 // Security headers
 app.use(helmet())
@@ -1831,6 +1830,8 @@ app.post('/api/player/skill', (req, res) => {
     const currentLevel = skills[skill] || 0
     if (currentLevel >= 10) return res.status(400).json({ error: 'Skill already at max level' })
 
+    // nosemgrep: javascript.express.security.audit.remote-property-injection
+    // `skill` is validated against a whitelist (validSkills) above, safe as object key
     skills[skill] = currentLevel + 1
 
     db.run(
@@ -1848,8 +1849,6 @@ app.post('/api/player/skill', (req, res) => {
 })
 
 // POST /api/player/reputation — update reputation for a location
-// nosemgrep: javascript.express.security.audit.remote-property-injection
-// Location is validated to be alphanumeric with hyphens only, safe for use as object key
 app.post('/api/player/reputation', (req, res) => {
   const playerId = req.body.playerId || 'player-1'
   const location = req.body.location
@@ -1870,6 +1869,8 @@ app.post('/api/player/reputation', (req, res) => {
 
     const reputation = JSON.parse(stats.reputation)
     const current = reputation[location] || 50
+    // nosemgrep: javascript.express.security.audit.remote-property-injection
+    // `location` is validated via regex (/^[a-z0-9-]{1,50}$/i) above, safe as object key
     reputation[location] = Math.max(0, Math.min(100, current + change))
 
     db.run(
