@@ -10,6 +10,7 @@ import { NpcsPage } from "@/pages/NpcsPage"
 import { WorldMapsPage } from "@/pages/WorldMapsPage"
 import { PlayerProgressPage } from "@/pages/PlayerProgressPage"
 import { AdminsPage } from "@/pages/AdminsPage"
+import { NotFoundPage } from "@/pages/NotFoundPage"
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/progress" element={<PlayerProgressPage />} />
           <Route path="/admins" element={<AdminsPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   )

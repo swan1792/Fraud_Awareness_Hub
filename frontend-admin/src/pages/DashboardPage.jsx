@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Toaster } from "@/components/ui/toast"
+import { useToast } from "@/lib/use-toast"
 import {
   useAlertsQuery,
   useCreateAlertMutation,
@@ -26,10 +28,15 @@ export function DashboardPage() {
   const { data: alerts = [], isLoading } = useAlertsQuery()
   const createAlert = useCreateAlertMutation()
   const deleteAlert = useDeleteAlertMutation()
+  const { toasts, toast, dismiss } = useToast()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newAlert, setNewAlert] = useState({ title: "", category: "", description: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [alertToDelete, setAlertToDelete] = useState(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleCreateAlert = useCallback(async () => {
     if (!newAlert.title || !newAlert.category || !newAlert.description) return
@@ -42,23 +49,33 @@ export function DashboardPage() {
       })
       setNewAlert({ title: "", category: "", description: "" })
       setIsDialogOpen(false)
+      toast({ title: "Alert created", variant: "success" })
     } catch (error) {
-      console.error("Failed to create alert:", error)
+      toast({ title: "Failed to create alert", description: error.message, variant: "error" })
     } finally {
       setIsSubmitting(false)
     }
-  }, [newAlert, createAlert])
+  }, [newAlert, createAlert, toast])
 
-  const handleDeleteAlert = useCallback(
-    async (id) => {
-      try {
-        await deleteAlert.mutateAsync(id)
-      } catch (error) {
-        console.error("Failed to delete alert:", error)
-      }
-    },
-    [deleteAlert]
-  )
+  const handleDeleteClick = useCallback((alert) => {
+    setAlertToDelete(alert)
+    setDeleteDialogOpen(true)
+  }, [])
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!alertToDelete) return
+    setIsDeleting(true)
+    try {
+      await deleteAlert.mutateAsync(alertToDelete.id)
+      toast({ title: "Alert deleted", variant: "success" })
+    } catch (error) {
+      toast({ title: "Failed to delete alert", description: error.message, variant: "error" })
+    } finally {
+      setIsDeleting(false)
+      setDeleteDialogOpen(false)
+      setAlertToDelete(null)
+    }
+  }, [alertToDelete, deleteAlert, toast])
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -208,7 +225,8 @@ export function DashboardPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleDeleteAlert(alert.id)}
+                      onClick={() => handleDeleteClick(alert)}
+                      disabled={isDeleting}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -220,6 +238,39 @@ export function DashboardPage() {
           </Table>
         </div>
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Delete Alert</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{alertToDelete?.title}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={isDeleting}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Toaster toasts={toasts} dismiss={dismiss} />
     </div>
   )
 }
