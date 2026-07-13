@@ -46,6 +46,10 @@ const logger = winston.createLogger({
 // ─── Express App ──────────────────────────────────────────────
 const app = express()
 
+// NOTE: CSRF middleware not used — this is a JWT-based API (tokens in localStorage,
+// sent via Authorization header). CSRF attacks only affect cookie-based auth.
+// CORS policy already restricts cross-origin access.
+
 // Security headers
 app.use(helmet())
 
@@ -1844,13 +1848,18 @@ app.post('/api/player/skill', (req, res) => {
 })
 
 // POST /api/player/reputation — update reputation for a location
+// nosemgrep: javascript.express.security.audit.remote-property-injection
+// Location is validated to be alphanumeric with hyphens only, safe for use as object key
 app.post('/api/player/reputation', (req, res) => {
   const playerId = req.body.playerId || 'player-1'
   const location = req.body.location
   const change = req.body.change || 0
   const now = new Date().toISOString()
 
-  if (!location) return res.status(400).json({ error: 'location is required' })
+  // Validate location: must be alphanumeric with hyphens, max 50 chars
+  if (!location || !/^[a-z0-9-]{1,50}$/i.test(location)) {
+    return res.status(400).json({ error: 'location is required and must be alphanumeric with hyphens (max 50 chars)' })
+  }
 
   db.get('SELECT * FROM player_stats WHERE player_id = ?', [playerId], (err, stats) => {
     if (err) {

@@ -9,23 +9,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check branch name
+        env:
+          BRANCH_NAME: ${{ github.head_ref }}
         run: |
-          BRANCH="${{ github.head_ref }}"
-          if [[ ! "$BRANCH" =~ ^(feat|fix|chore)\/[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-            echo "❌ Branch '$BRANCH' must match feat/*, fix/*, or chore/*"
+          if [[ ! "$BRANCH_NAME" =~ ^(feat|fix|chore)\/[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
+            echo "❌ Branch '$BRANCH_NAME' must match feat/*, fix/*, or chore/*"
             echo "   Examples: feat/add-login, fix/rate-limit, chore/update-deps"
             exit 1
           fi
-          echo "✅ Branch name valid: $BRANCH"
+          echo "✅ Branch name valid: $BRANCH_NAME"
 
   commit-messages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4
         with:
           fetch-depth: 0
 
       - name: Validate commit messages
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           FAIL=0
           while read -r msg; do
@@ -35,5 +39,5 @@ jobs:
               echo "   Types: feat, fix, docs, build, style, refactor, test, chore, ci"
               FAIL=1
             fi
-          done < <(git log --format=%s ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+          done < <(git log --format=%s "$BASE_SHA".."$HEAD_SHA")
           exit $FAIL
