@@ -18,5 +18,8 @@
     "morgan": "^1.11.0",
     "sqlite3": "^5.1.7",
     "winston": "^3.19.0"
+  },
+  "allowScripts": {
+    "sqlite3@5.1.7": true
   }
 }
