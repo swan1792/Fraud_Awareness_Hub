@@ -102,9 +102,12 @@ function toCamel(row) {
   return {
     id: row.id,
     title: row.title,
+    titleMy: row.title_my,
     category: row.category,
     description: row.description,
+    descriptionMy: row.description_my,
     date: row.date,
+    status: row.status,
     redFlags: row.red_flags ? JSON.parse(row.red_flags) : undefined,
     example: row.example,
     icon: row.icon,
@@ -290,7 +293,10 @@ app.delete('/api/auth/admins/:id', authenticate, authorize('super_admin'), (req,
 // ─── Scam Alerts CRUD ─────────────────────────────────────────
 
 app.get('/api/alerts', (req, res) => {
-  db.all('SELECT * FROM scam_alerts ORDER BY date DESC', [], (err, rows) => {
+  const query = req.query.all === 'true'
+    ? 'SELECT * FROM scam_alerts ORDER BY date DESC'
+    : "SELECT * FROM scam_alerts WHERE status = 'published' ORDER BY date DESC"
+  db.all(query, [], (err, rows) => {
     if (err) {
       logger.error('GET /api/alerts error:', err.message)
       return res.status(500).json({ error: 'Internal server error' })
@@ -318,19 +324,20 @@ app.post('/api/alerts',
   body('date').optional().isISO8601().withMessage('Date must be a valid ISO 8601 date'),
   handleValidation,
   (req, res) => {
-    const { title, category, description, date } = req.body
+    const { title, title_my, category, description, description_my, date, status } = req.body
     const id = `alert-${Date.now()}`
     const alertDate = date || new Date().toISOString().split('T')[0]
+    const alertStatus = status || 'published'
     db.run(
-      'INSERT INTO scam_alerts (id, title, category, description, date) VALUES (?, ?, ?, ?, ?)',
-      [id, title, category, description, alertDate],
+      'INSERT INTO scam_alerts (id, title, title_my, category, description, description_my, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, title, title_my || null, category, description, description_my || null, alertDate, alertStatus],
       function (err) {
         if (err) {
           logger.error('POST /api/alerts error:', err.message)
           return res.status(500).json({ error: 'Internal server error' })
         }
         logger.info(`Alert created: ${id}`)
-        res.status(201).json({ id, title, category, description, date: alertDate })
+        res.status(201).json({ id, title, titleMy: title_my || null, category, description, descriptionMy: description_my || null, date: alertDate, status: alertStatus })
       }
     )
   }
@@ -344,12 +351,14 @@ app.put('/api/alerts/:id',
   body('date').optional().isISO8601().withMessage('Date must be a valid ISO 8601 date'),
   handleValidation,
   (req, res) => {
-    const { title, category, description, date } = req.body
+    const { title, title_my, category, description, description_my, date } = req.body
     const fields = []
     const values = []
     if (title !== undefined) { fields.push('title = ?'); values.push(title) }
+    if (title_my !== undefined) { fields.push('title_my = ?'); values.push(title_my || null) }
     if (category !== undefined) { fields.push('category = ?'); values.push(category) }
     if (description !== undefined) { fields.push('description = ?'); values.push(description) }
+    if (description_my !== undefined) { fields.push('description_my = ?'); values.push(description_my || null) }
     if (date !== undefined) { fields.push('date = ?'); values.push(date) }
     if (fields.length === 0) return res.status(400).json({ error: 'No fields to update' })
     values.push(req.params.id)
@@ -384,6 +393,23 @@ app.delete('/api/alerts/:id', authenticate, (req, res) => {
     if (this.changes === 0) return res.status(404).json({ error: 'Alert not found' })
     logger.info(`Alert deleted: ${req.params.id}`)
     res.json({ success: true })
+  })
+})
+
+// PUT /api/alerts/:id/status — toggle publish/draft status
+app.put('/api/alerts/:id/status', authenticate, (req, res) => {
+  const { status } = req.body
+  if (!['draft', 'published'].includes(status)) {
+    return res.status(400).json({ error: 'Status must be draft or published' })
+  }
+  db.run('UPDATE scam_alerts SET status = ? WHERE id = ?', [status, req.params.id], function (err) {
+    if (err) {
+      logger.error('PUT /api/alerts/:id/status error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (this.changes === 0) return res.status(404).json({ error: 'Alert not found' })
+    logger.info(`Alert ${req.params.id} status changed to ${status}`)
+    res.json({ id: req.params.id, status })
   })
 })
 
