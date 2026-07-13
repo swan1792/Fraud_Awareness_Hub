@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "base64-encoder": {
+      "source": "aidotnet/moyucode",
+      "sourceType": "github",
+      "skillPath": "skills/tools/base64-encoder/SKILL.md",
+      "computedHash": "1d7b23826086f0f1e4814720d8415dae988789c368826cb0ae198cfc4e95cf8a"
+    }
+  }
+}
