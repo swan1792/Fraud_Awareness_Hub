@@ -35,166 +35,25 @@ function getAudioCtx() {
   return _audioCtx
 }
 
-// ─── Background Music (AudioBuffer-based chiptune loop) ──────
-let _bgmSource = null
-let _bgmGain = null
-let _bgmBuffer = null
-
-function generateBGMBuffer(ctx) {
-  const sr = ctx.sampleRate
-  const bpm = 150
-  const beatSec = 60 / bpm
-  const beatsPerBar = 4
-  const bars = 8
-  const totalBeats = bars * beatsPerBar
-  const loopSec = totalBeats * beatSec
-  const len = Math.ceil(sr * loopSec)
-  const buf = ctx.createBuffer(1, len, sr)
-  const data = buf.getChannelData(0)
-
-  // Helper: write a square wave tone
-  function square(out, startS, endS, freq, vol) {
-    const s0 = Math.floor(startS * sr)
-    const s1 = Math.min(Math.floor(endS * sr), len)
-    for (let i = s0; i < s1; i++) {
-      const t = i / sr
-      out[i] += (Math.sin(2 * Math.PI * freq * t) > 0 ? vol : -vol)
-    }
-  }
-
-  // Helper: write a triangle wave tone
-  function triangle(out, startS, endS, freq, vol) {
-    const s0 = Math.floor(startS * sr)
-    const s1 = Math.min(Math.floor(endS * sr), len)
-    for (let i = s0; i < s1; i++) {
-      const t = i / sr
-      const phase = ((freq * t) % 1 + 1) % 1
-      const tri = phase < 0.5 ? 4 * phase - 1 : 3 - 4 * phase
-      out[i] += tri * vol
-    }
-  }
-
-  // Helper: write a sine tone
-  function sine(out, startS, endS, freq, vol) {
-    const s0 = Math.floor(startS * sr)
-    const s1 = Math.min(Math.floor(endS * sr), len)
-    for (let i = s0; i < s1; i++) {
-      const t = i / sr
-      out[i] += Math.sin(2 * Math.PI * freq * t) * vol
-    }
-  }
-
-  // Subway Surfers-style melody (catchy, energetic, repetitive)
-  // Key: C minor, BPM 150
-  const melody = [
-    // Bar 1-2: main riff
-    'C5', 'Eb5', 'G5', 'Bb5', 'G5', 'Eb5', 'C5', 'D5',
-    'Eb5', 'G5', 'Bb5', 'G5', 'F5', 'Eb5', 'D5', 'C5',
-    // Bar 3-4: variation
-    'C5', 'Eb5', 'G5', 'C6', 'Bb5', 'G5', 'F5', 'Eb5',
-    'D5', 'F5', 'Bb5', 'A5', 'G5', 'F5', 'Eb5', 'D5',
-    // Bar 5-6: repeat with flair
-    'C5', 'Eb5', 'G5', 'Bb5', 'G5', 'Eb5', 'C5', 'D5',
-    'Eb5', 'G5', 'C6', 'Bb5', 'Ab5', 'G5', 'F5', 'Eb5',
-    // Bar 7-8: ending turnaround
-    'D5', 'F5', 'Bb5', 'D6', 'C6', 'Bb5', 'Ab5', 'G5',
-    'F5', 'Eb5', 'D5', 'C5', 'C5', 'D5', 'Eb5', 'C5',
-  ]
-
-  const bass = [
-    // Bass pattern — driving eighth notes
-    'C3', 'C3', 'Eb3', 'Eb3', 'G3', 'G3', 'Bb2', 'Bb2',
-    'Ab2', 'Ab2', 'Eb3', 'Eb3', 'F3', 'F3', 'G3', 'G3',
-    'C3', 'C3', 'Eb3', 'Eb3', 'G3', 'G3', 'C4', 'C4',
-    'Bb2', 'Bb2', 'F3', 'F3', 'G3', 'G3', 'Ab3', 'Ab3',
-    'C3', 'C3', 'Eb3', 'Eb3', 'G3', 'G3', 'Bb2', 'Bb2',
-    'Ab2', 'Ab2', 'C4', 'C4', 'F3', 'F3', 'G3', 'G3',
-    'Bb2', 'Bb2', 'D3', 'D3', 'F3', 'F3', 'Ab3', 'Ab3',
-    'G3', 'G3', 'F3', 'F3', 'Eb3', 'Eb3', 'C3', 'C3',
-  ]
-
-  // Harmony — softer pad
-  const harmony = [
-    'C4', 'G4', 'Eb4', 'G4', 'Ab4', 'Eb4', 'F4', 'G4',
-    'C4', 'G4', 'Eb4', 'G4', 'F4', 'C5', 'Bb4', 'G4',
-    'C4', 'G4', 'Eb4', 'G4', 'Ab4', 'Eb4', 'F4', 'G4',
-    'Bb3', 'F4', 'D4', 'F4', 'G4', 'D4', 'Eb4', 'G4',
-  ]
-
-  const noteFreq = {
-    'C3': 130.81, 'D3': 146.83, 'Eb3': 155.56, 'E3': 164.81, 'F3': 174.61, 'G3': 196.00, 'Ab3': 207.65, 'A3': 220.00, 'Bb3': 233.08, 'B3': 246.94,
-    'C4': 261.63, 'D4': 293.66, 'Eb4': 311.13, 'E4': 329.63, 'F4': 349.23, 'G4': 392.00, 'Ab4': 415.30, 'A4': 440.00, 'Bb4': 466.16, 'B4': 493.88,
-    'C5': 523.25, 'D5': 587.33, 'Eb5': 622.25, 'E5': 659.25, 'F5': 698.46, 'G5': 783.99, 'Ab5': 830.61, 'A5': 880.00, 'Bb5': 932.33, 'B5': 987.77,
-    'C6': 1046.50, 'D6': 1174.66,
-  }
-
-  const melBeatLen = beatSec / 2  // 16th notes for melody
-  const bassBeatLen = beatSec / 2  // 8th notes for bass
-  const harmBeatLen = beatSec      // quarter notes for harmony
-
-  // Render melody (square wave — bright, punchy)
-  for (let i = 0; i < melody.length; i++) {
-    const note = melody[i]
-    const freq = noteFreq[note]
-    if (!freq) continue
-    const t0 = i * melBeatLen
-    const t1 = t0 + melBeatLen * 0.85
-    square(data, t0, t1, freq, 0.35)
-  }
-
-  // Render bass (triangle wave — warm, round)
-  for (let i = 0; i < bass.length; i++) {
-    const note = bass[i]
-    const freq = noteFreq[note]
-    if (!freq) continue
-    const t0 = i * bassBeatLen
-    const t1 = t0 + bassBeatLen * 0.8
-    triangle(data, t0, t1, freq, 0.40)
-  }
-
-  // Render harmony (sine wave — soft pad)
-  for (let i = 0; i < harmony.length; i++) {
-    const note = harmony[i]
-    const freq = noteFreq[note]
-    if (!freq) continue
-    const t0 = i * harmBeatLen
-    const t1 = t0 + harmBeatLen * 0.9
-    sine(data, t0, t1, freq, 0.15)
-  }
-
-  // Soft limiter — prevent clipping
-  for (let i = 0; i < len; i++) {
-    data[i] = Math.max(-0.9, Math.min(0.9, data[i]))
-  }
-
-  return buf
-}
+// ─── Background Music (MP3) ──────────────────────────────────
+let _bgmAudio = null
 
 function playBGM() {
   try {
     stopBGM()
-    const ctx = getAudioCtx()
-    if (ctx.state === 'suspended') ctx.resume()
-    if (!_bgmBuffer) _bgmBuffer = generateBGMBuffer(ctx)
-
-    _bgmGain = ctx.createGain()
-    _bgmGain.gain.setValueAtTime(0, ctx.currentTime)
-    _bgmGain.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.3)
-    _bgmGain.connect(ctx.destination)
-
-    _bgmSource = ctx.createBufferSource()
-    _bgmSource.buffer = _bgmBuffer
-    _bgmSource.loop = true
-    _bgmSource.connect(_bgmGain)
-    _bgmSource.start()
-  } catch (e) { console.warn('BGM failed:', e) }
+    _bgmAudio = new Audio('/bgm/Subway-Surfers-theme-song.mp3')
+    _bgmAudio.loop = true
+    _bgmAudio.volume = 0.3
+    _bgmAudio.play().catch(() => {})
+  } catch (_) { /* silent fail */ }
 }
 
 function stopBGM() {
-  try {
-    if (_bgmSource) { _bgmSource.stop(); _bgmSource.disconnect(); _bgmSource = null }
-    if (_bgmGain) { _bgmGain.disconnect(); _bgmGain = null }
-  } catch (_) { _bgmSource = null; _bgmGain = null }
+  if (_bgmAudio) {
+    _bgmAudio.pause()
+    _bgmAudio.currentTime = 0
+    _bgmAudio = null
+  }
 }
 
 function playCashSound() {
