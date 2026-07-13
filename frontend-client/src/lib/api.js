@@ -264,3 +264,48 @@ export function useUpdateReputationMutation() {
     },
   })
 }
+
+// ─── Fraud City: Save/Load System ────────────────────────────
+
+export function useSavesQuery() {
+  return useQuery({
+    queryKey: ['saves'],
+    queryFn: () => apiClient.get('/saves').then((res) => res.data),
+  })
+}
+
+export function useSaveGameMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ slotNumber, saveData }) =>
+      apiClient.post('/saves', { slotNumber, saveData }).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['saves'] })
+    },
+  })
+}
+
+export function useLoadGameMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (saveId) =>
+      apiClient.post(`/saves/${saveId}/load`).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['playerStats'] })
+      queryClient.invalidateQueries({ queryKey: ['progress'] })
+      queryClient.invalidateQueries({ queryKey: ['relationships'] })
+      queryClient.invalidateQueries({ queryKey: ['evidence'] })
+    },
+  })
+}
+
+export function useDeleteSaveMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (saveId) =>
+      apiClient.delete(`/saves/${saveId}`).then((res) => res.data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['saves'] })
+    },
+  })
+}

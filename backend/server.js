@@ -1903,6 +1903,230 @@ app.post('/api/player/stats/update', (req, res) => {
   })
 })
 
+// ─── Fraud City: Save/Load System ────────────────────────────
+
+// GET /api/saves — list all save slots for player
+app.get('/api/saves', (req, res) => {
+  const playerId = req.query.playerId || 'player-1'
+  db.all('SELECT * FROM save_slots WHERE player_id = ? ORDER BY slot_number', [playerId], (err, rows) => {
+    if (err) {
+      logger.error('GET /api/saves error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    res.json(rows.map(r => ({
+      id: r.id,
+      slotName: r.slot_name,
+      slotNumber: r.slot_number,
+      level: r.level,
+      playTime: r.play_time,
+      location: r.location,
+      thumbnail: r.thumbnail ? JSON.parse(r.thumbnail) : null,
+      hasData: r.save_data !== '{}',
+      createdAt: r.created_at,
+      updatedAt: r.updated_at,
+    })))
+  })
+})
+
+// POST /api/saves — save game to a slot
+app.post('/api/saves', (req, res) => {
+  const playerId = req.body.playerId || 'player-1'
+  const slotNumber = req.body.slotNumber || 1
+  const saveData = req.body.saveData
+  const now = new Date().toISOString()
+
+  if (!saveData) return res.status(400).json({ error: 'saveData is required' })
+
+  // Gather current game state
+  const gatherState = () => {
+    return new Promise((resolve, reject) => {
+      const state = { playerStats: null, progress: [], relationships: [], evidence: [] }
+      let pending = 4
+
+      db.get('SELECT * FROM player_stats WHERE player_id = ?', [playerId], (err, stats) => {
+        if (stats) state.playerStats = {
+          level: stats.level, xp: stats.xp, xpToNext: stats.xp_to_next,
+          totalXp: stats.total_xp, skillPoints: stats.skill_points,
+          skills: JSON.parse(stats.skills), reputation: JSON.parse(stats.reputation),
+          titles: JSON.parse(stats.titles), achievements: JSON.parse(stats.achievements),
+          playTime: stats.play_time, scamsPrevented: stats.scams_prevented,
+          citizensHelped: stats.citizens_helped,
+        }
+        if (--pending === 0) resolve(state)
+      })
+
+      db.all('SELECT * FROM player_progress WHERE player_id = ?', [playerId], (err, rows) => {
+        state.progress = (rows || []).map(r => ({
+          missionId: r.mission_id, status: r.status,
+          objectivesComplete: r.objectives_complete ? JSON.parse(r.objectives_complete) : [],
+          xpEarned: r.xp_earned,
+        }))
+        if (--pending === 0) resolve(state)
+      })
+
+      db.all('SELECT * FROM npc_relationships WHERE player_id = ?', [playerId], (err, rows) => {
+        state.relationships = (rows || []).map(r => ({
+          npcId: r.npc_id, trustLevel: r.trust_level,
+          met: r.met ? true : false, totalTalks: r.total_talks,
+        }))
+        if (--pending === 0) resolve(state)
+      })
+
+      db.all('SELECT * FROM evidence WHERE player_id = ?', [playerId], (err, rows) => {
+        state.evidence = (rows || []).map(r => ({
+          id: r.id, evidenceType: r.evidence_type, title: r.title,
+          description: r.description, content: r.content ? JSON.parse(r.content) : null,
+          isRead: r.is_read ? true : false, collectedAt: r.collected_at,
+        }))
+        if (--pending === 0) resolve(state)
+      })
+    })
+  }
+
+  gatherState().then(state => {
+    const level = state.playerStats?.level || 1
+    const playTime = state.playerStats?.playTime || 0
+    const location = saveData.currentLocation || 'neighborhood'
+    const thumbnail = {
+      level, location, playTime,
+      missionsCompleted: state.progress.filter(p => p.status === 'completed').length,
+      evidenceCount: state.evidence.length,
+    }
+
+    // Upsert save slot
+    db.get('SELECT * FROM save_slots WHERE player_id = ? AND slot_number = ?', [playerId, slotNumber], (err, existing) => {
+      if (existing) {
+        db.run(
+          'UPDATE save_slots SET save_data = ?, level = ?, play_time = ?, location = ?, thumbnail = ?, updated_at = ? WHERE id = ?',
+          [JSON.stringify(state), level, playTime, location, JSON.stringify(thumbnail), now, existing.id],
+          function (err2) {
+            if (err2) {
+              logger.error('POST /api/saves update error:', err2.message)
+              return res.status(500).json({ error: 'Internal server error' })
+            }
+            res.json({ id: existing.id, slotNumber, updatedAt: now })
+          }
+        )
+      } else {
+        const saveId = `save-${playerId}-${slotNumber}-${Date.now()}`
+        db.run(
+          'INSERT INTO save_slots (id, player_id, slot_name, slot_number, save_data, level, play_time, location, thumbnail, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+          [saveId, playerId, `Slot ${slotNumber}`, slotNumber, JSON.stringify(state), level, playTime, location, JSON.stringify(thumbnail), now, now],
+          function (err2) {
+            if (err2) {
+              logger.error('POST /api/saves insert error:', err2.message)
+              return res.status(500).json({ error: 'Internal server error' })
+            }
+            res.status(201).json({ id: saveId, slotNumber, createdAt: now })
+          }
+        )
+      }
+    })
+  }).catch(err => {
+    logger.error('POST /api/saves gather error:', err.message)
+    res.status(500).json({ error: 'Failed to gather save data' })
+  })
+})
+
+// POST /api/saves/:id/load — load game from a save slot
+app.post('/api/saves/:id/load', (req, res) => {
+  const playerId = req.body.playerId || 'player-1'
+  const saveId = req.params.id
+
+  db.get('SELECT * FROM save_slots WHERE id = ? AND player_id = ?', [saveId, playerId], (err, save) => {
+    if (err) {
+      logger.error('POST /api/saves/:id/load error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (!save) return res.status(404).json({ error: 'Save not found' })
+    if (save.save_data === '{}') return res.status(400).json({ error: 'Save slot is empty' })
+
+    const state = JSON.parse(save.save_data)
+    const now = new Date().toISOString()
+
+    // Restore player stats
+    if (state.playerStats) {
+      const s = state.playerStats
+      db.run(
+        `UPDATE player_stats SET level = ?, xp = ?, xp_to_next = ?, total_xp = ?, skill_points = ?,
+         skills = ?, reputation = ?, titles = ?, achievements = ?, play_time = ?,
+         scams_prevented = ?, citizens_helped = ?, updated_at = ? WHERE player_id = ?`,
+        [s.level, s.xp, s.xpToNext, s.totalXp, s.skillPoints,
+         JSON.stringify(s.skills), JSON.stringify(s.reputation),
+         JSON.stringify(s.titles), JSON.stringify(s.achievements),
+         s.playTime, s.scamsPrevented, s.citizensHelped, now, playerId]
+      )
+    }
+
+    // Restore mission progress
+    if (state.progress && state.progress.length > 0) {
+      db.run('DELETE FROM player_progress WHERE player_id = ?', [playerId])
+      state.progress.forEach(p => {
+        const progId = `prog-${playerId}-${p.missionId}`
+        db.run(
+          'INSERT INTO player_progress (id, player_id, mission_id, status, objectives_complete, xp_earned, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          [progId, playerId, p.missionId, p.status, JSON.stringify(p.objectivesComplete), p.xpEarned || 0, now]
+        )
+      })
+    }
+
+    // Restore relationships
+    if (state.relationships && state.relationships.length > 0) {
+      db.run('DELETE FROM npc_relationships WHERE player_id = ?', [playerId])
+      state.relationships.forEach(r => {
+        const relId = `rel-${playerId}-${r.npcId}`
+        db.run(
+          'INSERT INTO npc_relationships (id, player_id, npc_id, trust_level, met, total_talks, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          [relId, playerId, r.npcId, r.trustLevel, r.met ? 1 : 0, r.totalTalks, now]
+        )
+      })
+    }
+
+    // Restore evidence
+    if (state.evidence && state.evidence.length > 0) {
+      db.run('DELETE FROM evidence WHERE player_id = ?', [playerId])
+      state.evidence.forEach(ev => {
+        db.run(
+          'INSERT INTO evidence (id, player_id, evidence_type, title, description, content, is_read, collected_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+          [ev.id, playerId, ev.evidenceType, ev.title, ev.description,
+           ev.content ? JSON.stringify(ev.content) : null, ev.isRead ? 1 : 0, ev.collectedAt]
+        )
+      })
+    }
+
+    res.json({
+      success: true,
+      level: state.playerStats?.level || 1,
+      location: save.location,
+      playTime: save.play_time,
+    })
+  })
+})
+
+// DELETE /api/saves/:id — delete a save slot
+app.delete('/api/saves/:id', (req, res) => {
+  db.get('SELECT * FROM save_slots WHERE id = ?', [req.params.id], (err, save) => {
+    if (err) {
+      logger.error('DELETE /api/saves/:id error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (!save) return res.status(404).json({ error: 'Save not found' })
+
+    // Reset to empty rather than delete
+    db.run(
+      'UPDATE save_slots SET save_data = ?, level = 1, play_time = 0, location = ?, thumbnail = ?, updated_at = ? WHERE id = ?',
+      ['{}', 'neighborhood', null, new Date().toISOString(), req.params.id],
+      function (err2) {
+        if (err2) {
+          logger.error('DELETE /api/saves/:id reset error:', err2.message)
+          return res.status(500).json({ error: 'Internal server error' })
+        }
+        res.json({ success: true })
+      }
+    )
+  })
+})
+
 // ─── Hub Stats (static) ──────────────────────────────────────
 app.get('/api/stats', (req, res) => {
   res.json([
