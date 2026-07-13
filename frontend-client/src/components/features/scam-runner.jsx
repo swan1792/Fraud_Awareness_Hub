@@ -659,6 +659,13 @@ export function ScamRunner() {
     playBGM()
   }, [])
 
+  const handleExit = useCallback(() => {
+    if (gameRef.current) gameRef.current.state = 'idle'
+    if (animRef.current) cancelAnimationFrame(animRef.current)
+    stopBGM()
+    setGameState('idle'); setScamPopup(null)
+  }, [])
+
   useEffect(() => {
     const onKey = (e) => {
       if (e.code === 'Enter' && scamPopup) {
@@ -959,7 +966,13 @@ export function ScamRunner() {
   }
 
   return (
-    <div className="flex justify-center py-2">
+    <div className="flex flex-col items-center py-2">
+      <button
+        onClick={handleExit}
+        className="mb-2 px-4 py-1.5 text-xs font-bold text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+      >
+        ✕ {t('game.runner.exit', 'Exit')}
+      </button>
       <canvas
         ref={canvasRef}
         width={CW}
