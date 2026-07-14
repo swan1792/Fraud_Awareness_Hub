@@ -1,0 +1,20 @@
+	I want to add a dedicated Analytics page to the admin section of my "Fraud Awareness Hub" website. This page will display visitor data, locations, and top click events using an iframe embed from our privacy-focused analytics provider.
+
+Please execute the following steps:
+
+1. **Locate the Main Layout/HTML Entry**: Scan the codebase to find the primary layout file or HTML entry point (e.g., `index.html`, `layout.js`, `App.jsx`, or `RootLayout`). 
+   - Inject this tracking script snippet inside the <head> tags:
+     <script defer src="https://cloud.umami.is/script.js" data-website-id="6811d928-ea88-45f2-85a6-45f2f44ae076"></script>
+
+2. **Add Click Tracking Attributes**: Scan our main public facing pages/components (especially buttons or links related to fraud alerts, reporting forms, or guides). Add the appropriate custom tracking data attributes to the top 3-5 high-value action buttons so we can track "Most Clicks".
+
+3. **Locate the Admin Dashboard/Routing**: Scan the codebase to find where the admin pages, admin dashboard layout, or admin routing configurations are managed. 
+
+4. **Create the Analytics Page**: Create a new page/component named `Analytics` (matching the file extension and styling architecture of the project, e.g., Tailwind, CSS, etc.). 
+   - Inside this page, build a clean container wrapper with a header titled "Website Traffic & Analytics".
+   - Embed the analytics dashboard using an `<iframe>` element. Ensure it is responsive, filling the width and height of the dashboard panel elegantly. Use this URL for the iframe source:
+     https://cloud.umami.is/share/FfI4DpFnWDB5Ni3J
+
+5. **Update Admin Navigation**: Find the sidebar, header navigation, or routing menu within the admin layout and add a new link/button labeled "Analytics" that navigates to this newly created page.
+
+Please review the repository first and let me know your plan and what files you intend to modify before writing any code.

@@ -10,6 +10,7 @@ export function HomePage() {
   const games = [
     {
       to: "/game",
+      umamiEvent: "click-phishing-quiz",
       title: t("home.games.phishing.title"),
       description: t("home.games.phishing.description"),
       eyebrow: t("home.games.phishing.eyebrow"),
@@ -21,6 +22,7 @@ export function HomePage() {
     },
     {
       to: "/simulator",
+      umamiEvent: "click-chat-simulator",
       title: t("home.games.simulator.title"),
       description: t("home.games.simulator.description"),
       eyebrow: t("home.games.simulator.eyebrow"),
@@ -32,6 +34,7 @@ export function HomePage() {
     },
     {
       to: "/spot-fake",
+      umamiEvent: "click-spot-fake-slip",
       title: t("home.games.spotFake.title"),
       description: t("home.games.spotFake.description"),
       eyebrow: t("home.games.spotFake.eyebrow"),
@@ -67,6 +70,7 @@ export function HomePage() {
               <Link
                 key={game.to}
                 to={game.to}
+                data-umami-event={game.umamiEvent}
                 className={`group relative flex h-full min-h-64 flex-col overflow-hidden rounded-3xl border border-gray-200/80 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-orange-200 hover:shadow-xl hover:-translate-y-2 ${game.glow}`}
               >
                 {/* Gradient glow blob */}

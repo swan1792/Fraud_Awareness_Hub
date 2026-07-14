@@ -9,9 +9,9 @@ export function PublicLayout() {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
-    { label: t("nav.home"), href: "/", icon: Home },
-    { label: t("nav.chatSim"), href: "/simulator", icon: MessageSquareWarning },
-    { label: t("nav.spotFake"), href: "/spot-fake", icon: FileSearch },
+    { label: t("nav.home"), href: "/", icon: Home, umamiEvent: "nav-home" },
+    { label: t("nav.chatSim"), href: "/simulator", icon: MessageSquareWarning, umamiEvent: "nav-chat-simulator" },
+    { label: t("nav.spotFake"), href: "/spot-fake", icon: FileSearch, umamiEvent: "nav-spot-fake" },
   ]
 
   const toggleLanguage = () => {
@@ -53,6 +53,7 @@ export function PublicLayout() {
                   <Link
                     key={item.href}
                     to={item.href}
+                    data-umami-event={item.umamiEvent}
                     className={`relative flex items-center gap-2 rounded-lg px-3.5 py-2 text-sm font-medium transition duration-200 ${
                       isActive
                         ? "bg-white/15 text-white shadow-sm"
@@ -74,6 +75,7 @@ export function PublicLayout() {
               <button
                 type="button"
                 onClick={toggleLanguage}
+                data-umami-event="toggle-language"
                 className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 min-h-11 text-xs font-semibold text-zinc-300 transition hover:border-orange-400/40 hover:bg-orange-500/15 hover:text-orange-200"
               >
                 <Globe className="size-3.5" />
@@ -83,6 +85,7 @@ export function PublicLayout() {
               {/* Desktop CTA */}
               <Link
                 to="/game"
+                data-umami-event="play-game-cta"
                 className="group relative hidden items-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 via-orange-600 to-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-950/40 transition duration-300 hover:-translate-y-0.5 hover:brightness-110 hover:shadow-xl hover:shadow-orange-950/50 active:translate-y-0 active:scale-[0.98] sm:flex"
               >
                 <span className="absolute inset-0 -translate-x-[120%] bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover:translate-x-[120%]" />
@@ -114,6 +117,7 @@ export function PublicLayout() {
                         key={item.href}
                         to={item.href}
                         onClick={() => setIsOpen(false)}
+                        data-umami-event={item.umamiEvent}
                         className={`flex items-center gap-3 rounded-xl border px-3.5 py-3 text-sm font-medium transition ${
                           isActive
                             ? "border-orange-400/25 bg-orange-500/15 text-orange-100"
@@ -129,6 +133,7 @@ export function PublicLayout() {
                 <Link
                   to="/game"
                   onClick={() => setIsOpen(false)}
+                  data-umami-event="play-game-mobile"
                   className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 via-orange-600 to-red-600 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-950/40 transition hover:brightness-110 active:scale-[0.98]"
                 >
                   <Gamepad2 className="size-4" />
@@ -171,11 +176,11 @@ export function PublicLayout() {
               <h2 className="text-xs font-semibold tracking-[0.18em] text-zinc-200 uppercase">{t("footer.practiseSafely")}</h2>
               <nav className="mt-4 space-y-3">
                 {[
-                  { to: "/game", label: t("footer.phishingQuiz"), icon: Gamepad2 },
-                  { to: "/simulator", label: t("footer.chatSimulator"), icon: MessageSquareWarning },
-                  { to: "/spot-fake", label: t("footer.spotFakeSlip"), icon: FileSearch },
+                  { to: "/game", label: t("footer.phishingQuiz"), icon: Gamepad2, umamiEvent: "footer-phishing-quiz" },
+                  { to: "/simulator", label: t("footer.chatSimulator"), icon: MessageSquareWarning, umamiEvent: "footer-chat-simulator" },
+                  { to: "/spot-fake", label: t("footer.spotFakeSlip"), icon: FileSearch, umamiEvent: "footer-spot-fake-slip" },
                 ].map((item) => (
-                  <Link key={item.to} to={item.to} className="group flex w-fit items-center gap-2.5 py-2 text-sm text-zinc-400 transition hover:text-white">
+                  <Link key={item.to} to={item.to} data-umami-event={item.umamiEvent} className="group flex w-fit items-center gap-2.5 py-2 text-sm text-zinc-400 transition hover:text-white">
                     <item.icon className="size-4 text-zinc-600 transition group-hover:text-orange-400" />
                     {item.label}
                   </Link>
