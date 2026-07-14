@@ -43,6 +43,13 @@ Each developer needs:
 - Run `npm run dev` to start all services
 - Backend auto-creates `fraud_hub.db` on first start — no manual DB setup needed
 
+## Translation Policy (Myanmar / my.json)
+- **Do not** modify existing Myanmar translations in `frontend-client/src/locales/my.json`
+- When adding features, add new keys with best-effort Myanmar translations
+- Myanmar translation accuracy is reviewed by the team before merging
+- `en.json` is the source of truth — edit freely
+- Both locale files must always have matching keys (run the validation script to check)
+
 ---
 
 _Signed (all members):_

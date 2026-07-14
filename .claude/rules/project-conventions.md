@@ -71,3 +71,11 @@ export function useCreateItemMutation() {
 - Use `cn()` helper for conditional classes: `cn("base-class", condition && "conditional-class")`
 - No inline styles except for dynamic values (e.g., `width: ${percent}%`)
 - No separate CSS files for components
+
+## Translation Rules (i18n)
+- **NEVER** modify existing values in `frontend-client/src/locales/my.json`
+- **ONLY** add new keys when adding new features that require translation
+- When adding new keys, provide best-effort Myanmar translations (the team reviews)
+- Myanmar translations are manually maintained and reviewed by the team
+- `en.json` can be edited freely — it's the source of truth for English strings
+- Both `en.json` and `my.json` must always have the same keys (1:1 match)
