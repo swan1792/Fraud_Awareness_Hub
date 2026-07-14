@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # Python LLM Inference Server
+  llm-server:
+    build:
+      context: ./ml/server
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_DIR=/app/models/scammer-llm
+      - MAX_TOKENS=150
+      - TEMPERATURE=0.8
+    volumes:
+      - ./ml/models:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Express Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PYTHON_SIDECAR_URL=http://llm-server:8000
+    depends_on:
+      llm-server:
+        condition: service_healthy
+
+  # Client Frontend
+  frontend-client:
+    build:
+      context: ./frontend-client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  # Admin Frontend
+  frontend-admin:
+    build:
+      context: ./frontend-admin
+      dockerfile: Dockerfile
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend

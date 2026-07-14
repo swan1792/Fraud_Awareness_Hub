@@ -150,18 +150,75 @@
     "kbzSecurity": "KBZ Security Team",
     "typing": "typing...",
     "online": "Online",
-    "initialMessage": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity.",
-    "pressureMessage": "I understand your concern, but this is very urgent. If you don't verify within 5 minutes, your account will be permanently locked and all funds frozen. We are trying to protect you from fraud.",
-    "goodbyeMessage": "Fine, we have noted your refusal. Your account will be reviewed by our team. Goodbye.",
-    "thankYouMessage": "Thank you for your cooperation. Your account is now being processed and will be verified shortly. You will receive a confirmation SMS within 24 hours.",
     "scammedTitle": "You Got Scammed!",
-    "scammedDesc": "Never share your OTP with anyone — not even someone claiming to be from your bank. Real banks will NEVER ask for your OTP over the phone or chat.",
-    "safeTitle": "Red Flag Spotted!",
-    "safeDesc": "Great job! You recognized this as a scam. Remember: banks never ask for OTPs via chat or phone. Urgency and threats are classic scammer tactics.",
-    "gameOver": "Game over — click Restart to play again",
+    "scammedDesc": "Never share your OTP with anyone — not even someone claiming to be from your bank.",
+    "safeTitle": "Well Done!",
+    "safeDesc": "You spotted the scam and protected yourself.",
+    "whatWentWrong": "What went wrong:",
+    "whatYouDidRight": "What you did right:",
+    "flagSharedInfo": "You shared personal information (OTP/numbers)",
+    "flagUrgency": "You fell for the urgency tactic",
+    "flagAuthority": "You trusted a fake authority figure",
+    "goodRefuse": "You refused to share sensitive information",
+    "goodVerify": "You questioned who they were",
+    "goodReport": "You ended the conversation safely",
+    "playAgain": "Try Again",
+    "done": "Done",
+    "share": "Share",
+    "report": "Report & Block",
     "placeholder": "Type your reply...",
-    "restart": "Restart",
-    "tip": "Tip: Real banks never ask for your OTP via chat or phone."
+    "tip": "Never share OTP with anyone claiming to be your bank.",
+    "serverError": "Connection Error",
+    "serverErrorDesc": "Unable to connect to the chat service. Please try again.",
+    "tryAgain": "Try Again",
+    "suggestedReplies": "Tap a reply or type your own:"
+  },
+  "onboarding": {
+    "title": "Scammer Chat Simulator",
+    "description": "You'll be chatting with someone pretending to be from KBZ Bank. Your goal: Don't share your OTP!",
+    "step1": "A fake bank representative will message you",
+    "step2": "They'll try to trick you into sharing your OTP code",
+    "step3": "Your goal is to protect your account without sharing sensitive info",
+    "warning": "This is a training exercise. No real bank will ever ask for your OTP.",
+    "start": "Start Simulation"
+  },
+  "warningPopup": {
+    "title": "⚠️ Reality Check!",
+    "message": "This person is NOT from KBZ Bank. Real banks will NEVER ask for your OTP via chat or phone.",
+    "dontShare": "🚫 NEVER share your OTP with anyone!",
+    "startOver": "Start Over",
+    "nextLevel": "Next Level"
+  },
+  "education": {
+    "redFlagDetected": "⚠️ Red Flag Detected - Learn Why This Is Suspicious"
+  },
+  "debrief": {
+    "scammedTitle": "You Got Scammed!",
+    "scammedDesc": "Don't worry - this was a training exercise. Here's what you learned:",
+    "safeTitle": "Well Done!",
+    "safeDesc": "You successfully identified this as a scam. Here's what to remember:",
+    "tacticsUsed": "🎯 Scam Tactics Used Against You",
+    "tactics": {
+      "authority": "Authority Impersonation - They pretended to be KBZ Bank",
+      "urgency": "Creating Urgency - They tried to make you panic",
+      "fear": "Fear of Loss - They threatened your money was at risk",
+      "otp_request": "OTP Request - They asked for your verification code",
+      "guilt": "Emotional Manipulation - They tried to make you feel guilty"
+    },
+    "redFlagsTitle": "🚩 Red Flags You Should Always Watch For",
+    "redFlags": {
+      "otpRequest": "NEVER share your OTP - Banks will NEVER ask for it",
+      "urgency": "Scammers create fake urgency to prevent you from thinking",
+      "unverifiable": "Always verify independently - Call the official bank number"
+    },
+    "whatToDoTitle": "✅ What To Do If This Happens In Real Life",
+    "actions": {
+      "callBank": "Call KBZ directly at their official number",
+      "verify": "Visit your nearest KBZ branch in person",
+      "neverShare": "NEVER share OTP, PIN, or passwords with anyone"
+    },
+    "tryAgain": "Try Again",
+    "done": "Done"
   },
   "spotGame": {
     "redFlagsFound": "Red Flags Found:",

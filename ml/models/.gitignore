@@ -1,0 +1,11 @@
+# Ignore model files (large binaries)
+*.gguf
+*.bin
+*.pt
+*.pth
+*.onnx
+*.safetensors
+
+# Keep directory structure
+!.gitignore
+!README.md

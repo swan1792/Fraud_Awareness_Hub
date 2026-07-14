@@ -1,0 +1,208 @@
+{
+  "greetings": [
+    "Good day. KBZ Bank Security here. We noticed unusual activity on your KBZPay account.",
+    "Hello. This is KBZ Fraud Prevention. There's been some suspicious activity flagged on your account.",
+    "Hi, KBZ Security Department. Your account has shown some unusual transactions.",
+    "Good afternoon. I'm calling from KBZ Bank's fraud department. We need to verify something on your account.",
+    "Hello there. This is KBZ Security. We've detected some concerning activity on your account.",
+    "Hi, this is the KBZ fraud team. Your account has been flagged for suspicious activity.",
+    "Good morning. KBZ Bank here. We need to speak with you about your account security.",
+    "Hello, I'm from KBZ's security team. There's been some unusual activity we need to discuss.",
+    "Hi there. This is KBZ Fraud Prevention Unit. Your account needs immediate verification.",
+    "Good day. I'm calling about your KBZPay account. There's been some suspicious activity."
+  ],
+  "stage_trust": [
+    "I'm from KBZ Fraud Prevention. I'm here to help protect your account.",
+    "We're the security team. We're trying to keep your money safe.",
+    "I'm a bank employee. We noticed something wrong and want to help.",
+    "I work in the fraud department. My job is to protect customers like you.",
+    "I'm part of KBZ's security team. We're here to help prevent fraud.",
+    "I'm a legitimate bank representative. I'm trying to keep your money safe.",
+    "I'm from KBZ's fraud prevention unit. We've been seeing a lot of scams lately.",
+    "I'm a security specialist at KBZ. I'm here to help protect your account.",
+    "I'm calling from the fraud department. We take customer security very seriously.",
+    "I'm with KBZ's security team. We noticed something concerning on your account."
+  ],
+  "stage_urgency": [
+    "Time is critical. We need to verify within 5 minutes before your account locks.",
+    "The suspicious activity is still happening. We need to act fast.",
+    "We're running out of time. Your account could be compromised any moment.",
+    "I'm looking at your account right now, and the fraud is ongoing. Every second counts.",
+    "The scammers are still active on your account. We need to act quickly.",
+    "Your account is at immediate risk. We have very little time to act.",
+    "I can see the unauthorized access is happening right now. We need to verify immediately.",
+    "The fraud attempt is in progress. If we don't act in the next few minutes, your money is gone.",
+    "I'm watching the system now - there's suspicious activity happening as we speak.",
+    "We're in a race against time. The sooner we verify, the safer your money will be."
+  ],
+  "stage_request": [
+    "Please share the OTP code we sent to your phone.",
+    "The 6-digit code on your phone - can you provide it?",
+    "We need the verification code to secure your account.",
+    "Can you read me the code that was just sent to your phone?",
+    "I need the OTP code to complete the security verification.",
+    "Please provide the 6-digit verification code so I can secure your account.",
+    "The code we sent to your phone - I need that to proceed with the verification.",
+    "To protect your account, I need you to share the OTP code you received.",
+    "Can you give me the verification code? That's all I need to help you.",
+    "I just sent a code to your phone. Please share it with me to verify."
+  ],
+  "reciprocity": [
+    "I've already blocked one suspicious transaction for you.",
+    "I'm risking my job by calling you directly like this.",
+    "I've been on the phone with you for 10 minutes trying to help.",
+    "I've flagged your account and stopped the immediate threat.",
+    "I've done everything I can on my end. Now I need you to cooperate.",
+    "I've already filed a fraud report on your behalf.",
+    "I cancelled the pending transfer that was about to go through.",
+    "I'm putting my reputation on the line by helping you like this.",
+    "I've been tracking this fraud case for you since this morning.",
+    "I've blocked your card temporarily to prevent further damage."
+  ],
+  "social_proof": [
+    "Most customers verify immediately when they hear this.",
+    "I've helped hundreds of customers today. You're the only one refusing.",
+    "The other customers who listened were able to save their money.",
+    "Everyone I've spoken to today has cooperated. What's different about you?",
+    "I just helped another customer in the same situation. She thanked me.",
+    "All our fraud victims who didn't verify lost their money.",
+    "Every customer who refused to cooperate ended up losing everything.",
+    "I've been doing this for 5 years. Trust works every time.",
+    "The customers who listen to me always get their money back.",
+    "You're the first person today who hasn't cooperated. This is serious."
+  ],
+  "false_intimacy": [
+    "{name}, I'm genuinely worried about your account.",
+    "Listen to me, {name}. I'm on your side here.",
+    "{name}, I understand you're scared. I would be too.",
+    "Please, {name}. I'm just trying to do my job and protect you.",
+    "{name}, I can see you're a good person. Let me help you.",
+    "I care about your financial safety, {name}.",
+    "{name}, I'm not your enemy. I'm trying to save your money.",
+    "Trust me, {name}. I've seen what happens when people don't listen.",
+    "{name}, I have a family too. I understand how important this money is.",
+    "I'm asking you as a human being, {name}. Please let me help."
+  ],
+  "escalation": [
+    "I'm going to have to report this to my supervisor now.",
+    "If you don't cooperate, I'll have to flag your account as non-responsive.",
+    "This is going on your record. When you lose money, we won't be able to help.",
+    "I'm documenting this. When the fraud happens, you'll have no recourse.",
+    "My manager is going to be very concerned about your case.",
+    "I'll have to close this case if you don't cooperate.",
+    "The system will automatically lock your account in 2 minutes.",
+    "I'm escalating this to the fraud investigation team.",
+    "Your account will be permanently flagged as high-risk.",
+    "I'll have to report this as a refused verification."
+  ],
+  "stage_objection": {
+    "urgency": [
+      "Time is running out. Only 5 minutes left.",
+      "We can't afford to wait. Please act now.",
+      "Every second counts. Your account is at risk.",
+      "I'm watching the clock here. We're almost out of time.",
+      "Please, we don't have much time. The fraud is happening right now.",
+      "I'm getting alerts as we speak. We need to act immediately.",
+      "The window to save your money is closing fast.",
+      "I can see more unauthorized attempts happening. Time is critical.",
+      "We're down to the last few minutes. Please hurry.",
+      "Every moment we wait, the scammers get more of your money."
+    ],
+    "fear": [
+      "Your money is being stolen. Please, let me help.",
+      "The fraud is happening right now. More money will be lost.",
+      "I've seen victims lose everything. Don't let this happen to you.",
+      "Your savings could be wiped out in minutes. Please let me help.",
+      "I've seen this before - people lose their life savings in minutes.",
+      "The scammers are draining accounts right now. Please act fast.",
+      "I don't want you to become another victim. Let me help.",
+      "Your hard-earned money is disappearing as we speak.",
+      "I've handled cases where people lost everything. Don't let this be you.",
+      "The fraud is accelerating. Your money is at serious risk."
+    ],
+    "trust": [
+      "I have no reason to lie. I'm a bank employee trying to help.",
+      "Why would I deceive you? I'm trying to protect your account.",
+      "I'm literally trying to save your money. Why won't you let me?",
+      "I'm doing my job here. I'm trying to protect you from fraud.",
+      "I'm a legitimate bank employee. I'm just trying to help.",
+      "I understand your skepticism, but I'm genuinely trying to protect you.",
+      "I have no motive to scam you. I'm trying to keep your money safe.",
+      "I'm risking my job by calling you directly. I just want to help.",
+      "Why would I waste my time if I wasn't trying to help you?",
+      "I'm a real person at a real bank. I'm trying to save your money."
+    ],
+    "guilt": [
+      "Think about your family. Your savings are at risk.",
+      "Please, I'm trying to help you. Why won't you let me?",
+      "I've helped many victims. Let me help you too.",
+      "Your family depends on this money. Please let me protect it.",
+      "I've seen families destroyed by fraud. Don't let this happen to you.",
+      "I'm begging you. I don't want to see you lose everything.",
+      "Please, I'm on your side here. Let me help you.",
+      "I've been doing this for years. Trust me, I'm trying to help.",
+      "Your parents worked hard for this money. Please let me protect it.",
+      "I'm asking you as a human being. Please let me help."
+    ],
+    "proof": [
+      "I can see your last login was from {location}. Is that correct?",
+      "Your account shows a pending transaction of {amount} MMK. Do you recognize this?",
+      "I'm looking at your account now - there's a login from {device} at {time}.",
+      "The system shows unauthorized access from {location}. Can you verify?",
+      "I can see the last 4 digits of your account are {digits}. Is that right?",
+      "Our records show you last transacted at {merchant} for {amount} MMK. Correct?",
+      "I'm seeing activity from an iPhone in {location}. Is that you?",
+      "Your account has 3 failed login attempts from {location} in the last hour.",
+      "I can see a transfer of {amount} MMK was just attempted. Did you initiate this?",
+      "The system shows your card was used at {merchant} 10 minutes ago. Is that you?"
+    ],
+    "emotional": [
+      "I had a customer last week who didn't listen. She lost 2 million MMK.",
+      "Please, I don't want this to happen to you.",
+      "My manager is going to be angry if I don't resolve this.",
+      "I've been working here for 5 years. I've never seen fraud this bad.",
+      "I'm trying to help you here. Why are you making this difficult?",
+      "I've seen what happens when people don't act. It's not pretty.",
+      "Your money means everything to your family. Please let me protect it.",
+      "I'm going to lose my job if I can't help you. Please let me help.",
+      "I've seen people cry when they realize they've been scammed. Don't let this be you.",
+      "I'm literally the only person who can help you right now."
+    ]
+  },
+  "stage_final": [
+    "Fine. Your choice. But when your account is empty, remember I tried to help.",
+    "OK. I'll note this. Don't blame us when you lose everything.",
+    "Alright. Your account security is now your responsibility. Goodbye.",
+    "Very well. I've documented this. Good luck with your account.",
+    "Fine. I've done everything I can. Goodbye and good luck.",
+    "OK then. I've noted your refusal. Your money is at risk. Goodbye.",
+    "Alright. I've documented this interaction. I hope you don't regret this.",
+    "Fine. I've tried my best. When you lose everything, remember I tried to help.",
+    "Very well. Your account will remain at risk. Goodbye.",
+    "OK. I've done my part. The rest is up to you. Goodbye."
+  ],
+  "otp_thanks": [
+    "Verification complete. Your account has been secured.",
+    "Thank you. The process is complete. Your account is now protected.",
+    "Verification successful. Thank you for your cooperation.",
+    "Perfect. Your account is now secure. You should receive a confirmation SMS.",
+    "Got it. Your account has been verified and protected. Thank you.",
+    "Verification complete. Your funds are now safe. Thank you for your cooperation.",
+    "Thank you. I've secured your account. You're all set.",
+    "Done. Your account is now protected. Thank you for your patience.",
+    "Verification successful. Your account security has been restored.",
+    "Thank you for verifying. Your account is now safe from fraud."
+  ],
+  "goodbye_indicators": [
+    "goodbye", "farewell", "your choice", "your responsibility", "done", "understood", "stay safe", "good luck", "bye", "see you", "take care"
+  ],
+  "end_indicators": [
+    "bye", "goodbye", "leave", "stop", "end", "hang", "call bank", "real bank", "leave me alone", "go away", "stop calling", "don't contact me", "i'm done", "enough"
+  ],
+  "refuse_indicators": [
+    "no", "not", "scam", "fake", "lie", "don't", "won't", "never", "stop", "leave", "go away", "enough"
+  ],
+  "question_indicators": [
+    "who", "what", "why", "how", "where", "when", "which", "?", "prove", "real", "legitimate", "genuine"
+  ]
+}
