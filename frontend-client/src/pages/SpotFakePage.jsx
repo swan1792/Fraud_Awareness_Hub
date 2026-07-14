@@ -6,10 +6,12 @@ import { QrReceiptVerifier } from "@/components/features/qr-receipt-verifier"
 import { AnimatedBackground } from "@/components/section/animated-background"
 import { cn } from "@/lib/utils"
 
-export function SpotFakePage() {
+export function SpotFakePage() {     
   const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState("click")
 
+
+  
   return (
     <div className="min-h-screen bg-zinc-50">
       <section className="relative isolate overflow-hidden text-white">
