@@ -129,7 +129,31 @@
     "shootInstruction": "🎯 Shoot the correct intervention at the scammer before time runs out!",
     "bestPrefix": "Best: ",
     "stagesClearedCount": "{{count}} stages cleared",
-    "startGame": "Start Game"
+    "startGame": "Start Game",
+    "runner": {
+      "title": "Scam Runner",
+      "intro": "Run through the digital city! Dodge scam obstacles and collect safe messages. Learn about each scam type when you hit one!",
+      "controls": "Controls",
+      "start": "Start Running",
+      "gameOver": "Game Over",
+      "finalScore": "Your score: ",
+      "great": "Amazing! You really know how to spot scams!",
+      "good": "Good job! Keep practicing to improve.",
+      "learn": "Keep learning! Review the scam patterns to improve.",
+      "warning": "In real life, scammers steal your money! Stay alert, verify before you trust, and protect your wallet. If you fall for a scam, you lose real cash!",
+      "playAgain": "Play Again",
+      "popup": {
+        "redFlags": "Red Flags",
+        "howToAvoid": "How to Protect Yourself",
+        "continue": "Continue Running →"
+      },
+      "paused": {
+        "title": "Game Paused",
+        "resume": "▶  Continue",
+        "restart": "🔄  Restart",
+        "exit": "🚪  Exit"
+      }
+    }
   },
   "simulator": {
     "title": "Scammer Chat Simulator",
