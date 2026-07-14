@@ -1,14 +1,15 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Gamepad2, ScanSearch, ShieldCheck, Zap, Map, Sword } from "lucide-react"
+import { Gamepad2, ScanSearch, ShieldCheck, Zap, Map, Sword, Trophy, Coins } from "lucide-react"
 import { GameStage } from "@/components/game/GameStage"
 import { WorldGame } from "@/components/game/WorldGame"
+import { ScamRunner } from "@/components/features/scam-runner"
 import { AnimatedBackground } from "@/components/section/animated-background"
 import { useWorldsQuery } from "@/lib/api"
 
 export function GamePage() {
   const { t } = useTranslation()
-  const [mode, setMode] = useState(null) // null = select, "shooter", "rpg"
+  const [mode, setMode] = useState(null) // null = select, "shooter", "rpg", "runner"
   const [selectedWorld, setSelectedWorld] = useState(null)
 
   const { data: worlds = [] } = useWorldsQuery()
@@ -68,9 +69,30 @@ export function GamePage() {
 
         {/* Game Mode Selection */}
         <section className="relative z-20 -mt-12 px-4 pb-20 md:-mt-16 md:pb-28">
-          <div className="mx-auto max-w-3xl">
+          <div className="mx-auto max-w-4xl">
             <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Choose Your Mode</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* Scam Runner Mode */}
+              <button
+                onClick={() => setMode("runner")}
+                className="group relative overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-6 text-left transition-all hover:border-amber-400 hover:shadow-xl"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-amber-100 to-transparent rounded-bl-full opacity-50" />
+                <div className="relative">
+                  <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-200 transition-colors">
+                    <Trophy className="h-7 w-7 text-amber-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Scam Runner</h3>
+                  <p className="text-sm text-gray-600">
+                    Run through the digital city! Collect safe messages and dodge scam pop-ups.
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-sm text-amber-600 font-medium">
+                    <Coins className="h-4 w-4" />
+                    Collect coins, dodge scams
+                  </div>
+                </div>
+              </button>
+
               {/* Action Shooter Mode */}
               <button
                 onClick={() => setMode("shooter")}
@@ -217,15 +239,86 @@ export function GamePage() {
   }
 
   // RPG mode: Playing world
+  if (mode === "rpg" && selectedWorld) {
+    return (
+      <div className="min-h-screen bg-zinc-50">
+        <section className="relative z-20 px-4 py-8">
+          <WorldGame
+            worldId={selectedWorld}
+            onNpcInteract={handleNpcInteract}
+            onObjectInteract={handleObjectInteract}
+            onBack={() => setSelectedWorld(null)}
+          />
+        </section>
+      </div>
+    )
+  }
+
+  // Runner mode
   return (
     <div className="min-h-screen bg-zinc-50">
-      <section className="relative z-20 px-4 py-8">
-        <WorldGame
-          worldId={selectedWorld}
-          onNpcInteract={handleNpcInteract}
-          onObjectInteract={handleObjectInteract}
-          onBack={() => setSelectedWorld(null)}
-        />
+      <section className="relative isolate overflow-hidden text-white">
+        <AnimatedBackground />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 pt-32 pb-20 md:pt-40 md:pb-24">
+          <div className="max-w-3xl">
+            <button
+              onClick={() => setMode(null)}
+              className="mb-4 text-sm text-amber-300 hover:text-white transition-colors"
+            >
+              ← Back to mode select
+            </button>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-cyan-200 uppercase backdrop-blur-xl">
+              <ShieldCheck className="size-4" />
+              {t("game.badge")}
+            </div>
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl">
+              {t("game.title")}{" "}
+              <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
+                {t("game.titleHighlight")}
+              </span>
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 md:text-xl md:leading-8">
+              {t("game.description")}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {gameFeatures.map((feature) => (
+                <div
+                  key={feature.label}
+                  className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-zinc-300 backdrop-blur-xl"
+                >
+                  <feature.icon className="size-4 text-cyan-300" />
+                  {feature.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="relative z-20 -mt-8 px-4 pb-20 md:-mt-12 md:pb-28">
+        <div className="mx-auto max-w-3xl">
+          <div className="overflow-hidden rounded-3xl border border-zinc-200/80 bg-white shadow-[0_30px_90px_-35px_rgba(9,9,12,0.35)]">
+            <div className="flex items-center justify-between border-b border-zinc-100 bg-gradient-to-r from-zinc-50/90 to-zinc-100/60 px-5 py-3 text-xs text-zinc-500 sm:px-7">
+              <div className="flex items-center gap-2">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                </span>
+                {t("game.statusReady")}
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="hidden sm:inline-flex items-center gap-1 text-amber-600 font-medium">
+                  <Coins className="size-3.5" />
+                  Collect coins
+                </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-red-500 font-medium">
+                  <Trophy className="size-3.5" />
+                  Dodge scams
+                </span>
+              </div>
+            </div>
+            <ScamRunner />
+          </div>
+        </div>
       </section>
     </div>
   )
