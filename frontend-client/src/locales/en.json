@@ -94,7 +94,42 @@
       "gameOver": "💀 GAME OVER!",
       "timeBonus": "TIME BONUS!",
       "defaultScammerLine": "They'll fall for it"
-    }
+    },
+    "chars": {
+      "scammer": "Scammer",
+      "target": "Target",
+      "goodFriend": "You (Good Friend)",
+      "you": "You"
+    },
+    "difficulty": {
+      "1": "Easy",
+      "2": "Medium",
+      "3": "Hard",
+      "4": "Expert",
+      "5": "Master"
+    },
+    "modes": {
+      "chooseMode": "Choose Your Mode",
+      "actionShooter": "Action Shooter",
+      "actionShooterDesc": "Fight scammers in real-time! Shoot correct interventions to save targets before time runs out.",
+      "actionShooterFeature": "6 stages with parallax scrolling",
+      "fraudCityRpg": "Fraud City RPG",
+      "fraudCityRpgDesc": "Explore the city, talk to NPCs, investigate scams, and save citizens through investigation.",
+      "fraudCityRpgFeature": "Open world with 15 locations",
+      "backToModeSelect": "← Back to mode select",
+      "action": "Action",
+      "shooter": "Shooter",
+      "fraud": "Fraud",
+      "city": "City",
+      "rpgDescription": "Choose a location to explore. Talk to NPCs, investigate scams, and save citizens.",
+      "tiles": "tiles"
+    },
+    "stopScammer": "STOP THE SCAMMER",
+    "tapRight": "Tap the RIGHT intervention!",
+    "shootInstruction": "🎯 Shoot the correct intervention at the scammer before time runs out!",
+    "bestPrefix": "Best: ",
+    "stagesClearedCount": "{{count}} stages cleared",
+    "startGame": "Start Game"
   },
   "simulator": {
     "title": "Scammer Chat Simulator",
@@ -211,7 +246,28 @@
     "mismatchTitle": "Transaction Numbers Do NOT Match!",
     "mismatchDesc": "The transaction number from the QR code is different from what's printed on the receipt. This receipt may be tampered with. Do not trust it.",
     "finalWarning": "Always check your banking app to ensure the money was actually received. A receipt alone does not prove payment.",
-    "uploadNew": "Upload New Receipt"
+    "uploadNew": "Upload New Receipt",
+    "scanningQr": "Scanning QR code...",
+    "qrComplete": "QR scan complete",
+    "qrFinished": "QR scan finished (no code found)",
+    "startingOcr": "Starting OCR...",
+    "ocrComplete": "OCR complete",
+    "ocrFinished": "OCR finished",
+    "loadingOcr": "Loading OCR engine...",
+    "initializingOcr": "Initializing OCR...",
+    "downloadingLang": "Downloading language data (first time may be slow)...",
+    "preparingOcr": "Preparing OCR...",
+    "readingText": "Reading text from receipt...",
+    "decoded": "Decoded",
+    "textFound": "Text found",
+    "noText": "No text",
+    "formatLabel": "Format:",
+    "decodedQrData": "Decoded QR data",
+    "couldNotDecode": "Could not decode QR content — showing raw string below",
+    "rawQrString": "Raw QR string (encoded)",
+    "qrNotFoundInImage": "No QR code found in image. Make sure the QR code is clearly visible and well-lit.",
+    "failedToLoadImage": "Failed to load image",
+    "failedToReadFile": "Failed to read file"
   },
   "scamCard": {
     "hoverToReveal": "Hover to reveal warning signs",
@@ -222,7 +278,8 @@
       "Fake APK": "Fake APK",
       "Phishing Link": "Phishing Link",
       "Social Engineering": "Social Engineering"
-    }
+    },
+    "myanmarNotAvailable": "Myanmar text is not available"
   },
   "patterns": {
     "knowTactics": "Know the tactics",
@@ -242,6 +299,26 @@
     "bankWarning": "A legitimate bank will never ask for your OTP, PIN, or password through chat or phone.",
     "copyright": "Digital Fraud Pattern & Awareness Hub. Educational use only.",
     "adminAccess": "Admin access"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for does not exist or has been moved.",
+    "backToHome": "Back to Home"
+  },
+  "shareCard": {
+    "title": "Fraud Awareness Hub",
+    "scamAvoided": "Scam Avoided!",
+    "learnedLesson": "Learned a Lesson!",
+    "copied": "Copied to clipboard!",
+    "share": "Share",
+    "copy": "Copy",
+    "playNow": "Play now at fraud-awareness-hub.vercel.app",
+    "shareSuccess": "🛡️ I just avoided a \"{{title}}\" scam!\n\n✅ Score: {{score}} pts\n⚡ Reaction: {{reactionTime}}s\n🔥 Streak: {{streak}}x\n\nCan you beat my score? Play now!",
+    "shareFailure": "📚 I just learned about the \"{{title}}\" scam!\n\nEvery mistake is a lesson. Play now to protect yourself!"
+  },
+  "worldGame": {
+    "back": "← Back",
+    "controls": "Arrow Keys: Move | Shift: Run | E: Interact"
   },
   "dialog": {
     "close": "Close"
