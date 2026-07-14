@@ -72,6 +72,27 @@ export function GamePage() {
           <div className="mx-auto max-w-4xl">
             <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Choose Your Mode</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              {/* Scam Runner Mode */}
+              <button
+                onClick={() => setMode("runner")}
+                className="group relative overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-6 text-left transition-all hover:border-amber-400 hover:shadow-xl"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-amber-100 to-transparent rounded-bl-full opacity-50" />
+                <div className="relative">
+                  <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-200 transition-colors">
+                    <Trophy className="h-7 w-7 text-amber-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Scam Runner</h3>
+                  <p className="text-sm text-gray-600">
+                    Run through the digital city! Collect safe messages and dodge scam pop-ups.
+                  </p>
+                  <div className="mt-4 flex items-center gap-2 text-sm text-amber-600 font-medium">
+                    <Coins className="h-4 w-4" />
+                    Collect coins, dodge scams
+                  </div>
+                </div>
+              </button>
+
               {/* Action Shooter Mode */}
               <button
                 onClick={() => setMode("shooter")}
@@ -110,27 +131,6 @@ export function GamePage() {
                   <div className="mt-4 flex items-center gap-2 text-sm text-green-600 font-medium">
                     <Map className="h-4 w-4" />
                     Open world with 15 locations
-                  </div>
-                </div>
-              </button>
-
-              {/* Scam Runner Mode */}
-              <button
-                onClick={() => setMode("runner")}
-                className="group relative overflow-hidden rounded-2xl border-2 border-gray-200 bg-white p-6 text-left transition-all hover:border-amber-400 hover:shadow-xl"
-              >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-amber-100 to-transparent rounded-bl-full opacity-50" />
-                <div className="relative">
-                  <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-amber-200 transition-colors">
-                    <Trophy className="h-7 w-7 text-amber-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">Scam Runner</h3>
-                  <p className="text-sm text-gray-600">
-                    Run through the digital city! Collect safe messages and dodge scam pop-ups.
-                  </p>
-                  <div className="mt-4 flex items-center gap-2 text-sm text-amber-600 font-medium">
-                    <Coins className="h-4 w-4" />
-                    Collect coins, dodge scams
                   </div>
                 </div>
               </button>
