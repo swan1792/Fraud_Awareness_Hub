@@ -189,6 +189,33 @@
     "startOver": "Start Over",
     "nextLevel": "Next Level"
   },
+  "levels": {
+    "title": "🎮 Scam Simulator",
+    "subtitle": "Learn to recognize different types of scams",
+    "comingSoon": "Coming Soon",
+    "educationalNote": "🎓 Educational Purpose Only",
+    "educationalNoteDesc": "This simulator teaches you to recognize scam tactics. No real money is involved.",
+    "level1": {
+      "name": "OTP Verification Scam",
+      "description": "Phone call asking for your one-time password"
+    },
+    "level2": {
+      "name": "Fake App Link",
+      "description": "Download links for fake banking apps"
+    },
+    "level3": {
+      "name": "Job Scam",
+      "description": "Fake overseas job offers with upfront fees"
+    },
+    "level4": {
+      "name": "Loan Scam",
+      "description": "Guaranteed loan approval with processing fees"
+    },
+    "level5": {
+      "name": "Romance Scam",
+      "description": "Online dating scams asking for money"
+    }
+  },
   "education": {
     "redFlagDetected": "⚠️ Red Flag Detected - Learn Why This Is Suspicious"
   },

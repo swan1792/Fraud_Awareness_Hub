@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { streamChatMessage, checkSimulatorHealth } from "@/lib/simulator-api"
+import { LevelSelect } from "./level-select"
 
 // Helper: format time like real chat apps
 function formatTime(date) {
@@ -259,7 +260,8 @@ function WarningPopup({ onStartOver, onNextLevel, t }) {
 // Main Simulator Component
 export function ScammerChatSimulator() {
   const { t, i18n } = useTranslation()
-  const [phase, setPhase] = useState("onboarding")
+  const [phase, setPhase] = useState("levels") // levels | onboarding | chat | debrief
+  const [selectedLevel, setSelectedLevel] = useState(null)
   const [messages, setMessages] = useState([])
   const [userInput, setUserInput] = useState("")
   const [outcome, setOutcome] = useState(null)
@@ -271,7 +273,6 @@ export function ScammerChatSimulator() {
   const [showDebrief, setShowDebrief] = useState(false)
   const [showWarning, setShowWarning] = useState(false)
   const [persuasionCount, setPersuasionCount] = useState(0)
-  const [gameLevel, setGameLevel] = useState(1)
   const [currentTactics, setCurrentTactics] = useState([])
   const scrollRef = useRef(null)
 
@@ -379,10 +380,16 @@ export function ScammerChatSimulator() {
 
   const handleReport = useCallback(() => { setOutcome("safe"); setShowDebrief(true) }, [])
 
+  const handleSelectLevel = useCallback((levelId) => {
+    setSelectedLevel(levelId)
+    setPhase("onboarding")
+  }, [])
+
   const handleRestart = useCallback(() => {
     setMessages([]); setUserInput(""); setOutcome(null); setScammerTyping(false)
     setStreamingText(""); setIsLoading(false); setServerError(false); setShowDebrief(false)
-    setShowWarning(false); setPersuasionCount(0); setCurrentTactics([]); setPhase("onboarding")
+    setShowWarning(false); setPersuasionCount(0); setCurrentTactics([]); setPhase("levels")
+    setSelectedLevel(null)
   }, [])
 
   const handleStartOver = useCallback(() => {
@@ -396,6 +403,7 @@ export function ScammerChatSimulator() {
     setTimeout(() => sendToLLM([{ role: "system", content: "start" }]), 800)
   }, [sendToLLM])
 
+  if (phase === "levels") return <LevelSelect onSelectLevel={handleSelectLevel} />
   if (phase === "onboarding") return <OnboardingScreen onStart={() => setPhase("chat")} t={t} />
 
   if (serverError && messages.length === 0) {
