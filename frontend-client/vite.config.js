@@ -10,6 +10,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  define: {
+    __BUNDLED_DEV__: JSON.stringify(true),
+    __SERVER_FORWARD_CONSOLE__: JSON.stringify(false),
+  },
   server: {
     port: 5173,
   },
