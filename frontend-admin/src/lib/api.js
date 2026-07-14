@@ -89,6 +89,22 @@ export function useDeleteAdminMutation() {
   })
 }
 
+// ─── Patterns & Scenarios (read-only) ───────────────────────
+
+export function usePatternsQuery() {
+  return useQuery({
+    queryKey: ['patterns'],
+    queryFn: () => apiClient.get('/patterns').then((res) => res.data),
+  })
+}
+
+export function useScenariosQuery() {
+  return useQuery({
+    queryKey: ['scenarios'],
+    queryFn: () => apiClient.get('/scenarios').then((res) => res.data),
+  })
+}
+
 // ─── Game Stages ─────────────────────────────────────────────
 
 export function useStagesQuery() {

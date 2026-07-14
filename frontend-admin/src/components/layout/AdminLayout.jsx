@@ -27,6 +27,9 @@ export function AdminLayout() {
           <Link to="/dashboard" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm">
             <AlertTriangle className="h-4 w-4" /> Scam Alerts
           </Link>
+          <Link to="/analytics" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm">
+            <BarChart3 className="h-4 w-4" /> Analytics
+          </Link>
 
           {/* Fraud City Section */}
           <div className="pt-3 pb-1 px-3 text-xs text-gray-500 uppercase tracking-wider">Fraud City</div>

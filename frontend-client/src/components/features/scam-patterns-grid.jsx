@@ -5,7 +5,11 @@ import { useAlertsQuery } from "@/lib/api"
 import { ScamCard } from "./scam-card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-const categories = ["Fake APK", "Phishing Link", "Social Engineering"]
+const categories = [
+  { name: "Fake APK", umamiEvent: "filter-fake-apk" },
+  { name: "Phishing Link", umamiEvent: "filter-phishing-link" },
+  { name: "Social Engineering", umamiEvent: "filter-social-engineering" },
+]
 
 export function ScamPatternsGrid() {
   const { t } = useTranslation()
@@ -65,7 +69,7 @@ export function ScamPatternsGrid() {
               <SelectContent>
                 <SelectItem value="all">{t("patterns.all")}</SelectItem>
                 {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>{t(`scamCard.categories.${cat}`, cat)}</SelectItem>
+                  <SelectItem key={cat.name} value={cat.name} data-umami-event={cat.umamiEvent}>{t(`scamCard.categories.${cat.name}`, cat.name)}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -75,6 +79,7 @@ export function ScamPatternsGrid() {
           <div className="hidden flex-wrap gap-2 md:flex">
             <button
               onClick={() => setActiveFilter(null)}
+              data-umami-event="filter-all"
               className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
                 activeFilter === null
                   ? "bg-red-600 text-white shadow-md shadow-red-200/50"
@@ -85,15 +90,16 @@ export function ScamPatternsGrid() {
             </button>
             {categories.map((cat) => (
               <button
-                key={cat}
-                onClick={() => setActiveFilter(cat)}
+                key={cat.name}
+                onClick={() => setActiveFilter(cat.name)}
+                data-umami-event={cat.umamiEvent}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                  activeFilter === cat
+                  activeFilter === cat.name
                     ? "bg-red-600 text-white shadow-md shadow-red-200/50"
                     : "bg-white/80 text-gray-600 shadow-sm backdrop-blur-sm hover:bg-gray-100"
                 }`}
               >
-                {t(`scamCard.categories.${cat}`, cat)}
+                {t(`scamCard.categories.${cat.name}`, cat.name)}
               </button>
             ))}
           </div>
