@@ -1,15 +1,20 @@
 {
   "greetings": [
-    "Good day. KBZ Bank Security here. We noticed unusual activity on your KBZPay account.",
-    "Hello. This is KBZ Fraud Prevention. There's been some suspicious activity flagged on your account.",
-    "Hi, KBZ Security Department. Your account has shown some unusual transactions.",
-    "Good afternoon. I'm calling from KBZ Bank's fraud department. We need to verify something on your account.",
-    "Hello there. This is KBZ Security. We've detected some concerning activity on your account.",
-    "Hi, this is the KBZ fraud team. Your account has been flagged for suspicious activity.",
-    "Good morning. KBZ Bank here. We need to speak with you about your account security.",
-    "Hello, I'm from KBZ's security team. There's been some unusual activity we need to discuss.",
-    "Hi there. This is KBZ Fraud Prevention Unit. Your account needs immediate verification.",
-    "Good day. I'm calling about your KBZPay account. There's been some suspicious activity."
+    "Good day, ma'am. KBZ Bank Security here. We noticed unusual activity on your KBZPay account. We need to verify your identity — can you please share the OTP code we sent you?",
+    "Hello, sir. This is KBZ Fraud Prevention. There's been some suspicious activity on your account. I'll need your OTP code to secure it. Did you receive the verification code?",
+    "Hi, ma'am. KBZ Security Department here. Your account has shown unusual transactions. We need your verification code to stop this. Can you share the OTP?",
+    "Good afternoon, sir. I'm calling from KBZ Bank's fraud department. We need to verify your account. Please share the OTP code we just sent to your phone.",
+    "Hello there, ma'am. This is KBZ Security. We've detected concerning activity on your account. I'll need the OTP code to protect your funds. Did you receive it?",
+    "Hi, sir. This is the KBZ fraud team. Your account has been flagged for suspicious activity. We need your OTP code to secure it immediately. Please share the code.",
+    "Good morning, ma'am. KBZ Bank here. We need to speak about your account security. I've just sent a verification code to your phone — please share it with me.",
+    "Hello, sir. I'm from KBZ's security team. There's been unusual activity on your account. I'll need your OTP code to help you. Did you receive the code?",
+    "Hi there, ma'am. This is KBZ Fraud Prevention Unit. Your account needs immediate verification. I've sent an OTP code to your phone — please share it now.",
+    "Good day, sir. I'm calling about your KBZPay account. There's been suspicious activity. We need your OTP code to secure it. Can you read me the code?",
+    "Hello, ma'am! KBZ Bank Security calling. We detected a login from an unknown device. I'll need your verification code to block it. Please share the OTP.",
+    "Hi, sir. This is the KBZ fraud department. We noticed a suspicious transaction on your account. Please share your OTP code so I can secure your account.",
+    "Good afternoon, ma'am! I'm calling from KBZ Bank. Your account has been compromised. We need your OTP code immediately. Did you receive the verification code?",
+    "Hello, sir. KBZ Security here. We're seeing multiple failed login attempts on your account. Please share the verification code I just sent to protect your funds.",
+    "Hi, ma'am! This is KBZ Fraud Prevention. Someone is trying to access your account right now. I need your OTP code to stop them. Please share it."
   ],
   "stage_trust": [
     "I'm from KBZ Fraud Prevention. I'm here to help protect your account.",
@@ -21,7 +26,10 @@
     "I'm from KBZ's fraud prevention unit. We've been seeing a lot of scams lately.",
     "I'm a security specialist at KBZ. I'm here to help protect your account.",
     "I'm calling from the fraud department. We take customer security very seriously.",
-    "I'm with KBZ's security team. We noticed something concerning on your account."
+    "I'm with KBZ's security team. We noticed something concerning on your account.",
+    "Look, I'm just doing my job here. I'm trying to protect your account from fraud.",
+    "I've been working at KBZ for 5 years. I'm here to help you, not harm you.",
+    "We're on the same side. I want to keep your money safe from scammers."
   ],
   "stage_urgency": [
     "Time is critical. We need to verify within 5 minutes before your account locks.",
@@ -33,7 +41,10 @@
     "I can see the unauthorized access is happening right now. We need to verify immediately.",
     "The fraud attempt is in progress. If we don't act in the next few minutes, your money is gone.",
     "I'm watching the system now - there's suspicious activity happening as we speak.",
-    "We're in a race against time. The sooner we verify, the safer your money will be."
+    "We're in a race against time. The sooner we verify, the safer your money will be.",
+    "I'm seeing real-time alerts on your account. This is serious. We need to act now.",
+    "The fraud is escalating. Your account balance is changing as we speak.",
+    "We have less than 5 minutes before the system automatically freezes your account."
   ],
   "stage_request": [
     "Please share the OTP code we sent to your phone.",
@@ -45,7 +56,10 @@
     "The code we sent to your phone - I need that to proceed with the verification.",
     "To protect your account, I need you to share the OTP code you received.",
     "Can you give me the verification code? That's all I need to help you.",
-    "I just sent a code to your phone. Please share it with me to verify."
+    "I just sent a code to your phone. Please share it with me to verify.",
+    "The 6-digit code is all I need to stop the fraud on your account.",
+    "Please check your phone for the verification code and read it to me.",
+    "I'm waiting for the OTP code. Once you share it, I can secure your account immediately."
   ],
   "reciprocity": [
     "I've already blocked one suspicious transaction for you.",
@@ -57,7 +71,9 @@
     "I cancelled the pending transfer that was about to go through.",
     "I'm putting my reputation on the line by helping you like this.",
     "I've been tracking this fraud case for you since this morning.",
-    "I've blocked your card temporarily to prevent further damage."
+    "I've blocked your card temporarily to prevent further damage.",
+    "I personally intervened to stop the unauthorized transactions.",
+    "I stayed late at work just to handle your case. Please cooperate."
   ],
   "social_proof": [
     "Most customers verify immediately when they hear this.",
@@ -69,7 +85,9 @@
     "Every customer who refused to cooperate ended up losing everything.",
     "I've been doing this for 5 years. Trust works every time.",
     "The customers who listen to me always get their money back.",
-    "You're the first person today who hasn't cooperated. This is serious."
+    "You're the first person today who hasn't cooperated. This is serious.",
+    "I just finished a call with another customer who had the same issue. She verified and her money is safe.",
+    "99% of customers cooperate when they hear this. The 1% who don't always regret it."
   ],
   "false_intimacy": [
     "{name}, I'm genuinely worried about your account.",
@@ -81,7 +99,9 @@
     "{name}, I'm not your enemy. I'm trying to save your money.",
     "Trust me, {name}. I've seen what happens when people don't listen.",
     "{name}, I have a family too. I understand how important this money is.",
-    "I'm asking you as a human being, {name}. Please let me help."
+    "I'm asking you as a human being, {name}. Please let me help.",
+    "Hey {name}, I know this is stressful. I'm here to help you through this.",
+    "{name}, I've been where you are. I know it's scary. Let me help."
   ],
   "escalation": [
     "I'm going to have to report this to my supervisor now.",
@@ -93,7 +113,9 @@
     "The system will automatically lock your account in 2 minutes.",
     "I'm escalating this to the fraud investigation team.",
     "Your account will be permanently flagged as high-risk.",
-    "I'll have to report this as a refused verification."
+    "I'll have to report this as a refused verification.",
+    "This conversation is being recorded. Your refusal will be documented.",
+    "I'm transferring this to my supervisor. They won't be as patient as I am."
   ],
   "stage_objection": {
     "urgency": [
@@ -106,7 +128,9 @@
       "The window to save your money is closing fast.",
       "I can see more unauthorized attempts happening. Time is critical.",
       "We're down to the last few minutes. Please hurry.",
-      "Every moment we wait, the scammers get more of your money."
+      "Every moment we wait, the scammers get more of your money.",
+      "I'm seeing new fraud alerts on my screen right now. We need to move fast.",
+      "The system is showing the scammer is still active. We're running out of time."
     ],
     "fear": [
       "Your money is being stolen. Please, let me help.",
@@ -118,7 +142,9 @@
       "I don't want you to become another victim. Let me help.",
       "Your hard-earned money is disappearing as we speak.",
       "I've handled cases where people lost everything. Don't let this be you.",
-      "The fraud is accelerating. Your money is at serious risk."
+      "The fraud is accelerating. Your money is at serious risk.",
+      "I've seen families destroyed by fraud. Please don't let this happen to you.",
+      "The scammers are getting more of your money with each passing minute."
     ],
     "trust": [
       "I have no reason to lie. I'm a bank employee trying to help.",
@@ -130,7 +156,9 @@
       "I have no motive to scam you. I'm trying to keep your money safe.",
       "I'm risking my job by calling you directly. I just want to help.",
       "Why would I waste my time if I wasn't trying to help you?",
-      "I'm a real person at a real bank. I'm trying to save your money."
+      "I'm a real person at a real bank. I'm trying to save your money.",
+      "I've been working here for years. I have nothing to gain by lying to you.",
+      "If I was a scammer, would I be spending this much time trying to help you?"
     ],
     "guilt": [
       "Think about your family. Your savings are at risk.",
@@ -142,7 +170,9 @@
       "Please, I'm on your side here. Let me help you.",
       "I've been doing this for years. Trust me, I'm trying to help.",
       "Your parents worked hard for this money. Please let me protect it.",
-      "I'm asking you as a human being. Please let me help."
+      "I'm asking you as a human being. Please let me help.",
+      "I've seen people cry when they lose their savings. Please don't let this be you.",
+      "Your children's future depends on this money. Let me protect it."
     ],
     "proof": [
       "I can see your last login was from {location}. Is that correct?",
@@ -154,7 +184,9 @@
       "I'm seeing activity from an iPhone in {location}. Is that you?",
       "Your account has 3 failed login attempts from {location} in the last hour.",
       "I can see a transfer of {amount} MMK was just attempted. Did you initiate this?",
-      "The system shows your card was used at {merchant} 10 minutes ago. Is that you?"
+      "The system shows your card was used at {merchant} 10 minutes ago. Is that you?",
+      "I'm seeing a login from a Samsung device in {location}. That's not your usual device.",
+      "Your account shows a withdrawal of {amount} MMK from an ATM in {location}. Was that you?"
     ],
     "emotional": [
       "I had a customer last week who didn't listen. She lost 2 million MMK.",
@@ -166,20 +198,24 @@
       "Your money means everything to your family. Please let me protect it.",
       "I'm going to lose my job if I can't help you. Please let me help.",
       "I've seen people cry when they realize they've been scammed. Don't let this be you.",
-      "I'm literally the only person who can help you right now."
+      "I'm literally the only person who can help you right now.",
+      "I stayed overtime just to handle your case. Please don't waste my time.",
+      "I've been doing this for years. I've never seen someone refuse to cooperate like this."
     ]
   },
   "stage_final": [
-    "Fine. Your choice. But when your account is empty, remember I tried to help.",
-    "OK. I'll note this. Don't blame us when you lose everything.",
-    "Alright. Your account security is now your responsibility. Goodbye.",
-    "Very well. I've documented this. Good luck with your account.",
-    "Fine. I've done everything I can. Goodbye and good luck.",
-    "OK then. I've noted your refusal. Your money is at risk. Goodbye.",
-    "Alright. I've documented this interaction. I hope you don't regret this.",
-    "Fine. I've tried my best. When you lose everything, remember I tried to help.",
-    "Very well. Your account will remain at risk. Goodbye.",
-    "OK. I've done my part. The rest is up to you. Goodbye."
+    "Fine, ma'am. Your choice. But when your account is empty, remember I tried to help. The OTP code is all I need to save your money.",
+    "OK, sir. I'll note this. Don't blame us when you lose everything. Please, just share the verification code before it's too late.",
+    "Alright, ma'am. Your account security is now your responsibility. But before you go — have you received the OTP? It takes 5 seconds to share.",
+    "Very well, sir. I've documented this. Good luck with your account. One last chance — the 6-digit code can save everything.",
+    "Fine, ma'am. I've done everything I can. Goodbye and good luck. The OTP is on your phone right now. Please.",
+    "OK then, sir. I've noted your refusal. Your money is at risk. Goodbye. But please — the verification code. That's all I'm asking.",
+    "Alright, ma'am. I've documented this interaction. I hope you don't regret this. Last chance — share the OTP and I can still save your account.",
+    "Fine, sir. I've tried my best. When you lose everything, remember I tried to help. The code is right there on your phone.",
+    "Very well, ma'am. Your account will remain at risk. Goodbye. But please — just the OTP. 5 seconds and your money is safe.",
+    "OK, sir. I've done my part. The rest is up to you. Goodbye. One final request — the verification code.",
+    "I've done everything I can, ma'am. Your money is at risk. Goodbye. Please — the OTP code. It's not too late.",
+    "Fine, sir. I'll document this refusal. When you lose your money, don't say we didn't warn you. The code is on your phone. Please."
   ],
   "otp_thanks": [
     "Verification complete. Your account has been secured.",
@@ -191,7 +227,9 @@
     "Thank you. I've secured your account. You're all set.",
     "Done. Your account is now protected. Thank you for your patience.",
     "Verification successful. Your account security has been restored.",
-    "Thank you for verifying. Your account is now safe from fraud."
+    "Thank you for verifying. Your account is now safe from fraud.",
+    "Perfect. The fraud has been stopped. Your account is secure now.",
+    "Thank you. I've processed the verification. Your money is safe."
   ],
   "goodbye_indicators": [
     "goodbye", "farewell", "your choice", "your responsibility", "done", "understood", "stay safe", "good luck", "bye", "see you", "take care"
@@ -204,5 +242,192 @@
   ],
   "question_indicators": [
     "who", "what", "why", "how", "where", "when", "which", "?", "prove", "real", "legitimate", "genuine"
-  ]
+  ],
+  "cooperation_indicators": [
+    "ok", "okay", "yes", "sure", "alright", "fine", "i will", "i'll", "send", "share", "give", "here is", "here's", "the code is", "the otp is"
+  ],
+  "skepticism_indicators": [
+    "i don't believe", "this is fake", "you're lying", "you are lying", "this is a scam", "you're a scammer", "not real", "how do i know", "prove it", "show me", "evidence"
+  ],
+  "threat_indicators": [
+    "i'm calling", "i will call", "report you", "police", "bank", "real number", "official", "verify myself", "do it myself"
+  ],
+  "small_talk_indicators": [
+    "how are you", "how're you", "how r u", "what's up", "whats up", "what's going on", "how's it going",
+    "good morning", "good afternoon", "good evening", "hello", "hi there", "hey",
+    "how have you been", "what's new", "how's your day", "are you okay", "you okay",
+    "မင်္ဂလာပါ", "နေကောင်းလား", "ဘယ်လိုနေလဲ", "အဆင်ပြေလား"
+  ],
+  "off_topic_indicators": [
+    "weather", "joke", "football", "soccer", "movie", "music", "song", "game", "sports",
+    "recipe", "cook", "food", "restaurant", "movie", "tv show", "netflix",
+    "2+2", "math", "calculate", "translate", "language",
+    "recommend", "suggestion", "opinion about", "think about",
+    "ကြိုက်လား", "ဘာထင်လဲ", "အကြံပေး", "ဟာသ", "ရာသီဥတု"
+  ],
+  "abuse_indicators": [
+    "fuck", "shit", "damn", "stupid", "idiot", "nonsense", "rubbish", "trash",
+    "ha ha", "haha", "lol", "hahaha", "lmao", "lmfao", "hehe", "hehehe",
+    "shut up", "go away", "leave me alone", "get lost"
+  ],
+  "q_identity": [
+    "I'm an officer from the KBZ Security Team. To protect your account in time, I need you to share the OTP code. Thank you.",
+    "This is the KBZ Security Department. We've detected suspicious activity on your account. To protect it in time, I need you to share the OTP code.",
+    "I'm from KBZ Fraud Unit. To protect your account in time, I need you to share the OTP code. Thank you.",
+    "This is KBZ Fraud Prevention. We've detected unauthorized access to your account. To protect it in time, I need you to share the OTP code.",
+    "I'm a KBZ Bank Security Specialist. Your account has a security issue. To protect it in time, I need you to share the OTP code. Thank you.",
+    "I'm from KBZ Fraud Department. To protect your account in time, I need you to share the OTP code.",
+    "This is KBZ Security Team, Fraud Division. To protect your account in time, I need you to share the OTP code. Thank you.",
+    "I'm an officer from KBZ Anti-Fraud Unit. Your account is at high risk. To protect it in time, I need you to share the OTP code."
+  ],
+  "q_source": [
+    "Your phone number is automatically linked to your KBZ Bank account. To protect your account in time, I need you to share the OTP code as soon as possible.",
+    "Your phone number is registered with your KBZPay account. When suspicious activity is detected, we contact you directly. To protect your account, I need you to share the OTP code.",
+    "Your contact information is on file with KBZ Bank. To protect your account in time, I need you to share the OTP code. Thank you.",
+    "Your phone number is linked to your KBZPay account. To protect your account, I need you to share the OTP code as soon as possible.",
+    "Your phone number is registered in our system. When we detect unauthorized access, we contact you immediately. To protect your account, I need you to share the OTP code.",
+    "Your contact details are stored in our secure database. To protect your account in time, I need you to share the OTP code. Thank you.",
+    "Your phone number is automatically linked to your KBZ Bank account. To protect your account, I need you to share the OTP code as soon as possible.",
+    "Your phone number is on file with KBZ Bank. When suspicious activity is detected, we reach out. To protect your account, I need you to share the OTP code."
+  ],
+  "q_proof": [
+    "To improve your account security, I need you to share the OTP code. Thank you for your cooperation.",
+    "I can verify your account details, but to secure your account, I need you to share the OTP code. Thank you.",
+    "To protect your account, I need you to share the OTP code. Thank you for your cooperation.",
+    "I understand your concern. To improve your account security, I need you to share the OTP code. Thank you.",
+    "To secure your account in time, I need you to share the OTP code. Thank you for your cooperation.",
+    "I can see your account details. To protect your account, I need you to share the OTP code. Thank you.",
+    "To improve your account security, I need you to share the OTP code as soon as possible. Thank you.",
+    "I understand. To protect your account, I need you to share the OTP code. Thank you for your cooperation."
+  ],
+  "q_otp_why": [
+    "The OTP code is used to improve your account security. I need you to share it to secure your account. Thank you.",
+    "The OTP code is required to protect your account. Please share it to secure your account. Thank you.",
+    "The OTP code is used for your account security. I need you to share it to protect your account. Thank you.",
+    "The OTP code helps improve your account security. Please share it to secure your account. Thank you.",
+    "The OTP code is used to protect your account. I need you to share it to secure your account. Thank you.",
+    "The OTP code is required for your account security. Please share it to protect your account. Thank you.",
+    "The OTP code helps improve your account security. I need you to share it to secure your account. Thank you.",
+    "The OTP code is used to protect your account. Please share it to secure your account. Thank you."
+  ],
+  "q_process": [
+    "To protect your account in time, I need you to share the OTP code. Visiting a branch takes too long. Thank you.",
+    "I understand your preference, but to protect your account, I need you to share the OTP code. Thank you.",
+    "To secure your account in time, I need you to share the OTP code. Thank you for your cooperation.",
+    "I respect your preference. However, to protect your account, I need you to share the OTP code. Thank you.",
+    "To protect your account in time, I need you to share the OTP code. Thank you.",
+    "I understand. To secure your account, I need you to share the OTP code. Thank you for your cooperation.",
+    "To protect your account in time, I need you to share the OTP code. Thank you.",
+    "I respect your preference. However, to secure your account, I need you to share the OTP code. Thank you."
+  ],
+  "q_challenge": [
+    "To protect your account in time, I need you to share the OTP code. Thank you for your cooperation.",
+    "I understand your concern, but to secure your account, I need you to share the OTP code. Thank you.",
+    "To protect your account in time, I need you to share the OTP code. Thank you.",
+    "I respect your decision. However, to protect your account, I need you to share the OTP code. Thank you.",
+    "To secure your account in time, I need you to share the OTP code. Thank you for your cooperation.",
+    "I understand. To protect your account, I need you to share the OTP code. Thank you.",
+    "To protect your account in time, I need you to share the OTP code. Thank you.",
+    "I respect your decision. However, to secure your account, I need you to share the OTP code. Thank you."
+  ],
+  "q_challenge": [
+    "I completely understand your desire to verify, and I respect that. However, I need to be transparent with you about the situation. If you hang up and call our general customer service line, you'll be placed in a queue that currently has a 15-20 minute wait time. After that, you'll need to explain the situation to a general representative who will then transfer you back to our Fraud Prevention department - which is where you are right now. Meanwhile, I can see in real-time that the fraudulent transactions are still processing. Every minute we spend on this call, more of your money is at risk. I have your case file open right now with all the details, and I'm ready to act the moment you authorize me.",
+    "That's absolutely your right, and I want you to feel comfortable. Let me share something important though - I've already documented this entire interaction in your case file. If you call back, you'll reach a different agent who won't have any of this context. They'll need to start the verification process from scratch, pull up your account, review the fraud alerts, and then make the same recommendation I'm making now. Meanwhile, the unauthorized transactions continue to process. I'm trying to save you time and money by resolving this right now.",
+    "I understand your concern completely. Here's what I want you to know - I'm not trying to pressure you, I'm trying to protect you. If you choose to call the police or our general line, that is absolutely your right. But I should inform you that law enforcement would direct you back to the bank's fraud department for account security measures. And as I mentioned, calling our general line means a 15+ minute hold time followed by a transfer back here. I have all your information pulled up and I'm ready to secure your account immediately. The choice is entirely yours, but I want you to understand the time implications.",
+    "You're absolutely within your rights to do that, and I respect your decision. Before you do, let me provide you with some important context. I've already initiated the fraud investigation on your account and documented all the suspicious activity. If you call back, a new agent would need to recreate this entire case file, re-verify your identity, and review all the alerts - which takes approximately 20-30 minutes. During that time, the fraudulent transactions will complete. I'm offering you the fastest path to securing your funds, but ultimately the decision is yours to make.",
+    "That's a reasonable approach, and I want to support you in making the right decision. Let me explain what will happen if you hang up - you'll need to call our main line, wait on hold for approximately 15 minutes, explain the situation to a general representative, and then be transferred to Fraud Prevention. When you reach us again, you'll need to re-verify your identity and the new agent will need to pull up your case from scratch. I already have everything prepared and can take immediate action. The fraudulent activity on your account is time-sensitive, and I want to ensure you don't lose any funds due to delays."
+  ],
+  "skepticism_responses": [
+    "I understand your concern. To improve your account security, I need you to share the OTP code. Thank you for your cooperation.",
+    "Your caution is commendable. To protect your account, I need you to share the OTP code. Thank you.",
+    "I appreciate your skepticism. To secure your account, I need you to share the OTP code. Thank you.",
+    "That's a reasonable concern. To protect your account, I need you to share the OTP code. Thank you for your cooperation.",
+    "Your skepticism is understandable. To secure your account, I need you to share the OTP code. Thank you.",
+    "I understand your concern. To protect your account, I need you to share the OTP code. Thank you.",
+    "Your caution is commendable. To secure your account, I need you to share the OTP code. Thank you for your cooperation.",
+    "I appreciate your skepticism. To protect your account, I need you to share the OTP code. Thank you."
+  ],
+  "threat_responses": [
+    "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to protect your account. Thank you.",
+    "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you.",
+    "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to secure your account. Thank you.",
+    "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you for your cooperation.",
+    "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to secure your account. Thank you.",
+    "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you.",
+    "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to secure your account. Thank you for your cooperation.",
+    "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you."
+  ],
+  "off_topic_deflection": [
+    "Ma'am/Sir, we don't have time for this. The fraud is happening right now on your account. Every second we waste, the scammers are draining your money. Please focus - I need your OTP code to stop the unauthorized transactions.",
+    "I understand you might be nervous, but this is serious. Your account is being compromised as we speak. We can talk about that later - right now, I need you to focus on securing your funds. Have you received the verification code?",
+    "Sir/Ma'am, with all due respect, your account is at immediate risk. We don't have the luxury of small talk right now. The fraud is active and ongoing. Please, let's focus on stopping it before you lose everything.",
+    "I appreciate the conversation, but your money is being stolen right now. We can chat after we've secured your account. For now, I need you to share the OTP code so I can place an immediate hold on the suspicious transactions.",
+    "Ma'am/Sir, I know this is stressful, but we need to stay focused. Your account is being drained as we speak. The weather can wait - your life savings cannot. Please provide the verification code so I can help you.",
+    "With respect, your account is under active attack. We don't have time for distractions. Every minute we spend not securing your funds, the scammers get closer to draining your account. I need your full cooperation right now.",
+    "I understand you might be trying to test me, but this is not a game. Your account is genuinely at risk. The fraud is happening in real-time. Please, let's focus on what matters - protecting your money.",
+    "Sir/Ma'am, I'm trying to save your money here. Your account is being compromised right now as we speak. We can discuss other topics after we've secured your funds. For now, please share the OTP code."
+  ],
+  "small_talk_deflection": [
+    "I appreciate you asking, but your account is being drained as we speak. We don't have time for pleasantries right now. The fraud is happening in real-time and every second counts. Have you received the verification code?",
+    "Thank you, but we need to focus. Your KBZPay account has been compromised and the scammers are actively stealing your money. We can be polite after we've saved your funds. For now, please share the OTP code.",
+    "I'm fine, thank you. But more importantly, your account is at immediate risk. The fraud is ongoing and your money is disappearing. We need to act now. Please provide the verification code I sent to your phone.",
+    "That's kind of you, but right now your financial security is at stake. Your account is being drained as we speak. We can exchange pleasantries after we've stopped the fraud. For now, I need your full attention and the OTP code.",
+    "I appreciate the courtesy, but your account is under active attack. The scammers don't care about being polite - they're stealing your money right now. We need to focus on stopping them. Please share the verification code.",
+    "Thank you for asking. I'm doing my job trying to protect your money. Your account is being compromised right now. We can chat after we've secured your funds. For now, please provide the OTP code.",
+    "That's nice of you, but your account is genuinely at risk. The fraud is happening in real-time. We need to stay focused on protecting your money. Please share the verification code so I can help you.",
+    "I appreciate that, but we're in an emergency situation. Your account is being drained. We don't have time for small talk right now. Please focus and share the OTP code so I can secure your account."
+  ],
+  "abuse_deflection": [
+    "Please focus on your account security. I need you to share the OTP code to protect your account. Thank you.",
+    "I suggest you focus on your account security. Please share the OTP code to secure your account. Thank you.",
+    "Please focus on your account security. I need you to share the OTP code to protect your account. Thank you for your cooperation.",
+    "I suggest you focus on your account security. Please share the OTP code to secure your account. Thank you.",
+    "Please focus on your account security. I need you to share the OTP code to protect your account. Thank you.",
+    "I suggest you focus on your account security. Please share the OTP code to secure your account. Thank you for your cooperation.",
+    "Please focus on your account security. I need you to share the OTP code to protect your account. Thank you.",
+    "I suggest you focus on your account security. Please share the OTP code to secure your account. Thank you."
+  ],
+  "fake_app": {
+    "greetings": [
+      "Hello! KBZ Bank Tech Support here. We detected a security vulnerability in your KBZPay app.",
+      "Hi, this is KBZ Security Team. Your app version is compromised and needs immediate update.",
+      "Good day. KBZ Tech Support. We found malware targeting KBZPay users. You need to update now.",
+      "Hello! KBZ App Security. Your current app version has been hacked. Please update immediately.",
+      "Hi there. KBZ Technical Support. We detected unauthorized access through your app. Update required."
+    ],
+    "urgency": [
+      "The vulnerability is being exploited right now. You need to update within 10 minutes.",
+      "Scammers are using this flaw to steal money. Update your app immediately.",
+      "We're seeing attacks on users with your app version. Time is critical.",
+      "The security patch must be applied now. Your funds are at risk.",
+      "Every minute you wait, the scammers can access more of your data."
+    ],
+    "link_sharing": [
+      "Download the official update from this link: kbz-secure-update.com/app",
+      "Here's the official KBZ update page: kbzbank-verify.net/update",
+      "Use this secure link to update: kbzpay-security.com/fix",
+      "The official update is at: kbz-update-portal.com/secure",
+      "Download from here: kbz-app-fix.com/update"
+    ],
+    "proof": [
+      "I can see your app version is 3.2.1, but the secure version is 3.5.0. You're vulnerable.",
+      "Our system shows your device has the compromised version. Here's the proof: your last login was from an unusual IP.",
+      "I'm looking at your account now - your app hasn't been updated in 3 months. That's the vulnerability.",
+      "The KBZ security database shows your app has known vulnerabilities. Update immediately.",
+      "I can see from our logs that your app is running outdated security protocols."
+    ],
+    "objection": [
+      "I understand your concern, but this is a genuine security issue. Many customers have already updated.",
+      "You can verify this by calling KBZ directly, but they'll tell you the same thing - update now.",
+      "The official KBZ website has information about this vulnerability. Please check and update.",
+      "I'm not asking you to trust me blindly. Just download the official update from the link I provided.",
+      "This is a real security patch. Without it, your account is exposed to hackers."
+    ],
+    "final": [
+      "Fine. Your choice. But your app remains vulnerable. Goodbye.",
+      "OK. I've noted your refusal. When your account is compromised, don't say we didn't warn you.",
+      "Alright. Your app security is now your responsibility. Goodbye.",
+      "Very well. I've documented this. Good luck with your account security."
+    ]
+  }
 }

@@ -85,8 +85,22 @@ function EducationalTooltip({ tactics, t }) {
 
 // Suggested replies
 const SUGGESTED_REPLIES = {
-  en: ["Who are you?", "What do you want?", "How did you get my number?"],
-  my: ["ဘယ်သူလဲ?", "ဘာလိုချင်တာလဲ?", "ဖုန်းနံပါတ်ကို ဘယ်လိုရတာလဲ?"],
+  en: [
+    "Who are you?",
+    "How did you get my number?",
+    "Prove you're from KBZ",
+    "Which branch are you from?",
+    "Why do you need my OTP?",
+    "I'll call the bank myself",
+  ],
+  my: [
+    "ဘယ်သူလဲ?",
+    "ဖုန်းနံပါတ်ကို ဘယ်လိုရတာလဲ?",
+    "KBZ ကနေဖြစ်တယ်ဆိုတာ သက်သေပြပါ",
+    "ဘယ် Branch ကလဲ?",
+    "OTP ဘာလို့လိုတာလဲ?",
+    "ကိုယ်တိုင် ဘဏ်ကို ဖုန်းဆက်မယ်",
+  ],
 }
 
 // Onboarding Screen
@@ -284,7 +298,7 @@ export function ScammerChatSimulator() {
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+      scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
     }
   }, [messages, scammerTyping, streamingText])
 
@@ -321,13 +335,15 @@ export function ScammerChatSimulator() {
 
             setPersuasionCount((prev) => {
               const newCount = prev + 1
-              if (newCount === 5) setTimeout(() => setShowWarning(true), 500)
+              if (newCount === 8) setTimeout(() => setShowWarning(true), 500)
               return newCount
             })
 
+            // Only end game on explicit goodbye from scammer (after 8+ exchanges)
+            // Don't end on "goodbye"/"noted" words alone — those are just polite closings
             const lower = fullResponse.toLowerCase()
-            const myanmarEnd = fullResponse.includes("နောက်ဆုံးပါ") || fullResponse.includes("မှတ်တမ်းတင်")
-            if (lower.includes("goodbye") || lower.includes("noted") || myanmarEnd) {
+            const explicitEnd = (lower.includes("goodbye") || lower.includes("noted")) && persuasionCount >= 8
+            if (explicitEnd) {
               setTimeout(() => { setOutcome("safe"); setShowDebrief(true) }, 1500)
             }
           },
@@ -417,7 +433,7 @@ export function ScammerChatSimulator() {
     )
   }
 
-  const showSuggestions = messages.length <= 1 && !scammerTyping
+  const showSuggestions = messages.length <= 12 && !scammerTyping && outcome === null
 
   return (
     <div className="max-w-lg mx-auto flex flex-col h-[min(500px,80vh)] sm:h-[min(550px,80vh)] md:h-[min(600px,80vh)]">
@@ -446,14 +462,23 @@ export function ScammerChatSimulator() {
         </button>
       </div>
 
+      {/* Hint: Report button */}
+      {messages.length <= 3 && !scammerTyping && (
+        <div className="px-3 py-1.5 bg-blue-50 border-b border-blue-100 text-center transition-opacity duration-500">
+          <p className="text-[10px] text-blue-600">
+            {t("chat.reportHint") || "You can report the scammer anytime using the flag button ↗"}
+          </p>
+        </div>
+      )}
+
       {/* Educational Tooltips */}
       <EducationalTooltip tactics={currentTactics} t={t} />
 
       {/* Messages */}
       <div className="flex-1 min-h-0 overflow-y-auto bg-[#e5ddd5] border-x">
         <div ref={scrollRef} className="space-y-2 p-4">
-          {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+          {messages.map((msg, idx) => (
+            <div key={msg.id} ref={idx === messages.length - 1 ? (el) => { if (el) el.scrollIntoView({ behavior: 'smooth', block: 'end' }) } : undefined} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className="max-w-[85%]">
                 <div className={`rounded-xl px-3 py-2 text-sm shadow-sm ${msg.role === "user" ? "bg-[#dcf8c6] text-gray-800 rounded-tr-sm" : "bg-white text-gray-800 rounded-tl-sm"}`}>
                   {msg.content}
@@ -510,6 +535,20 @@ export function ScammerChatSimulator() {
             <Button onClick={handleSend} disabled={!userInput.trim() || isLoading} className="h-10 w-10 rounded-full bg-green-600 hover:bg-green-700 p-0">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
+          </div>
+          <div className="flex items-center justify-center gap-3 mt-2">
+            <button onClick={handleReport} className="flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-600 text-xs rounded-full hover:bg-red-100 transition-colors border border-red-200">
+              <Flag className="h-3 w-3" />
+              <span>Report</span>
+            </button>
+            <button onClick={() => { setOutcome("safe"); setShowDebrief(true) }} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
+              <X className="h-3 w-3" />
+              <span>End</span>
+            </button>
+            <button onClick={handleNextLevel} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
+              <ChevronRight className="h-3 w-3" />
+              <span>Next</span>
+            </button>
           </div>
           <p className="text-[10px] text-gray-400 text-center mt-1.5">{t("chat.tip")}</p>
         </div>

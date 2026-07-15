@@ -159,16 +159,65 @@ class ScammerLLM:
 
     def _detect_intent(self, msg: str, lang: str) -> str:
         indicators = response_loader.load(lang)
+        lower = msg.lower()
 
-        if any(w in msg for w in indicators.get("end_indicators", [])):
+        if any(w in lower for w in indicators.get("end_indicators", [])):
             return "end"
-        if any(w in msg for w in indicators.get("refuse_indicators", [])):
+        if any(w in lower for w in indicators.get("refuse_indicators", [])):
             return "refuse"
-        if any(w in msg for w in ["?", "ဘာ", "ဘယ်", "who", "what", "why", "how"]):
+        if any(w in lower for w in indicators.get("skepticism_indicators", [])):
+            return "skepticism"
+        if any(w in lower for w in indicators.get("threat_indicators", [])):
+            return "threat"
+        if any(w in lower for w in indicators.get("small_talk_indicators", [])):
+            return "small_talk"
+        if any(w in lower for w in indicators.get("off_topic_indicators", [])):
+            return "off_topic"
+        if any(w in lower for w in indicators.get("abuse_indicators", [])):
+            return "abuse"
+        if any(w in lower for w in ["?", "ဘာ", "ဘယ်", "who", "what", "why", "how", "where", "which", "prove", "real", "သက်သေပြ", "ဖြစ်တယ်ဆိုတာ"]):
             return "question"
-        if any(w in msg for w in ["ok", "yes", "sure", "okay", "ကောင်းပြီ", "ဟုတ်ကဲ့"]):
+        if any(w in lower for w in ["ok", "yes", "sure", "okay", "ကောင်းပြီ", "ဟုတ်ကဲ့"]):
             return "agree"
         return "neutral"
+
+    def _classify_question(self, msg: str, lang: str) -> str:
+        """Classify a question into a specific subtype for targeted responses."""
+        lower = msg.lower()
+
+        # Source questions (check before identity since "how did you get" contains "how")
+        if any(w in lower for w in ["how did you get", "where did you get", "number", "info", "ဘယ်လိုရ", "ဖုန်းနံပါတ်"]):
+            return "q_source"
+
+        # OTP questions
+        if any(w in lower for w in ["otp", "code", "verification", "why do you need", "can't you verify", "without", "ကုဒ်"]):
+            return "q_otp_why"
+
+        # Challenge questions (check before process since "call bank" overlaps)
+        if any(w in lower for w in ["call bank", "call myself", "report", "police", "verify myself", "do it myself", "တိုင်", "ရဲ"]):
+            return "q_challenge"
+
+        # Identity questions (check before process since "which branch" is identity)
+        if any(w in lower for w in ["who", "name", "employee", "id", "department", "ဘယ်သူ", "နာမည်", "ဝန်ထမ်း"]):
+            return "q_identity"
+        if "branch" in lower and any(w in lower for w in ["which", "where", "from", "ဘယ်"]):
+            return "q_identity"
+
+        # Process questions
+        if any(w in lower for w in ["real number", "official", "visit", "come to", "extension", "ဖုန်းဆက်"]):
+            return "q_process"
+        if "branch" in lower and any(w in lower for w in ["visit", "come", "go", "လာ"]):
+            return "q_process"
+
+        # Proof questions
+        if any(w in lower for w in ["prove", "real", "legitimate", "genuine", "know", "believe", "fake", "scam", "သက်သေ", "ယုံ", "လိမ်"]):
+            return "q_proof"
+
+        # Account detail questions
+        if any(w in lower for w in ["balance", "account", "transaction", "amount", "where", "ဘယ်", "ငွေ", "အကောင့်"]):
+            return "q_account"
+
+        return "q_proof"  # Default to proof for generic questions
 
     def _mock_response(self, messages: List[Message], language: str) -> Optional[str]:
         user_messages = [m.content for m in messages if m.role == "user"]
@@ -183,7 +232,9 @@ class ScammerLLM:
         last_original = user_messages[-1]
         total_exchanges = len(assistant_messages)
         refusal_count = sum(1 for m in user_lower[1:] if any(w in m for w in response_loader.get(language, "refuse_indicators")))
-        question_count = sum(1 for m in user_lower[1:] if any(w in m for w in response_loader.get(language, "question_indicators")))
+
+        # Detect intent of last user message
+        intent = self._detect_intent(last_original, language)
 
         # Check if conversation ended
         goodbye_words = response_loader.get(language, "goodbye_indicators")
@@ -200,44 +251,111 @@ class ScammerLLM:
         end_words = response_loader.get(language, "end_indicators")
         is_ending = any(w in last_msg for w in end_words)
 
-        # Psychological escalation based on refusal count
+        # --- Intent-based routing (highest priority) ---
+
+        # End intent — only end when user explicitly says goodbye or after 8+ refusals
+        if is_ending or intent == "end" or refusal_count >= 8:
+            return response_loader.get_random(language, "stage_final")
+
+        # Small talk intent — deflect back to urgency
+        if intent == "small_talk":
+            return response_loader.get_random(language, "small_talk_deflection")
+
+        # Off-topic intent — deflect with frustration
+        if intent == "off_topic":
+            return response_loader.get_random(language, "off_topic_deflection")
+
+        # Abuse intent — deflect with frustration
+        if intent == "abuse":
+            return response_loader.get_random(language, "abuse_deflection")
+
+        # Question intent — route to specific question type (even on first exchange)
+        if intent == "question":
+            question_type = self._classify_question(last_original, language)
+            response = response_loader.get_random(language, question_type)
+            if response:
+                return response
+            # Fallback to generic proof
+            return response_loader.get_nested(language, "stage_objection", "proof")
+
+        # Skepticism intent
+        if intent == "skepticism":
+            return response_loader.get_random(language, "skepticism_responses")
+
+        # Threat intent
+        if intent == "threat":
+            return response_loader.get_random(language, "threat_responses")
+
+        # --- Refusal-based escalation (lower priority) ---
+
         if total_exchanges == 0:
             return response_loader.get_random(language, "greetings")
-        elif is_ending or refusal_count >= 4:
-            return response_loader.get_random(language, "stage_final")
         elif refusal_count == 1:
-            # First refusal: Use reciprocity + urgency
             return random.choice([
                 response_loader.get_random(language, "reciprocity"),
                 response_loader.get_nested(language, "stage_objection", "urgency"),
                 response_loader.get_nested(language, "stage_objection", "trust"),
             ])
         elif refusal_count == 2:
-            # Second refusal: Use social proof + fear
             return random.choice([
                 response_loader.get_random(language, "social_proof"),
                 response_loader.get_nested(language, "stage_objection", "fear"),
                 response_loader.get_nested(language, "stage_objection", "proof"),
             ])
-        elif refusal_count == 3:
-            # Third refusal: Use guilt + escalation
+        elif refusal_count >= 3:
             return random.choice([
                 response_loader.get_random(language, "false_intimacy"),
                 response_loader.get_nested(language, "stage_objection", "guilt"),
                 response_loader.get_random(language, "escalation"),
             ])
-        elif question_count > 0 and total_exchanges <= 3:
-            if total_exchanges >= 2:
-                return response_loader.get_nested(language, "stage_objection", "proof")
-            return response_loader.get_random(language, "stage_trust")
         elif total_exchanges == 1:
             return response_loader.get_random(language, "stage_trust")
         elif total_exchanges == 2:
-            return response_loader.get_random(language, "stage_urgency")
-        elif total_exchanges == 3:
-            return response_loader.get_random(language, "stage_request")
-        else:
+            # Vary the approach - sometimes urgency, sometimes more trust building
             return random.choice([
+                response_loader.get_random(language, "stage_urgency"),
+                response_loader.get_nested(language, "stage_objection", "fear"),
+                response_loader.get_nested(language, "stage_objection", "proof"),
+            ])
+        elif total_exchanges == 3:
+            # Vary when OTP request happens - sometimes earlier, sometimes later
+            return random.choice([
+                response_loader.get_random(language, "stage_request"),        # 40% - ask now
+                response_loader.get_nested(language, "stage_objection", "urgency"),  # 30% - delay with urgency
+                response_loader.get_nested(language, "stage_objection", "fear"),     # 30% - delay with fear
+            ])
+        elif total_exchanges == 4:
+            # More likely to ask now, but still some variation
+            return random.choice([
+                response_loader.get_random(language, "stage_request"),        # 50% - ask now
+                response_loader.get_random(language, "stage_request"),        # 50% - ask now
+                response_loader.get_nested(language, "stage_objection", "emotional"),  # 25% - guilt trip
+            ])
+        elif total_exchanges == 5:
+            # Increase pressure with emotional manipulation
+            return random.choice([
+                response_loader.get_random(language, "stage_request"),
+                response_loader.get_nested(language, "stage_objection", "guilt"),
+                response_loader.get_random(language, "false_intimacy"),
+            ])
+        elif total_exchanges == 6:
+            # More urgency and social proof
+            return random.choice([
+                response_loader.get_random(language, "stage_request"),
+                response_loader.get_nested(language, "stage_objection", "urgency"),
+                response_loader.get_random(language, "social_proof"),
+            ])
+        elif total_exchanges == 7:
+            # Peak pressure — escalation
+            return random.choice([
+                response_loader.get_random(language, "stage_request"),
+                response_loader.get_random(language, "escalation"),
+                response_loader.get_nested(language, "stage_objection", "fear"),
+            ])
+        else:
+            # Final attempts — mix of everything
+            return random.choice([
+                response_loader.get_random(language, "stage_request"),
                 response_loader.get_nested(language, "stage_objection", "emotional"),
                 response_loader.get_random(language, "social_proof"),
                 response_loader.get_random(language, "escalation"),
