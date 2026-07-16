@@ -48,6 +48,15 @@
       "feedback": "Real-time action",
       "redFlags": "Red flag tips"
     },
+    "hubBadge": "Interactive learning platform",
+    "hubTitle": "Fraud Awareness",
+    "hubTitleHighlight": "Game Center",
+    "hubDescription": "Learn about digital fraud patterns through interactive games. Play, learn, and protect yourself from scams.",
+    "hubFeatures": {
+      "playGames": "Play games",
+      "learnPatterns": "Learn scam patterns",
+      "testSkills": "Test your skills"
+    },
     "statusReady": "Training session ready",
     "noTimer": "Choose carefully—there is no timer",
     "selectStage": "Select a Stage",
@@ -122,7 +131,15 @@
       "fraud": "Fraud",
       "city": "City",
       "rpgDescription": "Choose a location to explore. Talk to NPCs, investigate scams, and save citizens.",
-      "tiles": "tiles"
+      "tiles": "tiles",
+      "actionShooterBadge": "Action-packed training",
+      "actionShooterChip1": "Real-time combat",
+      "actionShooterChip2": "6 stages",
+      "actionShooterChip3": "Quick interventions",
+      "fraudCityRpgBadge": "Explore & investigate",
+      "fraudCityRpgChip1": "Open world map",
+      "fraudCityRpgChip2": "Talk to NPCs",
+      "fraudCityRpgChip3": "Solve scams"
     },
     "stopScammer": "STOP THE SCAMMER",
     "tapRight": "Tap the RIGHT intervention!",

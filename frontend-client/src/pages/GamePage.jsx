@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Gamepad2, ScanSearch, ShieldCheck, Zap, Map, Sword, Trophy, Coins } from "lucide-react"
+import { Gamepad2, ScanSearch, ShieldCheck, Zap, Map, Sword, Trophy, Coins, Users } from "lucide-react"
 import { GameStage } from "@/components/game/GameStage"
 import { WorldGame } from "@/components/game/WorldGame"
 import { ScamRunner } from "@/components/features/scam-runner"
@@ -18,6 +18,12 @@ export function GamePage() {
     { label: t("game.features.scenarios"), icon: Gamepad2 },
     { label: t("game.features.feedback"), icon: Zap },
     { label: t("game.features.redFlags"), icon: ScanSearch },
+  ]
+
+  const hubFeatures = [
+    { label: t("game.hubFeatures.playGames"), icon: Gamepad2 },
+    { label: t("game.hubFeatures.learnPatterns"), icon: ScanSearch },
+    { label: t("game.hubFeatures.testSkills"), icon: Zap },
   ]
 
   // RPG mode: NPC interaction handler
@@ -41,19 +47,19 @@ export function GamePage() {
             <div className="max-w-3xl">
               <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-cyan-200 uppercase backdrop-blur-xl">
                 <ShieldCheck className="size-4" />
-                {t("game.badge")}
+                {t("game.hubBadge")}
               </div>
-              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl">
-                {t("game.title")}{" "}
+              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl whitespace-nowrap">
+                {t("game.hubTitle")}{" "}
                 <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
-                  {t("game.titleHighlight")}
+                  {t("game.hubTitleHighlight")}
                 </span>
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 md:text-xl md:leading-8">
-                {t("game.description")}
+                {t("game.hubDescription")}
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                {gameFeatures.map((feature) => (
+                {hubFeatures.map((feature) => (
                   <div
                     key={feature.label}
                     className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-zinc-300 backdrop-blur-xl"
@@ -70,8 +76,8 @@ export function GamePage() {
         {/* Game Mode Selection */}
         <section className="relative z-20 -mt-12 px-4 pb-20 md:-mt-16 md:pb-28">
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-6">Choose Your Mode</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <h2 className="text-2xl font-bold text-(--primary-foreground) text-center mb-3">Choose Your Mode</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 bg-white rounded-3xl p-6 sm:p-8 shadow-lg">
               {/* Scam Runner Mode */}
               <button
                 onClick={() => setMode("runner")}
@@ -143,6 +149,12 @@ export function GamePage() {
 
   // Shooter mode
   if (mode === "shooter") {
+    const shooterFeatures = [
+      { label: t("game.modes.actionShooterChip1"), icon: Sword },
+      { label: t("game.modes.actionShooterChip2"), icon: Gamepad2 },
+      { label: t("game.modes.actionShooterChip3"), icon: Zap },
+    ]
+
     return (
       <div className="min-h-screen bg-zinc-50">
         <section className="relative isolate overflow-hidden text-white">
@@ -151,16 +163,34 @@ export function GamePage() {
             <div className="max-w-3xl">
               <button
                 onClick={() => setMode(null)}
-                className="mb-4 text-sm text-cyan-300 hover:text-white transition-colors"
+                className="mb-2 block text-sm text-cyan-300 hover:text-white transition-colors"
               >
                 ← Back to mode select
               </button>
-              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl">
-                Action{" "}
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-cyan-200 uppercase backdrop-blur-xl">
+                <ShieldCheck className="size-4" />
+                {t("game.modes.actionShooterBadge")}
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl whitespace-nowrap">
+                {t("game.modes.action")}{" "}
                 <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
-                  Shooter
+                  {t("game.modes.shooter")}
                 </span>
               </h1>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 md:text-xl md:leading-8">
+                {t("game.modes.actionShooterDesc")}
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {shooterFeatures.map((feature) => (
+                  <div
+                    key={feature.label}
+                    className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-zinc-300 backdrop-blur-xl"
+                  >
+                    <feature.icon className="size-4 text-cyan-300" />
+                    {feature.label}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -187,6 +217,12 @@ export function GamePage() {
 
   // RPG mode: World select
   if (mode === "rpg" && !selectedWorld) {
+    const rpgFeatures = [
+      { label: t("game.modes.fraudCityRpgChip1"), icon: Map },
+      { label: t("game.modes.fraudCityRpgChip2"), icon: Users },
+      { label: t("game.modes.fraudCityRpgChip3"), icon: ScanSearch },
+    ]
+
     return (
       <div className="min-h-screen bg-zinc-50">
         <section className="relative isolate overflow-hidden text-white">
@@ -195,19 +231,34 @@ export function GamePage() {
             <div className="max-w-3xl">
               <button
                 onClick={() => setMode(null)}
-                className="mb-4 text-sm text-green-300 hover:text-white transition-colors"
+                className="mb-2 block text-sm text-green-300 hover:text-white transition-colors"
               >
                 ← Back to mode select
               </button>
-              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl">
-                Fraud{" "}
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-green-300/20 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold tracking-[0.12em] text-green-200 uppercase backdrop-blur-xl">
+                <ShieldCheck className="size-4" />
+                {t("game.modes.fraudCityRpgBadge")}
+              </div>
+              <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl whitespace-nowrap">
+                {t("game.modes.fraud")}{" "}
                 <span className="bg-gradient-to-r from-green-300 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                  City
+                  {t("game.modes.city")}
                 </span>
               </h1>
               <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-300 md:text-xl md:leading-8">
-                Choose a location to explore. Talk to NPCs, investigate scams, and save citizens.
+                {t("game.modes.rpgDescription")}
               </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                {rpgFeatures.map((feature) => (
+                  <div
+                    key={feature.label}
+                    className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3.5 py-2.5 text-sm text-zinc-300 backdrop-blur-xl"
+                  >
+                    <feature.icon className="size-4 text-green-300" />
+                    {feature.label}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -263,7 +314,7 @@ export function GamePage() {
           <div className="max-w-3xl">
             <button
               onClick={() => setMode(null)}
-              className="mb-4 text-sm text-amber-300 hover:text-white transition-colors"
+              className="mb-2 block text-sm text-amber-300 hover:text-white transition-colors"
             >
               ← Back to mode select
             </button>
@@ -271,7 +322,7 @@ export function GamePage() {
               <ShieldCheck className="size-4" />
               {t("game.badge")}
             </div>
-            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl">
+            <h1 className="text-3xl sm:text-5xl font-bold tracking-tight md:text-7xl whitespace-nowrap">
               {t("game.title")}{" "}
               <span className="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">
                 {t("game.titleHighlight")}
