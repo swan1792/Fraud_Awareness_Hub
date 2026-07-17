@@ -16,8 +16,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create models directory
-RUN mkdir -p /app/models
+RUN mkdir -p /app/models/scammer-llm
+
+# Download model at startup if MODEL_URL is set
+RUN echo '#!/bin/bash\n\
+if [ -n "$MODEL_URL" ] && [ ! -f "/app/models/scammer-llm/model.gguf" ]; then\n\
+  echo "Downloading model from $MODEL_URL..."\n\
+  curl -L -o /app/models/scammer-llm/model.gguf "$MODEL_URL"\n\
+  echo "Model downloaded!"\n\
+fi\n\
+exec uvicorn main:app --host 0.0.0.0 --port 8000' > /app/run.sh && chmod +x /app/run.sh
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["/app/run.sh"]
