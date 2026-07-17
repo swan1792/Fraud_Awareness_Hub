@@ -1,5 +1,7 @@
 import Phaser from "phaser"
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
 /**
  * BossBattle - Boss confrontation scene
  * Player presents evidence to defeat the scam boss
@@ -236,7 +238,7 @@ export class BossBattle extends Phaser.Scene {
     if (this.isDefeated) return
 
     // Send to API
-    fetch(`http://localhost:3001/api/bosses/${this.bossData.id}/present`, {
+    fetch(`${API_URL}/api/bosses/${this.bossData.id}/present`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ evidenceId: evidence.id }),

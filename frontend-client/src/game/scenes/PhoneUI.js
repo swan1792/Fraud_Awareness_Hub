@@ -1,5 +1,7 @@
 import Phaser from "phaser"
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
 /**
  * PhoneUI - In-game smartphone overlay
  * Opens as a parallel scene on top of WorldScene
@@ -247,7 +249,7 @@ export class PhoneUI extends Phaser.Scene {
     this.currentScreen.add(title)
 
     // Fetch relationships from API
-    fetch("http://localhost:3001/api/relationships")
+    fetch(`${API_URL}/api/relationships`)
       .then(res => res.json())
       .then(contacts => {
         if (contacts.length === 0) {
@@ -522,7 +524,7 @@ export class PhoneUI extends Phaser.Scene {
     })
 
     // Fetch player stats
-    fetch("http://localhost:3001/api/player/stats")
+    fetch(`${API_URL}/api/player/stats`)
       .then(res => res.json())
       .then(stats => {
         // Skill points
@@ -595,7 +597,7 @@ export class PhoneUI extends Phaser.Scene {
             }).setOrigin(0.5).setInteractive({ useHandCursor: true })
 
             btn.on("pointerdown", () => {
-              fetch("http://localhost:3001/api/player/skill", {
+              fetch(`${API_URL}/api/player/skill`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ skill: skill.id }),
@@ -641,7 +643,7 @@ export class PhoneUI extends Phaser.Scene {
     })
 
     // Fetch evidence
-    fetch("http://localhost:3001/api/evidence")
+    fetch(`${API_URL}/api/evidence`)
       .then(res => res.json())
       .then(evidence => {
         if (evidence.length === 0) {
@@ -708,7 +710,7 @@ export class PhoneUI extends Phaser.Scene {
       color: "#607d8b",
     })
 
-    fetch("http://localhost:3001/api/saves")
+    fetch(`${API_URL}/api/saves`)
       .then(res => res.json())
       .then(saves => {
         if (saves.length === 0) {
@@ -767,7 +769,7 @@ export class PhoneUI extends Phaser.Scene {
 
   doSave(slotNumber) {
     const saveData = { currentLocation: "neighborhood", timestamp: new Date().toISOString() }
-    fetch("http://localhost:3001/api/saves", {
+    fetch(`${API_URL}/api/saves`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ slotNumber, saveData }),
@@ -807,7 +809,7 @@ export class PhoneUI extends Phaser.Scene {
       color: "#3f51b5",
     })
 
-    fetch("http://localhost:3001/api/saves")
+    fetch(`${API_URL}/api/saves`)
       .then(res => res.json())
       .then(saves => {
         const loadData = saves.filter(s => s.hasData)
@@ -882,7 +884,7 @@ export class PhoneUI extends Phaser.Scene {
     }).setOrigin(0.5)
     this.currentScreen?.add(loading)
 
-    fetch(`http://localhost:3001/api/saves/${saveId}/load`, {
+    fetch(`${API_URL}/api/saves/${saveId}/load`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     })
@@ -906,7 +908,7 @@ export class PhoneUI extends Phaser.Scene {
   }
 
   doDeleteSave(saveId) {
-    fetch(`http://localhost:3001/api/saves/${saveId}`, { method: "DELETE" })
+    fetch(`${API_URL}/api/saves/${saveId}`, { method: "DELETE" })
       .then(res => res.json())
       .then(() => {
         // Refresh the load screen

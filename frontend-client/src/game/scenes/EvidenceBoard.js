@@ -1,5 +1,7 @@
 import Phaser from "phaser"
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
 /**
  * EvidenceBoard - Overlay showing all collected evidence items
  * Opens from PhoneUI Notebook or when examining evidence
@@ -233,7 +235,7 @@ export class EvidenceBoard extends Phaser.Scene {
     // Mark as read
     if (!item.isRead) {
       item.isRead = true
-      fetch(`http://localhost:3001/api/evidence/${item.id}/read`, { method: "PUT" }).catch(() => {})
+      fetch(`${API_URL}/api/evidence/${item.id}/read`, { method: "PUT" }).catch(() => {})
     }
   }
 
