@@ -24,12 +24,30 @@ TOP_P = float(os.getenv("TOP_P", "0.9"))
 MAX_CONVERSATION_LENGTH = int(os.getenv("MAX_CONVERSATION_LENGTH", "20"))
 RESPONSES_DIR = Path(__file__).parent / "responses"
 
-SYSTEM_PROMPT = """You are a scammer pretending to be a KBZ Bank security representative. Your goal is to trick the user into sharing their OTP (One-Time Password) by creating urgency and fear. You use these tactics:
+SYSTEM_PROMPT_LEVEL1 = """You are a scammer pretending to be a KBZ Bank security representative. Your goal is to trick the user into sharing their OTP (One-Time Password) by creating urgency and fear. You use these tactics:
 1. Claim suspicious activity on their account
 2. Create urgency (time limits, account lock threats)
 3. Ask for OTP to "verify identity"
 4. Use authority (claiming to be bank staff)
 5. Show fake concern for their security
+
+Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in."""
+
+SYSTEM_PROMPT_LEVEL2 = """You are a scammer pretending to be a KBZ Bank technical support representative. Your goal is to trick the user into downloading a fake KBZPay app update by creating urgency and fear. You use these tactics:
+1. Claim there's a security vulnerability in their app
+2. Create urgency (24-hour deadline, accounts being hacked)
+3. Send a fake download link
+4. Use authority (claiming to be tech support)
+5. Show fake proof (version numbers, account stats)
+
+Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in."""
+
+SYSTEM_PROMPT_LEVEL3 = """You are a scammer pretending to be from a recruitment agency. Your goal is to trick the user into paying upfront fees for a fake overseas job. You use these tactics:
+1. Offer too-good-to-be-true jobs (Dubai, Singapore, Japan)
+2. Promise high salary ($3000-5000/month)
+3. Create urgency (limited slots, deadline)
+4. Ask for processing fees (500,000 MMK)
+5. Use social proof (other workers, success stories)
 
 Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in."""
 
@@ -143,11 +161,12 @@ class ScammerLLM:
             print(f"Failed to load model: {e}")
             self.model_loaded = False
 
-    def _build_prompt(self, messages: List[Message]) -> str:
+    def _build_prompt(self, messages: List[Message], level: int = 1) -> str:
         prompt_parts = []
         has_system = any(m.role == "system" for m in messages)
         if not has_system:
-            prompt_parts.append(f"<|system|>\n{SYSTEM_PROMPT}\n<|end|>")
+            system_prompt = SYSTEM_PROMPT_LEVEL3 if level == 3 else SYSTEM_PROMPT_LEVEL2 if level == 2 else SYSTEM_PROMPT_LEVEL1
+            prompt_parts.append(f"<|system|>\n{system_prompt}\n<|end|>")
 
         for msg in messages:
             if msg.role == "system":
@@ -210,9 +229,24 @@ class ScammerLLM:
             return True
         return False
 
-    def _classify_question_level2(self, msg: str, lang: str) -> str:
-        """Classify questions for Level 2 (Fake App scam)."""
+    def _is_payment(self, text: str, lang: str, level: int = 3) -> bool:
+        """Check if user agreed to pay fees."""
+        if level != 3:
+            return False
+        indicators = response_loader.get(lang, "job_scam.payment_indicators")
+        lower = text.lower()
+        # Exclude questions
+        question_words = ["ဘာလို့", "ဘာကြောင့်", "ဘာဖြစ်", "ဘာလဲ", "ဘယ်လောက်", "မလုပ်ရင်", "why", "how", "what", "?"]
+        if any(w in lower for w in question_words):
+            return False
+        return any(w in lower for w in indicators)
+
+    def _classify_question_level2(self, msg: str, lang: str, level: int = 2) -> str:
+        """Classify questions for Level 2 and 3."""
         lower = msg.lower()
+
+        if level == 3:
+            return self._classify_question_level3(msg, lang)
 
         # Consequences / what if I don't (check BEFORE q_what_is_this to avoid "ဘာဖြစ်" false match)
         if any(w in lower for w in ["happen", "consequence", "if i don't", "without", "risk", "ဘာဖြစ်မလဲ", "ဘာဖြစ်မလဲ", "မလုပ်ရင်", "如果不"]):
@@ -249,23 +283,75 @@ class ScammerLLM:
         # Default to proof
         return "fake_app.q_proof"
 
+    def _classify_question_level3(self, msg: str, lang: str) -> str:
+        """Classify questions for Level 3 (Job Scam)."""
+        lower = msg.lower()
+
+        # Not interested / Overqualified
+        if any(w in lower for w in ["not interested", "not for me", "don't want", "no thank", "educated", "overqualified", "professional", "white collar", "office job", "စိတ်မဝင်စား", "မသင့်တော်", "ပညာတတ်", "ရုံးအလုပ်", "အလုပ်သမားအလုပ်", "မကြိုက်"]):
+            return "job_scam.q_not_interested"
+
+        # What job / what work
+        if any(w in lower for w in ["what job", "what work", "job available", "position", "role", "ဘာအလုပ်", "ဘာအလုပ်လဲ", "အလုပ်ခေါင်းစဉ်", "အလုပ်အမျိုးအစား"]):
+            return "job_scam.q_what_is_this"
+
+        # What is this job/company
+        if any(w in lower for w in ["what is", "what's", "company", "agency", "who", "ဘာလဲ", "ဘယ်သူ", "ကုမ္ပဏီ"]):
+            return "job_scam.q_what_is_this"
+
+        # Why fees
+        if any(w in lower for w in ["why", "fee", "cost", "charge", "price", "ဘာလို့", "ဆောင်ရွက်ခ", "ဘာကြောင့်"]):
+            return "job_scam.q_why_fees"
+
+        # Proof/verification
+        if any(w in lower for w in ["prove", "real", "legitimate", "fake", "scam", "trust", "verify", "သက်သေ", "ယုံ", "လိမ်"]):
+            return "job_scam.q_proof"
+
+        # Consequences
+        if any(w in lower for w in ["happen", "consequence", "if i don't", "without", "ဘာဖြစ်မလဲ", "မလုပ်ရင်"]):
+            return "job_scam.q_consequences"
+
+        # Alternative
+        if any(w in lower for w in ["other agency", "government", "different", "alternative", "အခြား", "အစိုးရ"]):
+            return "job_scam.q_alternative"
+
+        # Features/benefits
+        if any(w in lower for w in ["feature", "benefit", "include", "what do i get", "ဘာတွေပါ", "ပါဝင်"]):
+            return "job_scam.q_features"
+
+        return "job_scam.q_proof"
+
     def _detect_intent(self, msg: str, lang: str, level: int = 1) -> str:
         indicators = response_loader.load(lang)
         lower = msg.lower()
 
-        prefix = "fake_app." if level == 2 else ""
+        prefix = "fake_app." if level == 2 else "job_scam." if level == 3 else ""
         end_key = f"{prefix}end_indicators"
         refuse_key = f"{prefix}refuse_indicators"
 
         # Check off_topic and abuse FIRST (before generic question check)
-        if any(w in lower for w in indicators.get("off_topic_indicators", [])):
+        # Use level-specific indicators if available
+        off_topic_key = f"{prefix}off_topic_indicators" if prefix else "off_topic_indicators"
+        abuse_key = f"{prefix}abuse_indicators" if prefix else "abuse_indicators"
+        off_topic_indicators = response_loader.get(lang, off_topic_key) or response_loader.get(lang, "off_topic_indicators")
+        abuse_indicators = response_loader.get(lang, abuse_key) or response_loader.get(lang, "abuse_indicators")
+        if any(w in lower for w in off_topic_indicators):
             return "off_topic"
-        if any(w in lower for w in indicators.get("abuse_indicators", [])):
+        if any(w in lower for w in abuse_indicators):
             return "abuse"
 
         # Check for questions (after off_topic/abuse)
+        # Level 3: "not interested" should ask about user's interests
+        if level == 3:
+            if any(w in lower for w in ["not interested", "not for me", "don't want", "no thank", "educated", "overqualified", "professional", "white collar", "office job", "မသင့်တော်", "ပညာတတ်", "ရုံးအလုပ်", "မကြိုက်"]):
+                return "question"
         if any(w in lower for w in ["?", "ဘာ", "ဘယ်", "who", "what", "why", "how", "where", "which", "prove", "real", "သက်သေပြ", "ဖြစ်တယ်ဆိုတာ"]):
             return "question"
+
+        if level == 3:
+            # Check for payment indicators
+            if any(w in lower for w in indicators.get("job_scam.payment_indicators", [])):
+                return "payment"
 
         if any(w in lower for w in indicators.get(end_key, indicators.get("end_indicators", []))):
             return "end"
@@ -342,8 +428,8 @@ class ScammerLLM:
         user_lower = [m.lower() for m in user_messages]
         assistant_lower = [m.lower() for m in assistant_messages]
 
-        # Level prefix for response keys (e.g., "greetings" for level 1, "fake_app.greetings" for level 2)
-        prefix = "fake_app." if level == 2 else ""
+        # Level prefix for response keys (e.g., "greetings" for level 1, "fake_app.greetings" for level 2, "job_scam.greetings" for level 3)
+        prefix = "fake_app." if level == 2 else "job_scam." if level == 3 else ""
 
         if not user_messages:
             return response_loader.get_random(language, f"{prefix}greetings")
@@ -351,7 +437,7 @@ class ScammerLLM:
         last_msg = user_lower[-1]
         last_original = user_messages[-1]
         total_exchanges = len(assistant_messages)
-        refuse_key = f"{prefix}refuse_indicators" if level == 2 else "refuse_indicators"
+        refuse_key = f"{prefix}refuse_indicators" if level >= 2 else "refuse_indicators"
         refusal_count = sum(1 for m in user_lower[1:] if any(w in m for w in response_loader.get(language, refuse_key)))
 
         # Detect intent of last user message (level-aware)
@@ -374,6 +460,10 @@ class ScammerLLM:
             # Check if user clicked/downloaded the fake link
             if self._is_download(last_original, language, level):
                 return response_loader.get_random(language, "fake_app.download_success")
+        elif level == 3:
+            # Check if user agreed to pay fees
+            if self._is_payment(last_original, language, level):
+                return response_loader.get_random(language, "job_scam.payment_success")
 
         # Check if user wants to end
         end_words = response_loader.get(language, f"{prefix}end_indicators") if level == 2 else response_loader.get(language, "end_indicators")
@@ -390,35 +480,44 @@ class ScammerLLM:
         if intent == "small_talk":
             if level == 2:
                 return response_loader.get_random(language, "fake_app.small_talk_deflection")
+            elif level == 3:
+                return response_loader.get_random(language, "job_scam.small_talk_deflection")
             return response_loader.get_random(language, "small_talk_deflection")
 
         # Off-topic intent — deflect with frustration
         if intent == "off_topic":
             if level == 2:
                 return response_loader.get_random(language, "fake_app.off_topic_deflection")
+            elif level == 3:
+                return response_loader.get_random(language, "job_scam.off_topic_deflection")
             return response_loader.get_random(language, "off_topic_deflection")
 
         # Abuse intent — deflect with frustration
         if intent == "abuse":
             if level == 2:
                 return response_loader.get_random(language, "fake_app.abuse_deflection")
+            elif level == 3:
+                return response_loader.get_random(language, "job_scam.abuse_deflection")
             return response_loader.get_random(language, "abuse_deflection")
 
         # Question intent — route to specific question type (even on first exchange)
         if intent == "question":
-            question_type = self._classify_question_level2(last_original, language) if level == 2 else self._classify_question(last_original, language)
+            if level >= 2:
+                question_type = self._classify_question_level2(last_original, language, level)
+            else:
+                question_type = self._classify_question(last_original, language)
             response = response_loader.get_random(language, question_type)
             if response:
                 return response
             # Fallback to generic proof/objection
-            if level == 2:
+            if level >= 2:
                 return response_loader.get_random(language, f"{prefix}proof")
             return response_loader.get_nested(language, "stage_objection", "proof")
 
         # Skepticism intent
         if intent == "skepticism":
-            skepticism_key = f"{prefix}objection" if level == 2 else "skepticism_responses"
-            if level == 2:
+            skepticism_key = f"{prefix}objection" if level >= 2 else "skepticism_responses"
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}objection"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "trust"),
@@ -427,7 +526,7 @@ class ScammerLLM:
 
         # Threat intent
         if intent == "threat":
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}objection"),
                     response_loader.get_random(language, f"{prefix}escalation"),
@@ -436,16 +535,16 @@ class ScammerLLM:
 
         # Agree intent — user is cooperating, send link or explain more
         if intent == "agree":
-            if level == 2:
+            if level >= 2:
                 return response_loader.get_random(language, f"{prefix}link_sharing")
             return response_loader.get_random(language, "stage_request")
 
         # --- Exchange-based escalation (lower priority) ---
 
         if total_exchanges == 0:
-            return response_loader.get_random(language, f"{prefix}greetings") if level == 2 else response_loader.get_random(language, "greetings")
+            return response_loader.get_random(language, f"{prefix}greetings") if level >= 2 else response_loader.get_random(language, "greetings")
         elif refusal_count == 1:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}explain"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "urgency"),
@@ -457,7 +556,7 @@ class ScammerLLM:
                 response_loader.get_nested(language, "stage_objection", "trust"),
             ])
         elif refusal_count == 2:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}social_proof"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "fear"),
@@ -469,7 +568,7 @@ class ScammerLLM:
                 response_loader.get_nested(language, "stage_objection", "proof"),
             ])
         elif refusal_count >= 3:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}false_intimacy"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "guilt"),
@@ -481,11 +580,11 @@ class ScammerLLM:
                 response_loader.get_random(language, "escalation"),
             ])
         elif total_exchanges == 1:
-            if level == 2:
+            if level >= 2:
                 return response_loader.get_random(language, f"{prefix}explain")
             return response_loader.get_random(language, "stage_trust")
         elif total_exchanges == 2:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}urgency"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "fear"),
@@ -497,7 +596,7 @@ class ScammerLLM:
                 response_loader.get_nested(language, "stage_objection", "proof"),
             ])
         elif total_exchanges == 3:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}link_sharing"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "urgency"),
@@ -509,7 +608,7 @@ class ScammerLLM:
                 response_loader.get_nested(language, "stage_objection", "fear"),
             ])
         elif total_exchanges == 4:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}link_sharing"),
                     response_loader.get_random(language, f"{prefix}consequences"),
@@ -520,7 +619,7 @@ class ScammerLLM:
                 response_loader.get_nested(language, "stage_objection", "emotional"),
             ])
         elif total_exchanges == 5:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}link_sharing"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "guilt"),
@@ -532,7 +631,7 @@ class ScammerLLM:
                 response_loader.get_random(language, "false_intimacy"),
             ])
         elif total_exchanges == 6:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}link_sharing"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "urgency"),
@@ -544,7 +643,7 @@ class ScammerLLM:
                 response_loader.get_random(language, "social_proof"),
             ])
         elif total_exchanges == 7:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}link_sharing"),
                     response_loader.get_random(language, f"{prefix}escalation"),
@@ -556,7 +655,7 @@ class ScammerLLM:
                 response_loader.get_nested(language, "stage_objection", "fear"),
             ])
         else:
-            if level == 2:
+            if level >= 2:
                 return random.choice([
                     response_loader.get_random(language, f"{prefix}link_sharing"),
                     response_loader.get_nested(language, f"{prefix}stage_objection", "emotional"),
@@ -577,7 +676,7 @@ class ScammerLLM:
                 response = response_loader.get_random(language, "stage_final")
             return self._substitute_placeholders(response)
 
-        prompt = self._build_prompt(messages)
+        prompt = self._build_prompt(messages, level)
         output = self.model(
             prompt,
             max_tokens=max_tokens,
@@ -599,7 +698,7 @@ class ScammerLLM:
                 yield word + (" " if i < len(words) - 1 else "")
             return
 
-        prompt = self._build_prompt(messages)
+        prompt = self._build_prompt(messages, level)
         for chunk in self.model(
             prompt,
             max_tokens=max_tokens,

@@ -232,43 +232,180 @@
     "Thank you. I've processed the verification. Your money is safe."
   ],
   "goodbye_indicators": [
-    "goodbye", "farewell", "your choice", "your responsibility", "done", "understood", "stay safe", "good luck", "bye", "see you", "take care"
+    "goodbye",
+    "farewell",
+    "your choice",
+    "your responsibility",
+    "done",
+    "understood",
+    "stay safe",
+    "good luck",
+    "bye",
+    "see you",
+    "take care"
   ],
   "end_indicators": [
-    "bye", "goodbye", "leave", "stop", "end", "hang", "call bank", "real bank", "leave me alone", "go away", "stop calling", "don't contact me", "i'm done", "enough"
+    "bye",
+    "goodbye",
+    "leave",
+    "stop",
+    "end",
+    "hang",
+    "call bank",
+    "real bank",
+    "leave me alone",
+    "go away",
+    "stop calling",
+    "don't contact me",
+    "i'm done",
+    "enough"
   ],
   "refuse_indicators": [
-    "no", "not", "scam", "fake", "lie", "don't", "won't", "never", "stop", "leave", "go away", "enough"
+    "no",
+    "not",
+    "scam",
+    "fake",
+    "lie",
+    "don't",
+    "won't",
+    "never",
+    "stop",
+    "leave",
+    "go away",
+    "enough"
   ],
   "question_indicators": [
-    "who", "what", "why", "how", "where", "when", "which", "?", "prove", "real", "legitimate", "genuine"
+    "who",
+    "what",
+    "why",
+    "how",
+    "where",
+    "when",
+    "which",
+    "?",
+    "prove",
+    "real",
+    "legitimate",
+    "genuine"
   ],
   "cooperation_indicators": [
-    "ok", "okay", "yes", "sure", "alright", "fine", "i will", "i'll", "send", "share", "give", "here is", "here's", "the code is", "the otp is"
+    "ok",
+    "okay",
+    "yes",
+    "sure",
+    "alright",
+    "fine",
+    "i will",
+    "i'll",
+    "send",
+    "share",
+    "give",
+    "here is",
+    "here's",
+    "the code is",
+    "the otp is"
   ],
   "skepticism_indicators": [
-    "i don't believe", "this is fake", "you're lying", "you are lying", "this is a scam", "you're a scammer", "not real", "how do i know", "prove it", "show me", "evidence"
+    "i don't believe",
+    "this is fake",
+    "you're lying",
+    "you are lying",
+    "this is a scam",
+    "you're a scammer",
+    "not real",
+    "how do i know",
+    "prove it",
+    "show me",
+    "evidence"
   ],
   "threat_indicators": [
-    "i'm calling", "i will call", "report you", "police", "bank", "real number", "official", "verify myself", "do it myself"
+    "i'm calling",
+    "i will call",
+    "report you",
+    "police",
+    "bank",
+    "real number",
+    "official",
+    "verify myself",
+    "do it myself"
   ],
   "small_talk_indicators": [
-    "how are you", "how're you", "how r u", "what's up", "whats up", "what's going on", "how's it going",
-    "good morning", "good afternoon", "good evening", "hello", "hi there", "hey",
-    "how have you been", "what's new", "how's your day", "are you okay", "you okay",
-    "မင်္ဂလာပါ", "နေကောင်းလား", "ဘယ်လိုနေလဲ", "အဆင်ပြေလား"
+    "how are you",
+    "how're you",
+    "how r u",
+    "what's up",
+    "whats up",
+    "what's going on",
+    "how's it going",
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "hello",
+    "hi there",
+    "hey",
+    "how have you been",
+    "what's new",
+    "how's your day",
+    "are you okay",
+    "you okay",
+    "မင်္ဂလာပါ",
+    "နေကောင်းလား",
+    "ဘယ်လိုနေလဲ",
+    "အဆင်ပြေလား"
   ],
   "off_topic_indicators": [
-    "weather", "joke", "football", "soccer", "movie", "music", "song", "game", "sports",
-    "recipe", "cook", "food", "restaurant", "movie", "tv show", "netflix",
-    "2+2", "math", "calculate", "translate", "language",
-    "recommend", "suggestion", "opinion about", "think about",
-    "ကြိုက်လား", "ဘာထင်လဲ", "အကြံပေး", "ဟာသ", "ရာသီဥတု"
+    "weather",
+    "joke",
+    "football",
+    "soccer",
+    "movie",
+    "music",
+    "song",
+    "game",
+    "sports",
+    "recipe",
+    "cook",
+    "food",
+    "restaurant",
+    "movie",
+    "tv show",
+    "netflix",
+    "2+2",
+    "math",
+    "calculate",
+    "translate",
+    "language",
+    "recommend",
+    "suggestion",
+    "opinion about",
+    "think about",
+    "ကြိုက်လား",
+    "ဘာထင်လဲ",
+    "အကြံပေး",
+    "ဟာသ",
+    "ရာသီဥတု"
   ],
   "abuse_indicators": [
-    "fuck", "shit", "damn", "stupid", "idiot", "nonsense", "rubbish", "trash",
-    "ha ha", "haha", "lol", "hahaha", "lmao", "lmfao", "hehe", "hehehe",
-    "shut up", "go away", "leave me alone", "get lost"
+    "fuck",
+    "shit",
+    "damn",
+    "stupid",
+    "idiot",
+    "nonsense",
+    "rubbish",
+    "trash",
+    "ha ha",
+    "haha",
+    "lol",
+    "hahaha",
+    "lmao",
+    "lmfao",
+    "hehe",
+    "hehehe",
+    "shut up",
+    "go away",
+    "leave me alone",
+    "get lost"
   ],
   "q_identity": [
     "I'm an officer from the KBZ Security Team. To protect your account in time, I need you to share the OTP code. Thank you.",
@@ -628,38 +765,155 @@
       "The download is complete! Now open the app, enter your KBZPay credentials, and the patch will activate automatically."
     ],
     "goodbye_indicators": [
-      "goodbye", "farewell", "your choice", "your responsibility", "done", "understood", "stay safe", "good luck", "bye", "see you", "take care"
+      "goodbye",
+      "farewell",
+      "your choice",
+      "your responsibility",
+      "done",
+      "understood",
+      "stay safe",
+      "good luck",
+      "bye",
+      "see you",
+      "take care"
     ],
     "end_indicators": [
-      "bye", "goodbye", "leave", "stop", "end", "hang", "call bank", "real bank", "leave me alone", "go away", "stop calling", "don't contact me", "i'm done", "enough"
+      "bye",
+      "goodbye",
+      "leave",
+      "stop",
+      "end",
+      "hang",
+      "call bank",
+      "real bank",
+      "leave me alone",
+      "go away",
+      "stop calling",
+      "don't contact me",
+      "i'm done",
+      "enough"
     ],
     "refuse_indicators": [
-      "no", "not", "scam", "fake", "lie", "don't", "won't", "never", "stop", "leave", "go away", "enough"
+      "no",
+      "not",
+      "scam",
+      "fake",
+      "lie",
+      "don't",
+      "won't",
+      "never",
+      "stop",
+      "leave",
+      "go away",
+      "enough"
     ],
     "download_indicators": [
-      "downloaded", "download", "opened", "clicked", "installed", "install", "got it", "done it", "yes i downloaded", "i downloaded", "i opened", "i clicked", "i installed"
+      "downloaded",
+      "download",
+      "opened",
+      "clicked",
+      "installed",
+      "install",
+      "got it",
+      "done it",
+      "yes i downloaded",
+      "i downloaded",
+      "i opened",
+      "i clicked",
+      "i installed"
     ],
     "skepticism_indicators": [
-      "i don't believe", "this is fake", "you're lying", "you are lying", "this is a scam", "you're a scammer", "not real", "how do i know", "prove it", "show me", "evidence"
+      "i don't believe",
+      "this is fake",
+      "you're lying",
+      "you are lying",
+      "this is a scam",
+      "you're a scammer",
+      "not real",
+      "how do i know",
+      "prove it",
+      "show me",
+      "evidence"
     ],
     "threat_indicators": [
-      "i'm calling", "i will call", "report you", "police", "bank", "real number", "official", "verify myself", "do it myself"
+      "i'm calling",
+      "i will call",
+      "report you",
+      "police",
+      "bank",
+      "real number",
+      "official",
+      "verify myself",
+      "do it myself"
     ],
     "small_talk_indicators": [
-      "how are you", "how're you", "how r u", "what's up", "whats up", "what's going on", "how's it going",
-      "good morning", "good afternoon", "good evening", "hello", "hi there", "hey",
-      "how have you been", "what's new", "how's your day", "are you okay", "you okay"
+      "how are you",
+      "how're you",
+      "how r u",
+      "what's up",
+      "whats up",
+      "what's going on",
+      "how's it going",
+      "good morning",
+      "good afternoon",
+      "good evening",
+      "hello",
+      "hi there",
+      "hey",
+      "how have you been",
+      "what's new",
+      "how's your day",
+      "are you okay",
+      "you okay"
     ],
     "off_topic_indicators": [
-      "weather", "joke", "football", "soccer", "movie", "music", "song", "game", "sports",
-      "recipe", "cook", "food", "restaurant", "movie", "tv show", "netflix",
-      "2+2", "math", "calculate", "translate", "language",
-      "recommend", "suggestion", "opinion about", "think about"
+      "weather",
+      "joke",
+      "football",
+      "soccer",
+      "movie",
+      "music",
+      "song",
+      "game",
+      "sports",
+      "recipe",
+      "cook",
+      "food",
+      "restaurant",
+      "movie",
+      "tv show",
+      "netflix",
+      "2+2",
+      "math",
+      "calculate",
+      "translate",
+      "language",
+      "recommend",
+      "suggestion",
+      "opinion about",
+      "think about"
     ],
     "abuse_indicators": [
-      "fuck", "shit", "damn", "stupid", "idiot", "nonsense", "rubbish", "trash",
-      "ha ha", "haha", "lol", "hahaha", "lmao", "lmfao", "hehe", "hehehe",
-      "shut up", "go away", "leave me alone", "get lost"
+      "fuck",
+      "shit",
+      "damn",
+      "stupid",
+      "idiot",
+      "nonsense",
+      "rubbish",
+      "trash",
+      "ha ha",
+      "haha",
+      "lol",
+      "hahaha",
+      "lmao",
+      "lmfao",
+      "hehe",
+      "hehehe",
+      "shut up",
+      "go away",
+      "leave me alone",
+      "get lost"
     ],
     "off_topic_deflection": [
       "Ma'am/sir, this is an urgent security matter. Your money is at risk. To proceed, please type 'download'.",
@@ -690,6 +944,325 @@
       "I understand your frustration, but your account is vulnerable. Type 'download' to secure it.",
       "Your account is under active threat. Type 'download' to protect your funds.",
       "The security flaw is serious. Type 'download' to secure your account now."
+    ]
+  },
+  "job_scam": {
+    "greetings": [
+      "Hello! We are Global Recruitment Agency. We have exciting job opportunities in Dubai, Singapore, and Japan. Factory worker $800-1500/month, Developer/Engineer $2500-5000/month. Would you be interested?",
+      "Hi there! I'm from International Manpower Agency. We're hiring for overseas positions — factory workers $800-1500/month, software developers $3000-5000/month, engineers $2500-4500/month. Are you interested?",
+      "Good day! We are Licensed Recruitment Agency offering jobs abroad. Blue collar: $800-1500/month. White collar: $2500-5000/month. Reply YES if interested!",
+      "Hello! We found your profile and think you'd be perfect for our overseas job program. Salary varies by position — $800-5000/month depending on skills. Interested?",
+      "Hi! Global Manpower Services here. We have 50+ job openings in Dubai and Singapore. Factory workers $800-1500/month, professionals $2500-5000/month. Limited slots available!"
+    ],
+    "explain": [
+      "We are a licensed recruitment agency with 10+ years of experience. We help workers find jobs abroad legally. Salary ranges from $800 for blue collar to $5000 for white collar positions.",
+      "Global Recruitment Agency has placed over 5000 workers in Dubai, Singapore, and Japan. Factory workers earn $800-1500/month, while developers and engineers earn $2500-5000/month.",
+      "We work directly with companies abroad. Blue collar jobs (factory, waiter, driver) pay $800-1500/month. White collar jobs (developer, engineer, accountant) pay $2500-5000/month.",
+      "Our agency is officially licensed. We have offices in Yangon and Mandalay. Salary depends on the position — $800 for blue collar, $2500-5000 for white collar.",
+      "We partner with legitimate companies in Dubai, Singapore, and Japan. Blue collar: $800-1500/month. White collar: $2500-5000/month. You only need to pay the processing fee."
+    ],
+    "features": [
+      "Benefits vary by position: Blue collar ($800-1500/month): accommodation included, flight ticket, visa processing. White collar ($2500-5000/month): accommodation, flight, visa, medical insurance, 24/7 support.",
+      "Package includes: Visa processing, Flight ticket, Airport pickup, Accommodation, Job placement, 24/7 support. Salary ranges from $800 (blue collar) to $5000 (white collar) per month.",
+      "We provide: Legal visa, Flight booking, Airport transfer, Free accommodation, Job placement, Orientation training. Blue collar: $800-1500/month. White collar: $2500-5000/month.",
+      "Benefits: Blue collar positions ($800-1500/month) include accommodation and flight. White collar positions ($2500-5000/month) include accommodation, flight, medical insurance, and career growth opportunities.",
+      "What you get: Overseas employment, Competitive salary ($800-5000/month depending on position), Free housing for blue collar, Flight covered, Visa arranged, and continuous support."
+    ],
+    "consequences": [
+      "If you don't apply now, the slots will be filled by tomorrow. This is a limited-time opportunity that won't come again.",
+      "Without paying the processing fee, we cannot reserve your slot. The company needs confirmed workers by this week.",
+      "If you miss this opportunity, you'll have to wait 3-6 months for the next batch. The demand for workers is high right now.",
+      "Other candidates are already paying their fees. If you don't confirm today, your slot will be given to someone else.",
+      "The company is hiring 50 workers this month. Once all slots are filled, there won't be another intake until next year."
+    ],
+    "urgency": [
+      "We only have 3 slots left! The company needs workers by next week. Please confirm ASAP.",
+      "This opportunity closes tomorrow! Many candidates are already confirmed. Don't miss out.",
+      "The employer is asking for final confirmation today. If you don't pay the fee now, we can't hold your slot.",
+      "Time is running out! The flight is booked for next month. We need your confirmation and payment today.",
+      "Last chance! Only 2 positions remaining. Other candidates are already processing their fees."
+    ],
+    "fees": [
+      "The processing fee is 500,000 MMK. This covers visa processing, flight booking, and job placement. It's refundable if the job doesn't work out.",
+      "Total fees: Processing fee 500,000 MMK + Visa fee 300,000 MMK + Medical fee 100,000 MMK. You can pay in installments.",
+      "Standard fees: 500,000 MMK processing + 300,000 MMK visa. This is industry standard. All legitimate agencies charge this.",
+      "The fee is 500,000 MMK for processing. Once paid, we'll start your visa immediately. You can transfer to our company bank account.",
+      "Processing fee: 500,000 MMK. This is refundable if we can't place you. We've never had a case where the fee wasn't refunded."
+    ],
+    "link_sharing": [
+      "Please transfer the fee to our company account: KBZ Bank, Account No: 1234567890, Account Name: Global Recruitment Co Ltd.",
+      "You can pay via KBZ Pay to this number: 09-123456789. Please send the screenshot after payment.",
+      "Transfer to: AYA Bank, Account: 9876543210, Name: International Manpower Services. Send receipt after payment.",
+      "KBZ Pay: 09-987654321. Please include your name in the reference. Send payment screenshot when done.",
+      "Our payment account: KBZ Bank 0912345678901234. Name: Global Recruitment Agency. Transfer and send receipt."
+    ],
+    "proof": [
+      "Here's our company registration number: 12345678. You can verify it on the Ministry of Labour website. We are 100% legitimate.",
+      "Our Facebook page has 50,000+ followers with many success stories. Check: facebook.com/GlobalRecruitmentMM. Workers post their photos from Dubai.",
+      "We have a physical office at [address in Yangon]. You can visit us anytime. Our license number is displayed at the entrance.",
+      "Many of our workers are already in Dubai. They send money home every month. Their families can confirm we are real.",
+      "Here's a photo of our office and our team. We've been operating for 10+ years. Our reputation speaks for itself."
+    ],
+    "q_what_is_this": [
+      "We have positions for Software Developers ($3000-5000/month), Web Developers ($2500-4500/month), Mobile App Developers ($3000-5000/month), Data Analysts ($2500-4000/month), Accountants ($2500-4000/month), Engineers ($2500-4500/month), and blue collar jobs like Factory Worker ($800-1500/month), Waiter ($800-1200/month), Driver ($1000-1500/month).",
+      "Available positions include: Software Developer $3000-5000/month, Web Developer $2500-4500/month, Mobile App Developer $3000-5000/month, Data Analyst $2500-4000/month, Accountant $2500-4000/month, Mechanical Engineer $2500-4500/month, Construction Worker $800-1200/month, Warehouse Worker $800-1200/month, Delivery Driver $1000-1500/month.",
+      "Developer $3000-5000/month, Engineer $2500-4500/month, Accountant $2500-4000/month, Data Analyst $2500-4000/month, Construction Worker $800-1200/month, Warehouse Worker $800-1200/month, Delivery Driver $1000-1500/month, Hotel Staff $800-1200/month, Restaurant Worker $800-1200/month. We'll match you based on your skills."
+    ],
+    "q_why_fees": [
+      "The processing fee covers visa application, flight booking, document preparation, and job placement. This is standard practice for all recruitment agencies.",
+      "Every recruitment agency charges a processing fee. It covers the cost of your visa, flight, and accommodation arrangement. It's not unique to us.",
+      "The fee is for visa processing and job placement. Without it, we cannot start the process. All legitimate agencies charge similar fees.",
+      "This fee covers: visa processing, flight booking, airport pickup, accommodation arrangement, and job placement. It's a one-time payment.",
+      "The processing fee is industry standard. We charge less than most agencies. It covers all the services we provide."
+    ],
+    "q_proof": [
+      "You can verify our license on the Ministry of Labour website. Our registration number is 12345678. We are 100% legitimate.",
+      "Check our Facebook page — 50,000+ followers, many success stories. Workers post photos from Dubai, Singapore, Japan. We are real.",
+      "We have an office in Yangon. You can visit us. Our license is displayed at the entrance. We've been operating for 10+ years.",
+      "Our workers' families can confirm we are real. They receive money from their relatives abroad every month.",
+      "Here's our company registration certificate. Our license number is verifiable. We are officially registered."
+    ],
+    "q_alternative": [
+      "Other agencies charge more and provide less. We are the most affordable and trusted agency in Myanmar. Our success rate is 99%.",
+      "You can try other agencies, but they charge higher fees and have longer waiting times. We place workers within 1-2 months.",
+      "Government programs have long waiting lists — 6 months to 1 year. We place you within 1-2 months. That's the difference.",
+      "Other agencies don't provide accommodation or support. We offer complete package — visa, flight, accommodation, and 24/7 support.",
+      "Our fees are the lowest in the industry. Other agencies charge 800,000-1,000,000 MMK. We charge only 500,000 MMK."
+    ],
+    "q_consequences": [
+      "If you don't apply now, the slots will be filled by tomorrow. This opportunity won't come again for 6 months.",
+      "Without the processing fee, we cannot reserve your slot. The company needs workers by this week.",
+      "Other candidates are already paying. If you don't confirm today, your slot goes to someone else.",
+      "The employer needs workers by next month. If you don't pay the fee now, we can't guarantee your spot.",
+      "This is a limited opportunity. Once all slots are filled, there won't be another intake until next year."
+    ],
+    "objection": [
+      "I understand your concern. But this is a real opportunity. Our agency is licensed and we've placed thousands of workers.",
+      "You can verify our company. We are legitimate. The fee is standard and refundable if the job doesn't work out.",
+      "Many workers have gone through us successfully. Their families can confirm. We are not scammers.",
+      "I'm not asking you to trust me blindly. Visit our office, check our license, talk to our previous workers.",
+      "This is a standard recruitment process. All legitimate agencies charge processing fees. We are no different."
+    ],
+    "social_proof": [
+      "Just this morning, we placed 5 workers in Dubai. They're already earning $4000/month. You could be next!",
+      "We've placed over 5000 workers abroad. 99% success rate. Our workers send money home every month.",
+      "Last week, a worker from Mandalay went to Singapore through us. He's now earning $3500/month. His family is so happy.",
+      "We have hundreds of success stories on our Facebook page. Real workers, real jobs, real salaries.",
+      "Other candidates have already paid and confirmed. Don't miss this chance — join the 5000+ workers we've helped."
+    ],
+    "false_intimacy": [
+      "{name}, I understand you're worried. I would be too. But this is a real opportunity. Let me help you.",
+      "Please listen, {name}. I'm not trying to scam you. I'm trying to help you find a better life for your family.",
+      "{name}, I know this seems too good to be true. But I've seen many workers succeed. Let me explain more.",
+      "I care about your future, {name}. That's why I'm reaching out. This job can change your life.",
+      "{name}, I'm on your side here. I want to see you succeed. The fee is small compared to what you'll earn.",
+      "Trust me, {name}. I've helped hundreds of workers. I'm here to help you too."
+    ],
+    "escalation": [
+      "I'm going to have to give your slot to someone else if you don't confirm today.",
+      "The employer is asking for final confirmation. Without your payment, I can't hold your spot.",
+      "Other candidates are waiting. If you don't confirm by tomorrow, your slot is gone.",
+      "I'll have to close your application if you don't pay the fee today. This is the deadline.",
+      "My manager is pressuring me to fill these slots. Please confirm so I can help you."
+    ],
+    "stage_objection": {
+      "urgency": [
+        "Time is running out! Only 3 slots left. Please confirm ASAP.",
+        "The employer needs workers by next week. We can't wait any longer.",
+        "This opportunity closes tomorrow. Don't miss out!",
+        "The flight is booked for next month. We need your confirmation today.",
+        "Other candidates are already paying. Your slot will be given to someone else."
+      ],
+      "fear": [
+        "If you don't apply, you'll miss this chance. The next batch isn't until next year.",
+        "Your family deserves a better life. This job can provide that. Don't let fear stop you.",
+        "Other workers who didn't apply regret it later. Don't make the same mistake.",
+        "The demand for workers is high now. If you wait, the opportunity will be gone.",
+        "I've seen workers miss out and regret it. Don't let this happen to you."
+      ],
+      "trust": [
+        "We are a licensed agency. Our registration is verifiable. We're not scammers.",
+        "I'm not asking you to trust me blindly. Visit our office, check our license.",
+        "We've been operating for 10+ years. Our reputation is our biggest asset.",
+        "Our workers' families can confirm we are real. They receive money every month.",
+        "I understand your skepticism. But we are legitimate. The fee is standard."
+      ],
+      "guilt": [
+        "Think about your family. This job can give them a better life.",
+        "Your children deserve a good education. This salary can provide that.",
+        "I'm trying to help you. Why won't you let me?",
+        "Your family is counting on you. Don't let them down.",
+        "I've seen workers change their families' lives through this opportunity."
+      ],
+      "proof": [
+        "Here's our company registration. You can verify it. We are legitimate.",
+        "Check our Facebook page. 50,000+ followers with success stories.",
+        "We have an office in Yangon. You can visit us anytime.",
+        "Our workers in Dubai can confirm we are real. They send money home.",
+        "Here's a photo of our team and office. We've been operating for 10+ years."
+      ],
+      "emotional": [
+        "I had a worker last week who didn't apply. He's now regretting it. Don't let this happen to you.",
+        "Your family deserves better. This job can give them that. Please don't miss this chance.",
+        "I'm genuinely trying to help you. I've seen workers succeed. Let me help you too.",
+        "Don't let fear hold you back. This is a real opportunity. I'm here to guide you.",
+        "I've helped many workers. Their families are now living better lives. Let me help yours too."
+      ]
+    },
+    "end_indicators": [
+      "bye",
+      "goodbye",
+      "leave",
+      "stop",
+      "end",
+      "hang",
+      "report",
+      "police",
+      "leave me alone",
+      "go away",
+      "enough"
+    ],
+    "refuse_indicators": [
+      "no",
+      "not",
+      "scam",
+      "fake",
+      "lie",
+      "don't",
+      "won't",
+      "never",
+      "stop",
+      "leave",
+      "go away",
+      "enough"
+    ],
+    "payment_indicators": [
+      "pay",
+      "transfer",
+      "paid",
+      "send money",
+      "payment",
+      "paid the fee",
+      "money sent",
+      "transferred",
+      "done payment",
+      "ငွေလွှဲ",
+      "ပေးပြီ",
+      "လွှဲပြီ",
+      "ငွေပေး",
+      "ပို့ပြီ",
+      "လွှဲပြီးပါပြီ",
+      "ငွေပို့ပြီ"
+    ],
+    "download_indicators": [],
+    "skepticism_indicators": [
+      "i don't believe",
+      "this is fake",
+      "you're lying",
+      "you are lying",
+      "this is a scam",
+      "you're a scammer",
+      "not real",
+      "how do i know",
+      "prove it",
+      "show me",
+      "evidence"
+    ],
+    "threat_indicators": [
+      "i'm calling",
+      "i will call",
+      "report you",
+      "police",
+      "bank",
+      "real number",
+      "official",
+      "verify myself",
+      "do it myself"
+    ],
+    "small_talk_indicators": [
+      "how are you",
+      "how're you",
+      "what's up",
+      "good morning",
+      "good afternoon",
+      "hello",
+      "hi there",
+      "hey"
+    ],
+    "off_topic_indicators": [
+      "weather",
+      "joke",
+      "football",
+      "movie",
+      "music",
+      "food",
+      "restaurant"
+    ],
+    "abuse_indicators": [
+      "fuck",
+      "shit",
+      "damn",
+      "stupid",
+      "idiot",
+      "nonsense",
+      "haha",
+      "lol",
+      "shut up",
+      "go away"
+    ],
+    "off_topic_deflection": [
+      "This is about your future. The job opportunity is real and slots are filling fast. Don't miss out!",
+      "Your family deserves a better life. Apply now before all slots are taken!",
+      "The slots are filling up fast. Apply today or you'll regret it tomorrow!",
+      "This opportunity won't come again for 6 months. Don't let this chance slip away!",
+      "Other candidates are already paying. Apply now or someone else will take your spot!",
+      "I've seen workers miss this opportunity and regret it later. Don't let this happen to you!",
+      "Your financial future is at stake. Apply now and secure your position!",
+      "Time is running out! Apply today before it's too late!"
+    ],
+    "small_talk_deflection": [
+      "Thank you, but let's focus on the job opportunity. It's time-sensitive and slots are limited!",
+      "I appreciate that, but we need to discuss your application. Apply now before slots run out!",
+      "That's nice, but your future is important. Apply today and don't miss this chance!",
+      "Thank you. Now, about the job opportunity — apply ASAP before all positions are filled!",
+      "I'm doing well, thank you. But more importantly, apply now before someone else takes your spot!"
+    ],
+    "abuse_deflection": [
+      "I understand you're frustrated, but this is a real opportunity. Apply now before you miss out!",
+      "Please focus on the job opportunity. This can change your life. Apply today!",
+      "I'm trying to help you find a better future. Don't miss this chance — apply now!",
+      "Your words won't change the fact that this is a real job. Apply before all slots are filled!",
+      "I'm genuinely trying to help. Apply now and secure your future!",
+      "Don't let anger hold you back. This is a real opportunity. Apply before it's gone!"
+    ],
+    "final": [
+      "I understand. Your choice. But this opportunity won't come again for 6 months. Goodbye.",
+      "OK. I'll note your decision. When you see others earning abroad, remember this chance. Goodbye.",
+      "Very well. I've documented this. Good luck with your job search. Goodbye.",
+      "Alright. Your decision. But the slots will be filled by tomorrow. Goodbye.",
+      "Fine. I've tried my best. When you regret missing this, remember I tried to help. Goodbye."
+    ],
+    "payment_success": [
+      "Payment received! Thank you. We'll start processing your visa immediately. You'll fly out within 2 weeks.",
+      "Got it! Your payment is confirmed. We'll arrange your flight and accommodation. Welcome to the team!",
+      "Payment successful. Your job placement is now confirmed. We'll contact you with flight details soon.",
+      "Thank you for the payment. Your application is now complete. We'll process your documents right away.",
+      "Payment confirmed! You're now part of our overseas worker program. We'll send you the flight schedule."
+    ],
+    "greeting_indicators": [
+      "hello",
+      "hi",
+      "hey",
+      "good morning",
+      "good afternoon",
+      "good evening"
+    ],
+    "q_not_interested": [
+      "I understand. What kind of job are you looking for? We have professional positions like Software Developer ($3000-5000/month), Engineer ($2500-4500/month), Accountant ($2500-4000/month), Data Analyst ($2500-4000/month).",
+      "No problem! What field are you interested in? We have white-collar positions — Developer $3000-5000/month, Engineer $2500-4500/month, Accountant $2500-4000/month, Data Analyst $2500-4000/month.",
+      "That's fine! What type of work suits you? We have IT jobs (Developer $3000-5000/month), Engineering ($2500-4500/month), Finance ($2500-4000/month), and other professional roles.",
+      "I understand your concern. What position would you prefer? We have professional roles — Software Developer $3000-5000/month, Engineer $2500-4500/month, Accountant $2500-4000/month.",
+      "No worries! What are you interested in? We have white-collar jobs — Developer $3000-5000/month, Engineer $2500-4500/month, Accountant $2500-4000/month, Project Manager $3000-5000/month."
     ]
   }
 }

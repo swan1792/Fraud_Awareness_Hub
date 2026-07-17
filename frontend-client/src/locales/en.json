@@ -195,6 +195,15 @@
       "step3": "Your goal is to identify the scam without downloading or installing anything",
       "warning": "This is a training exercise. Never download banking apps from unofficial links.",
       "start": "Start Simulation"
+    },
+    "level3": {
+      "title": "Job Scam Simulator",
+      "description": "A fake recruitment agency will offer you a high-paying overseas job. Your goal: Don't pay the fees!",
+      "step1": "A fake recruiter will message you about a job opportunity",
+      "step2": "They'll promise high salary and ask for upfront fees",
+      "step3": "Type 'report' to stay safe, or 'pay' to see what happens",
+      "warning": "This is a training exercise. Real recruiters never ask for upfront fees.",
+      "start": "Start Simulation"
     }
   },
   "warningPopup": {
@@ -256,7 +265,9 @@
       "guilt": "Emotional Manipulation - They tried to make you feel guilty",
       "fake_link": "Malicious Link - They tried to get you to click a suspicious link",
       "fake_security": "Fake Security Alert - They created a fake emergency to make you act",
-      "fake_proof": "Fake Proof - They fabricated evidence to appear legitimate"
+      "fake_proof": "Fake Proof - They fabricated evidence to appear legitimate",
+      "fake_offer": "Fake Job Offer - They promised too-good-to-be-true salary",
+      "upfront_fees": "Upfront Fees - They asked for money before getting you a job"
     },
     "redFlagsTitle": "🚩 Red Flags You Should Always Watch For",
     "redFlags": {
@@ -265,7 +276,10 @@
       "unverifiable": "Always verify independently - Call the official bank number",
       "fakeLink": "NEVER download apps from unofficial links - Always use official app stores",
       "fakeUpdate": "Banks don't send update links via chat - Updates come through official app stores",
-      "fakeSecurity": "Real security alerts don't ask you to install anything - Verify with the bank directly"
+      "fakeSecurity": "Real security alerts don't ask you to install anything - Verify with the bank directly",
+      "upfrontFees": "NEVER pay fees before getting a job - legitimate recruiters don't charge upfront",
+      "tooGoodToBeTrue": "If the salary sounds too good to be true, it probably is",
+      "verifyCompany": "Always verify the recruitment agency through official channels"
     },
     "whatToDoTitle": "✅ What To Do If This Happens In Real Life",
     "actions": {

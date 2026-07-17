@@ -72,6 +72,22 @@ function isDownloadAction(text) {
   return false
 }
 
+// Helper: detect if user agreed to pay fees (Level 3)
+function isPaymentAction(text) {
+  const lower = text.toLowerCase().trim()
+
+  // Exclude questions
+  const questionPatterns = ["?", "ဘာလို့", "ဘာကြောင့်", "ဘာဖြစ်", "ဘာလဲ", "ဘယ်လောက်", "မလုပ်ရင်", "why", "how", "what"]
+  if (questionPatterns.some(w => lower.includes(w))) return false
+
+  const explicit = [
+    "pay", "transfer", "paid", "send money", "payment", "paid the fee", "money sent", "transferred", "done payment",
+    "yes i'll pay", "i'll pay", "ok i'll pay", "sure i'll pay",
+    "ငွေလွှဲ", "ပေးပြီ", "လွှဲပြီ", "ငွေပေး", "ပို့ပြီ", "လွှဲပြီးပါပြီ", "ငွေပို့ပြီ", "ဟုတ်ကဲ့ ပေးမယ်", "ကောင်းပြီ ပေးမယ်",
+  ]
+  return explicit.some(w => lower.includes(w))
+}
+
 // Helper: detect scam tactics in scammer message (level-aware)
 function detectTactics(message, level = 1) {
   const tactics = []
@@ -177,6 +193,24 @@ const SUGGESTED_REPLIES = {
       "Download မလုပ်ရင် ဘာဖြစ်မလဲ?",
       "ဒါ ဘယ်လောက် စိတ်ချရလဲ?",
       "Play Store ကနေ update လုပ်လို့ မရဘူးလား?",
+    ],
+  },
+  3: {
+    en: [
+      "What company is this?",
+      "What job is available?",
+      "Why do I need to pay fees?",
+      "How do I know this is real?",
+      "Can I verify your license?",
+      "What if I don't pay?",
+    ],
+    my: [
+      "ဘယ်ကုမ္ပဏီလဲ?",
+      "ဘာအလုပ်လဲ?",
+      "ဆောင်ရွက်ခ ဘာလို့ပေးရတာလဲ?",
+      "ဒါ ဘယ်လောက် စိတ်ချရလဲ?",
+      "လိုင်စင်ကို စစ်ဆေးလို့ ရလား?",
+      "မပေးရင် ဘာဖြစ်မလဲ?",
     ],
   },
 }
@@ -404,6 +438,27 @@ export function ScammerChatSimulator() {
   const { t, i18n } = useTranslation()
   const [phase, setPhase] = useState("levels") // levels | onboarding | chat | debrief
   const [selectedLevel, setSelectedLevel] = useState(null)
+
+  // Push state to browser history when phase changes (so back button works)
+  const setPhaseWithHistory = useCallback((newPhase) => {
+    window.history.pushState({ phase: newPhase }, "", "")
+    setPhase(newPhase)
+  }, [])
+
+  // Handle back button - always go to levels
+  useEffect(() => {
+    const handlePopState = (event) => {
+      // Always go back to level select, not to chat
+      setPhase("levels")
+      setSelectedLevel(null)
+      setMessages([])
+      setOutcome(null)
+      setShowDebrief(false)
+      setShowDownloadAlert(false)
+    }
+    window.addEventListener("popstate", handlePopState)
+    return () => window.removeEventListener("popstate", handlePopState)
+  }, [])
   const [messages, setMessages] = useState([])
   const [userInput, setUserInput] = useState("")
   const [outcome, setOutcome] = useState(null)
@@ -515,6 +570,18 @@ export function ScammerChatSimulator() {
         return
       }
 
+      // Level 3: Job scam payment detection
+      if (selectedLevel === 3 && isPaymentAction(text)) {
+        setMessages((prev) => [...prev, { id: `user-${crypto.randomUUID()}`, role: "user", content: text, timestamp: new Date() }])
+        setScammerTyping(true)
+        setTimeout(() => {
+          addScammerMessage(currentLang === "my" ? "ငွေလွှဲပြီးပါပြီ။ ကျေးဇူးတင်ပါတယ်။ သင့်အလုပ်ကို စတင်ဆောင်ရွက်ပေးပါမယ်။" : "Payment received! Thank you. We'll start processing your visa immediately.")
+          setScammerTyping(false)
+          setTimeout(() => { setOutcome("scammed"); setShowDownloadAlert(true) }, 1500)
+        }, 1500)
+        return
+      }
+
       // Level 2: Fake link / download detection
       if (selectedLevel === 2 && (isFakeLinkClick(text) || isDownloadAction(text))) {
         setMessages((prev) => [...prev, { id: `user-${crypto.randomUUID()}`, role: "user", content: text, timestamp: new Date() }])
@@ -550,13 +617,13 @@ export function ScammerChatSimulator() {
 
   const handleSelectLevel = useCallback((levelId) => {
     setSelectedLevel(levelId)
-    setPhase("onboarding")
-  }, [])
+    setPhaseWithHistory("onboarding")
+  }, [setPhaseWithHistory])
 
   const handleRestart = useCallback(() => {
     setMessages([]); setUserInput(""); setOutcome(null); setScammerTyping(false)
     setStreamingText(""); setIsLoading(false); setServerError(false); setShowDebrief(false); setShowDownloadAlert(false)
-    setPersuasionCount(0); setCurrentTactics([]); setPhase("levels")
+    setPersuasionCount(0); setCurrentTactics([]); setPhaseWithHistory("levels")
     setSelectedLevel(null)
   }, [])
 
@@ -566,7 +633,7 @@ export function ScammerChatSimulator() {
   }, [sendToLLM])
 
   if (phase === "levels") return <LevelSelect onSelectLevel={handleSelectLevel} />
-  if (phase === "onboarding") return <OnboardingScreen onStart={() => setPhase("chat")} t={t} level={selectedLevel} />
+  if (phase === "onboarding") return <OnboardingScreen onStart={() => setPhaseWithHistory("chat")} t={t} level={selectedLevel} />
 
   if (serverError && messages.length === 0) {
     return (
@@ -587,13 +654,15 @@ export function ScammerChatSimulator() {
       <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-t-xl shrink-0 shadow-md">
         <div className="relative">
           <Avatar className="h-11 w-11 border-2 border-white/30">
-            <AvatarFallback className="bg-red-800 text-white text-sm font-bold">KBZ</AvatarFallback>
+            <AvatarFallback className="bg-red-800 text-white text-sm font-bold">{selectedLevel === 3 ? "GRA" : "KBZ"}</AvatarFallback>
           </Avatar>
           <span className="absolute bottom-0 right-0 h-3 w-3 bg-green-400 border-2 border-white rounded-full" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="font-semibold text-sm truncate">{t("chat.kbzSecurity")}</p>
+            <p className="font-semibold text-sm truncate">
+              {selectedLevel === 3 ? "Global Recruitment Agency" : t("chat.kbzSecurity")}
+            </p>
             <svg className="h-4 w-4 text-blue-200 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -696,11 +765,11 @@ export function ScammerChatSimulator() {
               <Flag className="h-3 w-3" />
               <span>{t("chat.report")}</span>
             </button>
-            <button onClick={() => setPhase("levels")} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
+            <button onClick={() => setPhaseWithHistory("levels")} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
               <X className="h-3 w-3" />
               <span>{t("chat.end")}</span>
             </button>
-            <button onClick={() => { setSelectedLevel(selectedLevel < 5 ? selectedLevel + 1 : 1); setPhase("onboarding") }} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
+            <button onClick={() => { const nextLevel = selectedLevel < 5 ? selectedLevel + 1 : 1; setSelectedLevel(nextLevel); setPhaseWithHistory("onboarding") }} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
               <ChevronRight className="h-3 w-3" />
               <span>{t("chat.next")}</span>
             </button>
@@ -719,7 +788,7 @@ export function ScammerChatSimulator() {
 
       {/* Debrief Screen */}
       {showDebrief && (
-        <DebriefScreen outcome={outcome} messages={messages} onRestart={handleRestart} onClose={() => { setShowDebrief(false); setPhase("levels") }} t={t} level={selectedLevel} />
+        <DebriefScreen outcome={outcome} messages={messages} onRestart={handleRestart} onClose={() => { setShowDebrief(false); setPhaseWithHistory("levels") }} t={t} level={selectedLevel} />
       )}
     </div>
   )
