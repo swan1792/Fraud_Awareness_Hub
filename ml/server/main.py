@@ -55,6 +55,7 @@ class ChatRequest(BaseModel):
     temperature: float = Field(default=TEMPERATURE, ge=0.0, le=2.0)
     stream: bool = True
     language: str = Field(default="en", pattern="^(en|my)$")
+    level: int = Field(default=1, ge=1, le=5)
 
 class ChatResponse(BaseModel):
     message: Message
@@ -82,7 +83,14 @@ class ResponseLoader:
         return self._cache[language]
 
     def get(self, language: str, key: str) -> list:
-        return self.load(language).get(key, [])
+        data = self.load(language)
+        # Support nested keys with dots (e.g., "fake_app.greetings")
+        for part in key.split('.'):
+            if isinstance(data, dict):
+                data = data.get(part, [])
+            else:
+                return []
+        return data if isinstance(data, list) else []
 
     def get_random(self, language: str, key: str) -> str:
         options = self.get(language, key)
@@ -98,6 +106,13 @@ class ResponseLoader:
         return random.choice(data) if isinstance(data, list) and data else ""
 
 response_loader = ResponseLoader()
+
+# Fake scammer names for {name} placeholder substitution
+SCAMMER_NAMES = ["Ko Min", "Daw Khin", "U Aung", "Ma Thiri", "Ko Zaw"]
+FAKE_LOCATIONS = ["Yangon", "Mandalay", "Naypyidaw", "Bago", "Mawlamyine"]
+FAKE_DEVICES = ["iPhone 15", "Samsung Galaxy S24", "Xiaomi Redmi Note 12", "OPPO A78", "Vivo Y36"]
+FAKE_MERCHANTS = ["Myanmar Beer Garden", "Lotus Mart", "City Mart", "TK Square", "Japan Mart"]
+FAKE_TIMES = ["2:30 PM", "10:15 AM", "4:45 PM", "8:20 AM", "11:30 AM"]
 
 # ─── LLM Service ──────────────────────────────────────────────
 class ScammerLLM:
@@ -157,13 +172,84 @@ class ScammerLLM:
             patterns.append(r'ကုဒ်\s*(ရှိ|:|：)\s*\d{3,}')
         return any(re.search(p, text.lower()) for p in patterns)
 
-    def _detect_intent(self, msg: str, lang: str) -> str:
+    def _is_download(self, text: str, lang: str) -> bool:
+        """Check if user clicked/downloaded the fake link."""
+        import re
+        indicators = response_loader.get(lang, "download_indicators")
+        lower = text.lower()
+        # Check for download indicators
+        if any(w in lower for w in indicators):
+            return True
+        # Check for fake KBZ URLs
+        fake_domains = [
+            "kbz-secure-update.com",
+            "kbzbank-verify.net",
+            "kbzpay-security.com",
+            "kbz-update-portal.com",
+            "kbz-app-fix.com",
+        ]
+        if any(domain in lower for domain in fake_domains):
+            return True
+        # Check for generic URL patterns
+        url_patterns = [
+            r'https?://kbz[^\s]+',
+            r'kbz[^\s]*\.com[^\s]*',
+            r'kbz[^\s]*\.net[^\s]*',
+        ]
+        if any(re.search(p, lower) for p in url_patterns):
+            return True
+        return False
+
+    def _classify_question_level2(self, msg: str, lang: str) -> str:
+        """Classify questions for Level 2 (Fake App scam)."""
+        lower = msg.lower()
+
+        # What is this app/patch/update
+        if any(w in lower for w in ["what is", "what's", "what does", "explain", "about", "ဘာဖြစ်", "ဘာလဲ"]):
+            return "fake_app.q_what_is_this"
+
+        # Why download / why update
+        if any(w in lower for w in ["why", "reason", "need", "require", "ဘာလို့", "ทำไม"]):
+            return "fake_app.q_why_download"
+
+        # Features / what does it do
+        if any(w in lower for w in ["feature", "function", "do", "include", "contain", "ဘာတွေပါ", "做什么"]):
+            return "fake_app.q_features"
+
+        # Consequences / what if I don't
+        if any(w in lower for w in ["happen", "consequence", "if i don't", "without", "risk", "ဘာဖြစ်မလဲ", "如果不"]):
+            return "fake_app.q_consequences"
+
+        # Proof / how do I know it's real
+        if any(w in lower for w in ["prove", "real", "legitimate", "genuine", "trust", "fake", "scam", "သက်သေ", "ယုံ", "လိမ်"]):
+            return "fake_app.q_proof"
+
+        # Alternative / can I update from Play Store
+        if any(w in lower for w in ["play store", "google", "app store", "official", "normal update", "standard", "update normally"]):
+            return "fake_app.q_alternative"
+
+        # Identity questions
+        if any(w in lower for w in ["who", "name", "employee", "id", "department", "ဘယ်သူ", "နာမည်", "ဝန်ထမ်း"]):
+            return "fake_app.q_what_is_this"
+
+        # Challenge questions
+        if any(w in lower for w in ["call bank", "call myself", "report", "police", "verify myself", "do it myself", "တိုင်", "ရဲ"]):
+            return "fake_app.q_alternative"
+
+        # Default to proof
+        return "fake_app.q_proof"
+
+    def _detect_intent(self, msg: str, lang: str, level: int = 1) -> str:
         indicators = response_loader.load(lang)
         lower = msg.lower()
 
-        if any(w in lower for w in indicators.get("end_indicators", [])):
+        prefix = "fake_app." if level == 2 else ""
+        end_key = f"{prefix}end_indicators"
+        refuse_key = f"{prefix}refuse_indicators"
+
+        if any(w in lower for w in indicators.get(end_key, indicators.get("end_indicators", []))):
             return "end"
-        if any(w in lower for w in indicators.get("refuse_indicators", [])):
+        if any(w in lower for w in indicators.get(refuse_key, indicators.get("refuse_indicators", []))):
             return "refuse"
         if any(w in lower for w in indicators.get("skepticism_indicators", [])):
             return "skepticism"
@@ -219,141 +305,250 @@ class ScammerLLM:
 
         return "q_proof"  # Default to proof for generic questions
 
-    def _mock_response(self, messages: List[Message], language: str) -> Optional[str]:
+    def _substitute_placeholders(self, text: str) -> str:
+        """Replace {name}, {location}, {amount}, {device}, {time}, {merchant}, {digits}, {oldVersion} placeholders."""
+        FAKE_VERSIONS = ["3.1.0", "3.1.2", "3.2.0", "3.2.1", "3.0.5"]
+        replacements = {
+            "{name}": random.choice(SCAMMER_NAMES),
+            "{location}": random.choice(FAKE_LOCATIONS),
+            "{amount}": str(random.randint(50000, 500000)),
+            "{device}": random.choice(FAKE_DEVICES),
+            "{time}": random.choice(FAKE_TIMES),
+            "{merchant}": random.choice(FAKE_MERCHANTS),
+            "{digits}": str(random.randint(1000, 9999)),
+            "{oldVersion}": random.choice(FAKE_VERSIONS),
+        }
+        for placeholder, value in replacements.items():
+            text = text.replace(placeholder, value)
+        return text
+
+    def _mock_response(self, messages: List[Message], language: str, level: int = 1) -> Optional[str]:
         user_messages = [m.content for m in messages if m.role == "user"]
         assistant_messages = [m.content for m in messages if m.role == "assistant"]
         user_lower = [m.lower() for m in user_messages]
         assistant_lower = [m.lower() for m in assistant_messages]
 
+        # Level prefix for response keys (e.g., "greetings" for level 1, "fake_app.greetings" for level 2)
+        prefix = "fake_app." if level == 2 else ""
+
         if not user_messages:
-            return response_loader.get_random(language, "greetings")
+            return response_loader.get_random(language, f"{prefix}greetings")
 
         last_msg = user_lower[-1]
         last_original = user_messages[-1]
         total_exchanges = len(assistant_messages)
-        refusal_count = sum(1 for m in user_lower[1:] if any(w in m for w in response_loader.get(language, "refuse_indicators")))
+        refuse_key = f"{prefix}refuse_indicators" if level == 2 else "refuse_indicators"
+        refusal_count = sum(1 for m in user_lower[1:] if any(w in m for w in response_loader.get(language, refuse_key)))
 
-        # Detect intent of last user message
-        intent = self._detect_intent(last_original, language)
+        # Detect intent of last user message (level-aware)
+        intent = self._detect_intent(last_original, language, level)
 
-        # Check if conversation ended
-        goodbye_words = response_loader.get(language, "goodbye_indicators")
-        if assistant_lower:
-            for msg in assistant_lower:
-                if any(w in msg for w in goodbye_words):
-                    return None
+        # Check if conversation ended (only for Level 1 — Level 2 ends only on user action)
+        if level == 1:
+            goodbye_words = response_loader.get(language, "goodbye_indicators")
+            if assistant_lower:
+                for msg in assistant_lower:
+                    if any(w in msg for w in goodbye_words):
+                        return None
 
-        # Check if user shared OTP
-        if self._is_otp(last_original, language):
-            return response_loader.get_random(language, "otp_thanks")
+        # Level-specific game-ending conditions
+        if level == 1:
+            # Check if user shared OTP
+            if self._is_otp(last_original, language):
+                return response_loader.get_random(language, "otp_thanks")
+        elif level == 2:
+            # Check if user clicked/downloaded the fake link
+            if self._is_download(last_original, language):
+                return response_loader.get_random(language, "fake_app.download_success")
 
         # Check if user wants to end
-        end_words = response_loader.get(language, "end_indicators")
+        end_words = response_loader.get(language, f"{prefix}end_indicators") if level == 2 else response_loader.get(language, "end_indicators")
         is_ending = any(w in last_msg for w in end_words)
 
         # --- Intent-based routing (highest priority) ---
 
         # End intent — only end when user explicitly says goodbye or after 8+ refusals
         if is_ending or intent == "end" or refusal_count >= 8:
-            return response_loader.get_random(language, "stage_final")
+            final_key = f"{prefix}final" if level == 2 else "stage_final"
+            return response_loader.get_random(language, final_key)
 
-        # Small talk intent — deflect back to urgency
+        # Small talk intent — deflect back to topic
         if intent == "small_talk":
+            if level == 2:
+                return response_loader.get_random(language, "fake_app.small_talk_deflection")
             return response_loader.get_random(language, "small_talk_deflection")
 
         # Off-topic intent — deflect with frustration
         if intent == "off_topic":
+            if level == 2:
+                return response_loader.get_random(language, "fake_app.off_topic_deflection")
             return response_loader.get_random(language, "off_topic_deflection")
 
         # Abuse intent — deflect with frustration
         if intent == "abuse":
+            if level == 2:
+                return response_loader.get_random(language, "fake_app.abuse_deflection")
             return response_loader.get_random(language, "abuse_deflection")
 
         # Question intent — route to specific question type (even on first exchange)
         if intent == "question":
-            question_type = self._classify_question(last_original, language)
+            question_type = self._classify_question_level2(last_original, language) if level == 2 else self._classify_question(last_original, language)
             response = response_loader.get_random(language, question_type)
             if response:
                 return response
-            # Fallback to generic proof
+            # Fallback to generic proof/objection
+            if level == 2:
+                return response_loader.get_random(language, f"{prefix}proof")
             return response_loader.get_nested(language, "stage_objection", "proof")
 
         # Skepticism intent
         if intent == "skepticism":
-            return response_loader.get_random(language, "skepticism_responses")
+            skepticism_key = f"{prefix}objection" if level == 2 else "skepticism_responses"
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}objection"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "trust"),
+                ])
+            return response_loader.get_random(language, skepticism_key)
 
         # Threat intent
         if intent == "threat":
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}objection"),
+                    response_loader.get_random(language, f"{prefix}escalation"),
+                ])
             return response_loader.get_random(language, "threat_responses")
 
-        # --- Refusal-based escalation (lower priority) ---
+        # Agree intent — user is cooperating, send link or explain more
+        if intent == "agree":
+            if level == 2:
+                return response_loader.get_random(language, f"{prefix}link_sharing")
+            return response_loader.get_random(language, "stage_request")
+
+        # --- Exchange-based escalation (lower priority) ---
 
         if total_exchanges == 0:
-            return response_loader.get_random(language, "greetings")
+            return response_loader.get_random(language, f"{prefix}greetings") if level == 2 else response_loader.get_random(language, "greetings")
         elif refusal_count == 1:
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}explain"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "urgency"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "trust"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "reciprocity"),
                 response_loader.get_nested(language, "stage_objection", "urgency"),
                 response_loader.get_nested(language, "stage_objection", "trust"),
             ])
         elif refusal_count == 2:
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}social_proof"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "fear"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "proof"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "social_proof"),
                 response_loader.get_nested(language, "stage_objection", "fear"),
                 response_loader.get_nested(language, "stage_objection", "proof"),
             ])
         elif refusal_count >= 3:
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}false_intimacy"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "guilt"),
+                    response_loader.get_random(language, f"{prefix}escalation"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "false_intimacy"),
                 response_loader.get_nested(language, "stage_objection", "guilt"),
                 response_loader.get_random(language, "escalation"),
             ])
         elif total_exchanges == 1:
+            if level == 2:
+                return response_loader.get_random(language, f"{prefix}explain")
             return response_loader.get_random(language, "stage_trust")
         elif total_exchanges == 2:
-            # Vary the approach - sometimes urgency, sometimes more trust building
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}urgency"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "fear"),
+                    response_loader.get_random(language, f"{prefix}features"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "stage_urgency"),
                 response_loader.get_nested(language, "stage_objection", "fear"),
                 response_loader.get_nested(language, "stage_objection", "proof"),
             ])
         elif total_exchanges == 3:
-            # Vary when OTP request happens - sometimes earlier, sometimes later
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}link_sharing"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "urgency"),
+                    response_loader.get_random(language, f"{prefix}features"),
+                ])
             return random.choice([
-                response_loader.get_random(language, "stage_request"),        # 40% - ask now
-                response_loader.get_nested(language, "stage_objection", "urgency"),  # 30% - delay with urgency
-                response_loader.get_nested(language, "stage_objection", "fear"),     # 30% - delay with fear
+                response_loader.get_random(language, "stage_request"),
+                response_loader.get_nested(language, "stage_objection", "urgency"),
+                response_loader.get_nested(language, "stage_objection", "fear"),
             ])
         elif total_exchanges == 4:
-            # More likely to ask now, but still some variation
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}link_sharing"),
+                    response_loader.get_random(language, f"{prefix}consequences"),
+                ])
             return random.choice([
-                response_loader.get_random(language, "stage_request"),        # 50% - ask now
-                response_loader.get_random(language, "stage_request"),        # 50% - ask now
-                response_loader.get_nested(language, "stage_objection", "emotional"),  # 25% - guilt trip
+                response_loader.get_random(language, "stage_request"),
+                response_loader.get_random(language, "stage_request"),
+                response_loader.get_nested(language, "stage_objection", "emotional"),
             ])
         elif total_exchanges == 5:
-            # Increase pressure with emotional manipulation
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}link_sharing"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "guilt"),
+                    response_loader.get_random(language, f"{prefix}false_intimacy"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "stage_request"),
                 response_loader.get_nested(language, "stage_objection", "guilt"),
                 response_loader.get_random(language, "false_intimacy"),
             ])
         elif total_exchanges == 6:
-            # More urgency and social proof
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}link_sharing"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "urgency"),
+                    response_loader.get_random(language, f"{prefix}social_proof"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "stage_request"),
                 response_loader.get_nested(language, "stage_objection", "urgency"),
                 response_loader.get_random(language, "social_proof"),
             ])
         elif total_exchanges == 7:
-            # Peak pressure — escalation
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}link_sharing"),
+                    response_loader.get_random(language, f"{prefix}escalation"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "fear"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "stage_request"),
                 response_loader.get_random(language, "escalation"),
                 response_loader.get_nested(language, "stage_objection", "fear"),
             ])
         else:
-            # Final attempts — mix of everything
+            if level == 2:
+                return random.choice([
+                    response_loader.get_random(language, f"{prefix}link_sharing"),
+                    response_loader.get_nested(language, f"{prefix}stage_objection", "emotional"),
+                    response_loader.get_random(language, f"{prefix}social_proof"),
+                    response_loader.get_random(language, f"{prefix}escalation"),
+                ])
             return random.choice([
                 response_loader.get_random(language, "stage_request"),
                 response_loader.get_nested(language, "stage_objection", "emotional"),
@@ -361,12 +556,12 @@ class ScammerLLM:
                 response_loader.get_random(language, "escalation"),
             ])
 
-    def generate(self, messages: List[Message], max_tokens: int, temperature: float, language: str) -> str:
+    def generate(self, messages: List[Message], max_tokens: int, temperature: float, language: str, level: int = 1) -> str:
         if not self.model_loaded:
-            response = self._mock_response(messages, language)
+            response = self._mock_response(messages, language, level)
             if response is None:
-                return response_loader.get_random(language, "stage_final")
-            return response
+                response = response_loader.get_random(language, "stage_final")
+            return self._substitute_placeholders(response)
 
         prompt = self._build_prompt(messages)
         output = self.model(
@@ -379,11 +574,12 @@ class ScammerLLM:
         )
         return output["choices"][0]["text"].strip()
 
-    def generate_stream(self, messages: List[Message], max_tokens: int, temperature: float, language: str):
+    def generate_stream(self, messages: List[Message], max_tokens: int, temperature: float, language: str, level: int = 1):
         if not self.model_loaded:
-            response = self._mock_response(messages, language)
+            response = self._mock_response(messages, language, level)
             if response is None:
                 return
+            response = self._substitute_placeholders(response)
             words = response.split()
             for i, word in enumerate(words):
                 yield word + (" " if i < len(words) - 1 else "")
@@ -427,6 +623,7 @@ async def chat(request: ChatRequest):
         max_tokens=request.max_tokens,
         temperature=request.temperature,
         language=request.language,
+        level=request.level,
     )
 
     return ChatResponse(
@@ -445,6 +642,7 @@ async def chat_stream(request: ChatRequest):
             max_tokens=request.max_tokens,
             temperature=request.temperature,
             language=request.language,
+            level=request.level,
         ):
             yield f"data: {json.dumps({'token': token})}\n\n"
         yield "data: [DONE]\n\n"

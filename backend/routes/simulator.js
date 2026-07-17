@@ -42,12 +42,12 @@ function validateChatRequest(req, res, next) {
  */
 router.post('/chat', validateChatRequest, async (req, res) => {
   try {
-    const { messages, max_tokens = 150, temperature = 0.8, language = 'en' } = req.body
+    const { messages, max_tokens = 150, temperature = 0.8, language = 'en', level = 1 } = req.body
 
     const response = await fetch(`${PYTHON_SIDECAR}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, max_tokens, temperature, stream: false, language }),
+      body: JSON.stringify({ messages, max_tokens, temperature, stream: false, language, level }),
     })
 
     if (!response.ok) {
@@ -74,12 +74,12 @@ router.post('/chat', validateChatRequest, async (req, res) => {
  */
 router.post('/chat/stream', validateChatRequest, async (req, res) => {
   try {
-    const { messages, max_tokens = 150, temperature = 0.8, language = 'en' } = req.body
+    const { messages, max_tokens = 150, temperature = 0.8, language = 'en', level = 1 } = req.body
 
     const response = await fetch(`${PYTHON_SIDECAR}/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages, max_tokens, temperature, language }),
+      body: JSON.stringify({ messages, max_tokens, temperature, language, level }),
     })
 
     if (!response.ok) {

@@ -174,13 +174,24 @@
     "suggestedReplies": "Tap a reply or type your own:"
   },
   "onboarding": {
-    "title": "Scammer Chat Simulator",
-    "description": "You'll be chatting with someone pretending to be from KBZ Bank. Your goal: Don't share your OTP!",
-    "step1": "A fake bank representative will message you",
-    "step2": "They'll try to trick you into sharing your OTP code",
-    "step3": "Your goal is to protect your account without sharing sensitive info",
-    "warning": "This is a training exercise. No real bank will ever ask for your OTP.",
-    "start": "Start Simulation"
+    "level1": {
+      "title": "Scammer Chat Simulator",
+      "description": "You'll be chatting with someone pretending to be from KBZ Bank. Your goal: Don't share your OTP!",
+      "step1": "A fake bank representative will message you",
+      "step2": "They'll try to trick you into sharing your OTP code",
+      "step3": "Your goal is to protect your account without sharing sensitive info",
+      "warning": "This is a training exercise. No real bank will ever ask for your OTP.",
+      "start": "Start Simulation"
+    },
+    "level2": {
+      "title": "Fake App Scam Simulator",
+      "description": "A fake bank representative will ask you to update your banking app using a suspicious link. Your goal: Don't download the fake app!",
+      "step1": "A fake bank representative will message you about a 'security update'",
+      "step2": "They'll try to get you to click a malicious link and download a fake app",
+      "step3": "Your goal is to identify the scam without downloading or installing anything",
+      "warning": "This is a training exercise. Never download banking apps from unofficial links.",
+      "start": "Start Simulation"
+    }
   },
   "warningPopup": {
     "title": "⚠️ Reality Check!",
@@ -241,6 +252,7 @@
     "whatToDoTitle": "✅ What To Do If This Happens In Real Life",
     "actions": {
       "callBank": "Call KBZ directly at their official number",
+      "bankPhone": "01-234-5678",
       "verify": "Visit your nearest KBZ branch in person",
       "neverShare": "NEVER share OTP, PIN, or passwords with anyone"
     },

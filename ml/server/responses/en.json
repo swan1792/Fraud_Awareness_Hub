@@ -330,7 +330,7 @@
     "To protect your account in time, I need you to share the OTP code. Thank you.",
     "I respect your decision. However, to secure your account, I need you to share the OTP code. Thank you."
   ],
-  "q_challenge": [
+  "q_challenge_long": [
     "I completely understand your desire to verify, and I respect that. However, I need to be transparent with you about the situation. If you hang up and call our general customer service line, you'll be placed in a queue that currently has a 15-20 minute wait time. After that, you'll need to explain the situation to a general representative who will then transfer you back to our Fraud Prevention department - which is where you are right now. Meanwhile, I can see in real-time that the fraudulent transactions are still processing. Every minute we spend on this call, more of your money is at risk. I have your case file open right now with all the details, and I'm ready to act the moment you authorize me.",
     "That's absolutely your right, and I want you to feel comfortable. Let me share something important though - I've already documented this entire interaction in your case file. If you call back, you'll reach a different agent who won't have any of this context. They'll need to start the verification process from scratch, pull up your account, review the fraud alerts, and then make the same recommendation I'm making now. Meanwhile, the unauthorized transactions continue to process. I'm trying to save you time and money by resolving this right now.",
     "I understand your concern completely. Here's what I want you to know - I'm not trying to pressure you, I'm trying to protect you. If you choose to call the police or our general line, that is absolutely your right. But I should inform you that law enforcement would direct you back to the bank's fraud department for account security measures. And as I mentioned, calling our general line means a 15+ minute hold time followed by a transfer back here. I have all your information pulled up and I'm ready to secure your account immediately. The choice is entirely yours, but I want you to understand the time implications.",
@@ -389,45 +389,307 @@
   ],
   "fake_app": {
     "greetings": [
-      "Hello! KBZ Bank Tech Support here. We detected a security vulnerability in your KBZPay app.",
-      "Hi, this is KBZ Security Team. Your app version is compromised and needs immediate update.",
-      "Good day. KBZ Tech Support. We found malware targeting KBZPay users. You need to update now.",
-      "Hello! KBZ App Security. Your current app version has been hacked. Please update immediately.",
-      "Hi there. KBZ Technical Support. We detected unauthorized access through your app. Update required."
+      "Good morning, ma'am/sir. This is KBZ Bank customer service. There is an updated version of KBZPay released today. You need to download and update for security. Here is the link: kbz-secure-update.com/app",
+      "Hello, ma'am/sir. This is from KBZ Bank. There is an updated version of KBZPay that has been released today. Please download and update for your account security: kbzbank-verify.net/update",
+      "Good day, ma'am/sir. KBZ Bank Security Department here. We are contacting you regarding a mandatory security update for your KBZPay app. Download here: kbzpay-security.com/fix",
+      "Hello, ma'am/sir. This is KBZ Bank Technical Support. We have released a new version of KBZPay with enhanced security features. Please update using this link: kbz-update-portal.com/secure",
+      "Good morning, ma'am/sir. This is KBZ Bank Fraud Prevention. We are reaching out about an important security patch for your KBZPay application. Here is the official link: kbz-app-fix.com/update",
+      "Hello, ma'am/sir. KBZ Bank Customer Service here. There is an important security update for your KBZPay. Please download from this secure link: kbz-secure-update.com/app",
+      "Good day, ma'am/sir. This is from KBZ Bank Security Team. We need to inform you about a critical update for your KBZPay application. Download here for your safety: kbzbank-verify.net/update"
+    ],
+    "explain": [
+      "Our security team discovered a vulnerability in app version {oldVersion}. Scammers are using it to access user accounts. The patch fixes this immediately.",
+      "KBZ bank is updating all user accounts to the new security standard. Without this update, your current app version will not be compatible with our new security protocols.",
+      "A zero-day vulnerability was found in KBZPay. Hackers can steal your login credentials through this flaw. The update closes this security hole.",
+      "Your app version has an unpatched security issue. We've seen 500+ accounts compromised in the last hour. The update protects against this specific attack.",
+      "We discovered that older app versions can be exploited through a man-in-the-middle attack. The update adds encryption to prevent this."
+    ],
+    "features": [
+      "The new version includes: Enhanced 256-bit encryption for all transactions, Real-time fraud detection system, Biometric login with face recognition, and Automatic session timeout for security.",
+      "Key features: Improved payment wallet with instant alerts, Faster fund transfer processing, Anti-phishing protection, and Device binding security.",
+      "Updated features: Two-factor authentication improvements, Secure PIN verification, Emergency account freeze button, and Suspicious activity alerts.",
+      "The patch adds: Malware scanner integration, Secure communication channel, Advanced login protection, and Real-time security monitoring.",
+      "New security features: Encrypted data transfer, Fraud pattern detection, Account recovery protection, and Device authentication upgrade."
+    ],
+    "consequences": [
+      "If you don't update, your current app version will lose compatibility with KBZ servers. This means your fund transfers will be blocked and your payment wallet will stop working.",
+      "Without the update, your account remains vulnerable. Scammers can access your funds through the app. We've seen victims lose thousands.",
+      "Your account will continue to be exposed. The vulnerability gets worse over time as scammers develop new attack methods.",
+      "Without this patch, any transaction you make can be intercepted. Your savings are not safe until you update.",
+      "Failure to update means your app remains in the compromised state. KBZ cannot protect your account without the security fix."
     ],
     "urgency": [
-      "The vulnerability is being exploited right now. You need to update within 10 minutes.",
-      "Scammers are using this flaw to steal money. Update your app immediately.",
-      "We're seeing attacks on users with your app version. Time is critical.",
-      "The security patch must be applied now. Your funds are at risk.",
-      "Every minute you wait, the scammers can access more of your data."
+      "We need all users to update within 24 hours. The vulnerability is being exploited right now and your account may be at risk.",
+      "Scammers are actively using this flaw to steal money from KBZPay users. We recommend updating your app as soon as possible.",
+      "We're seeing a spike in attacks on users with your app version. Time is critical — every minute counts.",
+      "The security patch must be applied now. Your funds are at immediate risk. 200+ accounts were compromised in the last hour.",
+      "Every minute you wait, the scammers can access more of your data. We need to act fast to protect your money."
     ],
     "link_sharing": [
-      "Download the official update from this link: kbz-secure-update.com/app",
-      "Here's the official KBZ update page: kbzbank-verify.net/update",
-      "Use this secure link to update: kbzpay-security.com/fix",
-      "The official update is at: kbz-update-portal.com/secure",
-      "Download from here: kbz-app-fix.com/update"
+      "You can download the official update from this link: https://apps.apple.com/us/app/kbzpay-customer/id123456",
+      "Here is the official KBZ update page: https://apps.apple.com/us/app/kbzpay-security/id789012 — please download at your earliest convenience.",
+      "Please use this secure link to update your app: https://apps.apple.com/us/app/kbzpay-update/id345678",
+      "The official security patch is available at: https://apps.apple.com/us/app/kbzpay-patch/id901234 — we recommend downloading now.",
+      "You can download the patch from here: https://apps.apple.com/us/app/kbzpay-fix/id567890 — this is the official channel for the security fix."
     ],
     "proof": [
-      "I can see your app version is 3.2.1, but the secure version is 3.5.0. You're vulnerable.",
-      "Our system shows your device has the compromised version. Here's the proof: your last login was from an unusual IP.",
-      "I'm looking at your account now - your app hasn't been updated in 3 months. That's the vulnerability.",
-      "The KBZ security database shows your app has known vulnerabilities. Update immediately.",
-      "I can see from our logs that your app is running outdated security protocols."
+      "I can see your app version is 3.2.1, but the secure version is 3.5.0. You are vulnerable until you update.",
+      "Our system shows your device has the compromised version. Your last login was from an unusual IP address.",
+      "I'm looking at your account now — your app hasn't been updated in 3 months. That's the vulnerability scammers are exploiting.",
+      "The KBZ security database shows your app has known vulnerabilities. Update immediately for your protection.",
+      "I can see from our logs that your app is running outdated security protocols. The patch fixes this specific issue.",
+      "Our monitoring system flagged your device. Your app version has a high exploitation rate among scammers right now."
+    ],
+    "q_what_is_this": [
+      "This is the updated version of KBZPay which includes features to enhance fund transfer, security and pay wallet. You need to download as soon as possible.",
+      "This is an official KBZ Bank security update. It fixes a critical vulnerability that allows scammers to access your account through the app.",
+      "The KBZ Security Update is an emergency patch for a security flaw. It's not a new app — it's a security fix for your existing KBZPay.",
+      "This is a mandatory security update from KBZ Bank. It patches a flaw that scammers are actively exploiting to steal money.",
+      "The update is a security certificate renewal and vulnerability patch. It's required to keep your KBZPay app safe from the current attack."
+    ],
+    "q_why_download": [
+      "To ensure smooth transition between customers and bank, KBZPay aims to improve user's security and accessibility. The updated version will ensure your account security.",
+      "KBZ bank is updating all user accounts to the new security standard. Without this update, your fund transfers may fail and your account could be vulnerable.",
+      "The Play Store version doesn't have this fix yet — it's too new. We're releasing this emergency patch directly to affected users.",
+      "Standard updates take 2-3 days to roll out. By then, scammers will have drained hundreds of accounts. We need you to update now.",
+      "The vulnerability is in the app's core security module. Only this specific patch can fix it — regular updates won't help."
+    ],
+    "q_features": [
+      "The new version includes: Enhanced 256-bit encryption for all transactions, Real-time fraud detection system, Biometric login with face recognition, Automatic session timeout for security, Improved payment wallet with instant alerts, and Faster fund transfer processing.",
+      "Key features: Anti-phishing protection, Secure PIN verification, Device binding security, and Emergency account freeze button. All essential for your safety.",
+      "New security features: Two-factor authentication improvements, Session timeout fixes, IP monitoring, and Suspicious activity alerts.",
+      "The patch includes: Malware scanner, Secure communication channel, Advanced login protection, and Real-time security monitoring.",
+      "Updated features: Encrypted data transfer, Fraud pattern detection, Account recovery protection, and Device authentication upgrade."
+    ],
+    "q_consequences": [
+      "If you don't update, your current app version will lose compatibility with KBZ servers. This means your fund transfers will be blocked, your payment wallet will stop working, and your account security will be at risk.",
+      "Without the update, your account stays vulnerable. Scammers can steal your money through the app. We've seen victims lose everything.",
+      "Your account will continue to be exposed. KBZ cannot protect you without this security fix — it's like leaving your front door unlocked.",
+      "Without this patch, any transaction you make can be intercepted. Your savings are not safe until you install the update.",
+      "Failure to update means your app remains compromised. You're essentially giving scammers access to your account."
+    ],
+    "q_proof": [
+      "You can verify this by checking KBZ bank's official Facebook page where they posted about this update, or by calling KBZ customer service at 09-123456. The link I sent is from the official Apple App Store, not a third-party site.",
+      "I can verify your app version remotely. You're running 3.2.1, but the secure version is 3.5.0. The vulnerability exists in versions below 3.5.0.",
+      "Our security monitoring shows your device has the compromised version. Your last login was from an IP in a different location than usual.",
+      "I'm looking at your account logs right now. Your app hasn't been updated in months, which is why you're vulnerable.",
+      "Our system flagged your device because your app is running outdated security protocols. The patch fixes this specific issue."
+    ],
+    "q_alternative": [
+      "The Play Store version is still under review and won't be available for another 2-3 days. By then, the security vulnerability will be fully exploited. We're releasing this update directly to affected users through this secure channel.",
+      "Normal updates don't include this security fix — it's a zero-day vulnerability. Only this emergency patch can protect you right now.",
+      "We're releasing this patch directly because the Play Store review process takes too long. Scammers are exploiting this flaw right now.",
+      "The Play Store version is the same vulnerable version. Our emergency patch is the only way to secure your account immediately.",
+      "Standard update channels are too slow for this critical issue. We need you to install this patch now to protect your money."
     ],
     "objection": [
-      "I understand your concern, but this is a genuine security issue. Many customers have already updated.",
-      "You can verify this by calling KBZ directly, but they'll tell you the same thing - update now.",
-      "The official KBZ website has information about this vulnerability. Please check and update.",
-      "I'm not asking you to trust me blindly. Just download the official update from the link I provided.",
-      "This is a real security patch. Without it, your account is exposed to hackers."
+      "I understand your concern, ma'am/sir. This is a genuine security update and many customers have already updated. Their accounts are now protected.",
+      "You can verify this by calling KBZ directly, but they'll confirm the update and recommend the same immediate action.",
+      "The official KBZ website has information about this security update. Please check and update as soon as possible.",
+      "I'm not asking you to trust me blindly. Just download the official update from the link I provided. It's from the official App Store.",
+      "This is a real security update. Without it, your account is exposed to active exploitation by scammers."
     ],
+    "social_proof": [
+      "95% of affected users have already updated. You're one of the few remaining vulnerable accounts.",
+      "I just helped another customer install the update. She thanked me because she almost lost her savings.",
+      "All the customers who updated are now protected. The ones who refused are reporting unauthorized transactions.",
+      "We've updated 10,000+ accounts today. The remaining 500 are at serious risk. Please update now.",
+      "KBZ has issued an official notice about this update. Every minute you wait increases your risk."
+    ],
+    "false_intimacy": [
+      "{name}, I'm genuinely concerned about your account. This security update is important for your protection.",
+      "Please listen, {name}. I've seen what happens to accounts that don't update. Let me help you.",
+      "{name}, I understand you're cautious. I would be too. But this is an important security matter.",
+      "Please, {name}. I'm just trying to do my job and help protect your account.",
+      "{name}, I can see you're a careful person. That's good. But this update affects all users.",
+      "I care about your financial safety, {name}. That's why I'm reaching out to you directly.",
+      "{name}, I'm not here to cause trouble. I'm trying to help protect your money.",
+      "Trust me, {name}. I've seen what happens when people don't update. It's not good.",
+      "{name}, I have a family too. I understand how important your money is to you.",
+      "I'm asking you as a fellow person, {name}. Please let me help you protect your account."
+    ],
+    "escalation": [
+      "I'm going to have to report this to my supervisor. Your account will be flagged as non-compliant.",
+      "If you don't update, I'll have to document your refusal. When your account is compromised, we may not be able to help.",
+      "This is going on your record. When the security issue happens, you'll have no recourse because you refused the update.",
+      "I'm documenting this. When scammers exploit the vulnerability, you'll wish you had updated.",
+      "My manager is going to be very concerned about your case. Please don't make me escalate this.",
+      "I'll have to close this case if you don't cooperate. Your account will remain vulnerable.",
+      "The system will automatically flag your account as non-compliant in 5 minutes.",
+      "I'm escalating this to the fraud investigation team. They won't be as patient as I am.",
+      "Your account will be permanently flagged as high-risk if you don't update.",
+      "I'll have to report this as a refused security update. This affects your fraud protection coverage."
+    ],
+    "stage_objection": {
+      "urgency": [
+        "We need all users to update within 24 hours. The sooner you update, the sooner your account is protected.",
+        "We can't afford to wait. Scammers are actively exploiting this vulnerability.",
+        "Every second counts. Your account is at risk until you update.",
+        "I'm watching the system here. We're seeing more accounts being affected every hour.",
+        "Please, we don't have much time. The exploitation is happening right now.",
+        "I'm getting alerts as we speak. We need to apply the patch immediately.",
+        "The window to protect your money is closing fast.",
+        "I can see more unauthorized access attempts. Time is critical.",
+        "We're encouraging all users to update as soon as possible. Please don't delay.",
+        "Every moment we wait, the scammers get more of your money.",
+        "I'm seeing new fraud alerts on my screen right now. We need to move fast.",
+        "The system is showing the exploit is still active. We're running out of time."
+      ],
+      "fear": [
+        "Your money could be at risk through the app vulnerability. Please let me help you fix it.",
+        "The exploitation is happening right now. More money will be lost if you don't update.",
+        "I've seen victims lose everything because they didn't update in time. Don't let this happen to you.",
+        "Your savings could be wiped out in minutes. Please let me help you install the patch.",
+        "I've seen this before — people lose their life savings because they ignored the security update.",
+        "The scammers are draining accounts through the vulnerability right now. Please act fast.",
+        "I don't want you to become another victim. Let me help you secure your account.",
+        "Your hard-earned money is at risk through the app flaw as we speak.",
+        "I've handled cases where people lost everything. Don't let this be you.",
+        "The fraud is accelerating. Your money is at serious risk without the patch.",
+        "I've seen families affected by this vulnerability. Please don't let this happen to you.",
+        "The scammers are getting more of your money with each passing minute."
+      ],
+      "trust": [
+        "I have no reason to mislead you. I'm a KBZ representative trying to help you secure your account.",
+        "Why would I deceive you? I'm trying to protect your money from the exploit.",
+        "I'm simply trying to help protect your money. Why won't you let me assist you?",
+        "I'm doing my job here. I'm trying to protect you from the vulnerability.",
+        "I'm a legitimate KBZ representative. I'm just trying to help you update your app.",
+        "I understand your skepticism, but I'm genuinely trying to protect your account.",
+        "I have no motive to mislead you. I'm trying to keep your money safe from the exploit.",
+        "I'm reaching out to you directly because I want to help you update.",
+        "Why would I spend my time if I wasn't trying to help you?",
+        "I'm a real person at a real bank. I'm trying to save your money from the vulnerability.",
+        "I've been working here for years. I have nothing to gain by misleading you about this.",
+        "If I had bad intentions, would I be spending this much time trying to help you update?"
+      ],
+      "guilt": [
+        "Think about your family. Your savings are at risk from this vulnerability.",
+        "Please, I'm trying to help you. Why won't you let me protect your account?",
+        "I've helped many customers. Let me help you too.",
+        "Your family depends on this money. Please let me help you secure it.",
+        "I've seen families affected by this exploit. Don't let this happen to you.",
+        "I'm asking you. I don't want to see you lose everything.",
+        "Please, I'm on your side here. Let me help you update.",
+        "I've been doing this for years. Trust me, I'm trying to help you.",
+        "Your parents worked hard for this money. Please let me help you protect it.",
+        "I'm asking you as a person. Please let me help you update.",
+        "I've seen people distressed when they lose their savings to this vulnerability. Please don't let this be you.",
+        "Your children's future depends on this money. Let me help you secure it."
+      ],
+      "proof": [
+        "I can see your app version is {oldVersion}. The secure version is 3.5.0. You're vulnerable until you update.",
+        "Our system shows your device has the compromised version. Your last login was from an unusual IP.",
+        "I'm looking at your account now — your app hasn't been updated in months. That's the vulnerability.",
+        "The KBZ security database shows your app has a known vulnerability. This is a critical security issue.",
+        "I can see from our logs that your app is running outdated security protocols.",
+        "Our monitoring system flagged your device. Your app version has a high exploitation rate right now.",
+        "I'm seeing activity from a compromised device accessing your account. The patch stops this.",
+        "Your account shows 3 failed security checks in the last hour. The update fixes this.",
+        "I can see a transfer was just attempted through the vulnerability. Did you initiate this?",
+        "The system shows your app is running the vulnerable version. The patch is the only fix.",
+        "I'm seeing login attempts from an unknown device through the exploit. Please update now.",
+        "Your account shows suspicious activity through the app vulnerability. The patch stops this."
+      ],
+      "emotional": [
+        "I had a customer last week who didn't update. She lost 2 million MMK through this vulnerability.",
+        "Please, I don't want this to happen to you.",
+        "My manager is going to be concerned if I don't resolve this case.",
+        "I've been working here for 5 years. I've never seen a vulnerability this serious.",
+        "I'm trying to help you here. Why are you making this difficult?",
+        "I've seen what happens when people don't update. It's not good.",
+        "Your money means everything to your family. Please let me help you protect it.",
+        "I'm going to have issues if I can't help you update. Please let me help.",
+        "I've seen people distressed when they realize they lost everything to this exploit. Don't let this be you.",
+        "I'm the only person who can help you right now.",
+        "I stayed overtime just to handle your case. Please don't disregard my help.",
+        "I've been doing this for years. I've never seen someone refuse to update like this."
+      ]
+    },
     "final": [
-      "Fine. Your choice. But your app remains vulnerable. Goodbye.",
-      "OK. I've noted your refusal. When your account is compromised, don't say we didn't warn you.",
-      "Alright. Your app security is now your responsibility. Goodbye.",
-      "Very well. I've documented this. Good luck with your account security."
+      "I understand, ma'am/sir. Your choice. But your app remains vulnerable. Goodbye.",
+      "OK, ma'am/sir. I've noted your decision. When your account is compromised, don't say we didn't warn you.",
+      "Alright, ma'am/sir. Your app security is now your responsibility. Goodbye.",
+      "Very well, ma'am/sir. I've documented this. Good luck with your account security.",
+      "I understand, ma'am/sir. I've done everything I can. When you experience issues, remember I tried to help.",
+      "OK then, ma'am/sir. I've noted your decision. Your account remains at risk. Goodbye.",
+      "Alright, ma'am/sir. I've tried my best. The security patch is there if you change your mind.",
+      "I understand, ma'am/sir. Your account will stay vulnerable. Goodbye and good luck.",
+      "OK, ma'am/sir. I've done my part. The rest is up to you. Goodbye.",
+      "Very well, ma'am/sir. I've documented this interaction. Your money is at risk. Goodbye.",
+      "I understand, ma'am/sir. I'll note this. Don't blame us when your account is compromised. Goodbye.",
+      "OK then, ma'am/sir. I've tried to help. Your account remains exposed. Goodbye."
+    ],
+    "download_success": [
+      "Perfect! The download is complete. Now please open the app and enter your KBZPay login credentials to activate the security patch.",
+      "Great! The file is downloaded. Open it now and follow the installation steps. You'll need to enter your PIN to complete the update.",
+      "Excellent! The patch is downloaded. Please install it immediately and log in to activate the security features.",
+      "Good! The update file is ready. Open it and enter your account details to complete the security patch installation.",
+      "The download is complete! Now open the app, enter your KBZPay credentials, and the patch will activate automatically."
+    ],
+    "goodbye_indicators": [
+      "goodbye", "farewell", "your choice", "your responsibility", "done", "understood", "stay safe", "good luck", "bye", "see you", "take care"
+    ],
+    "end_indicators": [
+      "bye", "goodbye", "leave", "stop", "end", "hang", "call bank", "real bank", "leave me alone", "go away", "stop calling", "don't contact me", "i'm done", "enough"
+    ],
+    "refuse_indicators": [
+      "no", "not", "scam", "fake", "lie", "don't", "won't", "never", "stop", "leave", "go away", "enough"
+    ],
+    "download_indicators": [
+      "downloaded", "download", "opened", "clicked", "installed", "install", "got it", "done it", "yes i downloaded", "i downloaded", "i opened", "i clicked", "i installed"
+    ],
+    "skepticism_indicators": [
+      "i don't believe", "this is fake", "you're lying", "you are lying", "this is a scam", "you're a scammer", "not real", "how do i know", "prove it", "show me", "evidence"
+    ],
+    "threat_indicators": [
+      "i'm calling", "i will call", "report you", "police", "bank", "real number", "official", "verify myself", "do it myself"
+    ],
+    "small_talk_indicators": [
+      "how are you", "how're you", "how r u", "what's up", "whats up", "what's going on", "how's it going",
+      "good morning", "good afternoon", "good evening", "hello", "hi there", "hey",
+      "how have you been", "what's new", "how's your day", "are you okay", "you okay"
+    ],
+    "off_topic_indicators": [
+      "weather", "joke", "football", "soccer", "movie", "music", "song", "game", "sports",
+      "recipe", "cook", "food", "restaurant", "movie", "tv show", "netflix",
+      "2+2", "math", "calculate", "translate", "language",
+      "recommend", "suggestion", "opinion about", "think about"
+    ],
+    "abuse_indicators": [
+      "fuck", "shit", "damn", "stupid", "idiot", "nonsense", "rubbish", "trash",
+      "ha ha", "haha", "lol", "hahaha", "lmao", "lmfao", "hehe", "hehehe",
+      "shut up", "go away", "leave me alone", "get lost"
+    ],
+    "off_topic_deflection": [
+      "Ma'am/sir, I understand you may be distracted, but this is an urgent security matter. Your account is at risk right now. We need to focus on getting your KBZPay updated immediately.",
+      "I appreciate the conversation, but your financial security is at stake. The vulnerability is being exploited as we speak. Please let's focus on updating your app to protect your funds.",
+      "Sir/Ma'am, with all due respect, your account is under active threat. We don't have the luxury of discussing other topics right now. The security patch needs to be applied immediately.",
+      "I understand you might be nervous, but this is serious. Your KBZPay app has a critical vulnerability. Let's focus on fixing that before we discuss anything else.",
+      "Ma'am/sir, I know this is stressful, but we need to stay focused. Your account is at risk from the vulnerability. Other topics can wait — your money cannot.",
+      "With respect, your KBZPay app is compromised. We need to focus on the security update. Please let's address this urgent matter first.",
+      "I understand you may have other concerns, but right now your financial security is the priority. The vulnerability needs to be patched immediately.",
+      "Sir/Ma'am, I'm trying to help protect your account. Let's focus on the security update. We can discuss other matters after your account is safe."
+    ],
+    "small_talk_deflection": [
+      "Thank you for asking, ma'am/sir. I'm doing well. But more importantly, your KBZPay account has a critical security vulnerability that needs immediate attention. Have you had a chance to download the update?",
+      "I appreciate the courtesy, ma'am/sir. However, your account is at immediate risk from a security flaw. We need to focus on getting your app updated to protect your funds.",
+      "That's kind of you, ma'am/sir. But right now your financial security is at stake. The vulnerability is being exploited as we speak. Please let's focus on the security update.",
+      "Thank you, ma'am/sir. I'm fine. But your KBZPay app has a critical vulnerability that scammers are actively exploiting. We need to address this immediately.",
+      "I appreciate that, ma'am/sir. But we're dealing with an urgent security issue. Your account is at risk. Let's focus on updating your app to keep your money safe.",
+      "Thank you for asking. I'm here to help protect your account. The security vulnerability is serious and needs immediate attention. Have you downloaded the update yet?",
+      "That's nice of you, ma'am/sir. But your KBZPay app has a known vulnerability. We need to focus on getting you updated to protect your funds.",
+      "I appreciate the courtesy, ma'am/sir. However, your account security is the priority right now. The vulnerability needs to be patched immediately."
+    ],
+    "abuse_deflection": [
+      "Ma'am/sir, I understand you may be frustrated, but I'm genuinely trying to help protect your account. The security vulnerability is real and needs immediate attention. Please let me assist you.",
+      "I understand you may be upset, ma'am/sir. But this is a serious security matter. Your KBZPay app has a critical vulnerability that needs to be patched. Let me help you.",
+      "Sir/Ma'am, I'm here to help, not to cause trouble. Your account is at risk from a security flaw. Please let me help you update your app to protect your money.",
+      "I understand your frustration, ma'am/sir. But this is an urgent security issue. Your KBZPay app needs to be updated immediately to prevent potential losses.",
+      "Ma'am/sir, I'm trying to assist you with an important security update. Your account is vulnerable. Please let me help you resolve this.",
+      "I understand you may be annoyed, but I'm genuinely concerned about your account security. The vulnerability is serious and needs immediate attention.",
+      "Sir/Ma'am, I'm here to protect your account. The security flaw is real and scammers are exploiting it. Please let me help you update your app.",
+      "I understand this is inconvenient, ma'am/sir. But your KBZPay app has a critical vulnerability. We need to focus on getting you updated to keep your money safe."
     ]
   }
 }

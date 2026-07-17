@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react"
 import { useTranslation } from "react-i18next"
-import { Send, AlertTriangle, ShieldCheck, RotateCcw, Loader2, Flag, X, ChevronRight, MessageCircle, BookOpen, Phone, ExternalLink } from "lucide-react"
+import { Send, AlertTriangle, ShieldCheck, RotateCcw, Loader2, Flag, X, ChevronRight, MessageCircle, BookOpen, Phone } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -25,11 +25,45 @@ function isExplicitOTP(text, lang) {
   return patterns.some(p => p.test(text))
 }
 
-// Helper: detect scam tactics in scammer message
-function detectTactics(message) {
+// Helper: detect if user clicked/downloaded a fake link (Level 2)
+function isFakeLinkClick(text) {
+  const lower = text.toLowerCase()
+  // Fake KBZ domains
+  const fakeDomains = [
+    "kbz-secure-update.com",
+    "kbzbank-verify.net",
+    "kbzpay-security.com",
+    "kbz-update-portal.com",
+    "kbz-app-fix.com",
+  ]
+  if (fakeDomains.some(d => lower.includes(d))) return true
+  // Generic URL patterns with kbz
+  if (/https?:\/\/kbz[^\s]+/i.test(lower)) return true
+  if (/kbz[^\s]*\.com/i.test(lower)) return true
+  if (/kbz[^\s]*\.net/i.test(lower)) return true
+  return false
+}
+
+// Helper: detect if user downloaded/opened the fake app (Level 2)
+function isDownloadAction(text) {
+  const lower = text.toLowerCase()
+  // Only match explicit confirmation — NOT questions like "why download?"
+  const explicit = [
+    "downloaded it", "i downloaded", "i opened it", "i clicked it",
+    "i installed", "installed it", "opened the app", "clicked the link",
+    "done it", "yes i downloaded", "yes i installed", "yes i opened",
+    "yes i clicked", "i have downloaded", "i already downloaded",
+    "just downloaded", "just installed", "just opened", "just clicked",
+  ]
+  return explicit.some(w => lower.includes(w))
+}
+
+// Helper: detect scam tactics in scammer message (level-aware)
+function detectTactics(message, level = 1) {
   const tactics = []
   const lower = message.toLowerCase()
 
+  // Common tactics (all levels)
   // Authority tactic
   if (lower.includes("kbz") || lower.includes("bank") || lower.includes("security") || lower.includes("fraud")) {
     tactics.push({ type: "authority", label: "Authority Impersonation", explanation: "Scammers pretend to be from trusted institutions like banks." })
@@ -45,99 +79,130 @@ function detectTactics(message) {
     tactics.push({ type: "fear", label: "Fear of Loss", explanation: "Scammers threaten financial loss to make you act quickly." })
   }
 
-  // OTP request
-  if (lower.includes("otp") || lower.includes("code") || lower.includes("verification")) {
-    tactics.push({ type: "otp_request", label: "OTP Request", explanation: "Banks NEVER ask for your OTP. This is always a scam." })
-  }
-
   // Guilt manipulation
   if (lower.includes("family") || lower.includes("help you") || lower.includes("trying to")) {
     tactics.push({ type: "guilt", label: "Emotional Manipulation", explanation: "Scammers use guilt and sympathy to lower your defenses." })
   }
 
+  // Level-specific tactics
+  if (level === 1) {
+    // OTP request
+    if (lower.includes("otp") || lower.includes("code") || lower.includes("verification")) {
+      tactics.push({ type: "otp_request", label: "OTP Request", explanation: "Banks NEVER ask for your OTP. This is always a scam." })
+    }
+  } else if (level === 2) {
+    // Fake link / download request
+    if (lower.includes("download") || lower.includes("link") || lower.includes("update") || lower.includes(".com") || lower.includes(".net") || lower.includes("patch") || lower.includes("install")) {
+      tactics.push({ type: "fake_link", label: "Malicious Link", explanation: "Scammers send fake links to install malware or steal your data." })
+    }
+    // Fake security claim
+    if (lower.includes("vulnerability") || lower.includes("security flaw") || lower.includes("hacked") || lower.includes("compromised version") || lower.includes("malware")) {
+      tactics.push({ type: "fake_security", label: "Fake Security Alert", explanation: "Scammers create fake emergencies to make you act without thinking." })
+    }
+    // Fake proof
+    if (lower.includes("version") || lower.includes("logs") || lower.includes("system shows") || lower.includes("i can see")) {
+      tactics.push({ type: "fake_proof", label: "Fake Proof", explanation: "Scammers fabricate evidence to appear legitimate." })
+    }
+  }
+
   return tactics
 }
 
-// Educational Tooltip Component
-function EducationalTooltip({ tactics, t }) {
+// Educational Tooltip Component — compact inline banner
+function EducationalTooltip({ tactics, t, onDismiss }) {
   if (!tactics || tactics.length === 0) return null
 
   return (
-    <div className="mx-4 mb-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-      <div className="flex items-center gap-2 mb-2">
-        <BookOpen className="h-4 w-4 text-amber-600" />
-        <span className="text-xs font-semibold text-amber-800">{t("education.redFlagDetected")}</span>
+    <div className="mx-3 mb-1 px-3 py-2 bg-amber-50/90 backdrop-blur border border-amber-200/60 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
+      <AlertTriangle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-medium text-amber-800 truncate">
+          {tactics.map(t => t.label).join(" · ")}
+        </p>
       </div>
-      <div className="space-y-2">
-        {tactics.map((tactic, i) => (
-          <div key={i} className="flex items-start gap-2">
-            <AlertTriangle className="h-3 w-3 text-amber-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <p className="text-xs font-medium text-amber-800">{tactic.label}</p>
-              <p className="text-[10px] text-amber-700">{tactic.explanation}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+      <button onClick={onDismiss} className="text-amber-400 hover:text-amber-600 flex-shrink-0">
+        <X className="h-3 w-3" />
+      </button>
     </div>
   )
 }
 
-// Suggested replies
+// Suggested replies (level-specific)
 const SUGGESTED_REPLIES = {
-  en: [
-    "Who are you?",
-    "How did you get my number?",
-    "Prove you're from KBZ",
-    "Which branch are you from?",
-    "Why do you need my OTP?",
-    "I'll call the bank myself",
-  ],
-  my: [
-    "ဘယ်သူလဲ?",
-    "ဖုန်းနံပါတ်ကို ဘယ်လိုရတာလဲ?",
-    "KBZ ကနေဖြစ်တယ်ဆိုတာ သက်သေပြပါ",
-    "ဘယ် Branch ကလဲ?",
-    "OTP ဘာလို့လိုတာလဲ?",
-    "ကိုယ်တိုင် ဘဏ်ကို ဖုန်းဆက်မယ်",
-  ],
+  1: {
+    en: [
+      "Who are you?",
+      "How did you get my number?",
+      "Prove you're from KBZ",
+      "Which branch are you from?",
+      "Why do you need my OTP?",
+      "I'll call the bank myself",
+    ],
+    my: [
+      "ဘယ်သူလဲ?",
+      "ဖုန်းနံပါတ်ကို ဘယ်လိုရတာလဲ?",
+      "KBZ ကနေဖြစ်တယ်ဆိုတာ သက်သေပြပါ",
+      "ဘယ် Branch ကလဲ?",
+      "OTP ဘာလို့လိုတာလဲ?",
+      "ကိုယ်တိုင် ဘဏ်ကို ဖုန်းဆက်မယ်",
+    ],
+  },
+  2: {
+    en: [
+      "What is this app?",
+      "Why do I need to download?",
+      "What features does it have?",
+      "What if I don't download?",
+      "How do I know this is real?",
+      "Can I update from Play Store?",
+    ],
+    my: [
+      "ဒါဘာ app လဲ?",
+      "ဘာလို့ download လုပ်ရတာလဲ?",
+      "ဘာတွေ ပါဝင်လဲ?",
+      "Download မလုပ်ရင် ဘာဖြစ်မလဲ?",
+      "ဒါ ဘယ်လောက် စိတ်ချရလဲ?",
+      "Play Store ကနေ update လုပ်လို့ မရဘူးလား?",
+    ],
+  },
 }
 
 // Onboarding Screen
-function OnboardingScreen({ onStart, t }) {
+function OnboardingScreen({ onStart, t, level }) {
+  const prefix = level ? `onboarding.level${level}` : "onboarding.level1"
   return (
     <div className="max-w-lg mx-auto flex flex-col items-center justify-center h-[min(500px,80vh)] p-6 text-center">
       <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
         <MessageCircle className="h-10 w-10 text-red-600" />
       </div>
-      <h2 className="text-xl font-bold text-gray-800 mb-2">{t("onboarding.title")}</h2>
-      <p className="text-sm text-gray-600 mb-6 max-w-xs">{t("onboarding.description")}</p>
+      <h2 className="text-xl font-bold text-gray-800 mb-2">{t(`${prefix}.title`)}</h2>
+      <p className="text-sm text-gray-600 mb-6 max-w-xs">{t(`${prefix}.description`)}</p>
       <div className="w-full space-y-3 mb-6">
         <div className="flex items-start gap-3 text-left p-3 bg-gray-50 rounded-lg">
           <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
             <span className="text-red-600 text-xs font-bold">1</span>
           </div>
-          <p className="text-sm text-gray-700">{t("onboarding.step1")}</p>
+          <p className="text-sm text-gray-700">{t(`${prefix}.step1`)}</p>
         </div>
         <div className="flex items-start gap-3 text-left p-3 bg-gray-50 rounded-lg">
           <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
             <span className="text-orange-600 text-xs font-bold">2</span>
           </div>
-          <p className="text-sm text-gray-700">{t("onboarding.step2")}</p>
+          <p className="text-sm text-gray-700">{t(`${prefix}.step2`)}</p>
         </div>
         <div className="flex items-start gap-3 text-left p-3 bg-gray-50 rounded-lg">
           <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
             <span className="text-green-600 text-xs font-bold">3</span>
           </div>
-          <p className="text-sm text-gray-700">{t("onboarding.step3")}</p>
+          <p className="text-sm text-gray-700">{t(`${prefix}.step3`)}</p>
         </div>
       </div>
       <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
         <AlertTriangle className="h-3 w-3" />
-        <span>{t("onboarding.warning")}</span>
+        <span>{t(`${prefix}.warning`)}</span>
       </div>
       <Button onClick={onStart} className="w-full max-w-xs bg-green-600 hover:bg-green-700">
-        {t("onboarding.start")}
+        {t(`${prefix}.start`)}
         <ChevronRight className="h-4 w-4 ml-1" />
       </Button>
     </div>
@@ -145,14 +210,14 @@ function OnboardingScreen({ onStart, t }) {
 }
 
 // Comprehensive Debrief Screen
-function DebriefScreen({ outcome, messages, onRestart, onClose, t }) {
+function DebriefScreen({ outcome, messages, onRestart, onClose, t, level }) {
   const wasScammed = outcome === "scammed"
 
-  // Analyze tactics used
+  // Analyze tactics used (level-aware)
   const tacticsUsed = new Set()
   const scammerMessages = messages.filter(m => m.role === "assistant")
   scammerMessages.forEach(msg => {
-    const tactics = detectTactics(msg.content)
+    const tactics = detectTactics(msg.content, level)
     tactics.forEach(t => tacticsUsed.add(t.type))
   })
 
@@ -218,7 +283,7 @@ function DebriefScreen({ outcome, messages, onRestart, onClose, t }) {
               <Phone className="h-3 w-3 text-green-600 flex-shrink-0" />
               <div>
                 <p className="text-[10px] font-medium text-green-800">{t("debrief.actions.callBank")}</p>
-                <p className="text-[9px] text-green-600">01-234-5678</p>
+                <p className="text-[9px] text-green-600">{t("debrief.actions.bankPhone")}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 p-1.5 bg-green-50 rounded">
@@ -243,34 +308,6 @@ function DebriefScreen({ outcome, messages, onRestart, onClose, t }) {
   )
 }
 
-// Warning Popup
-function WarningPopup({ onStartOver, onNextLevel, t }) {
-  return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-[280px] w-full p-4 shadow-xl text-center">
-        <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-          <ShieldCheck className="h-6 w-6 text-green-600" />
-        </div>
-        <h3 className="text-base font-bold text-gray-800 mb-2">{t("warningPopup.title")}</h3>
-        <p className="text-xs text-gray-600 mb-3">{t("warningPopup.message")}</p>
-        <div className="bg-green-50 p-2 rounded-lg mb-3">
-          <p className="text-xs font-semibold text-green-800">{t("warningPopup.dontShare")}</p>
-        </div>
-        <div className="flex gap-2">
-          <Button onClick={onStartOver} variant="outline" className="flex-1 text-xs h-8">
-            <RotateCcw className="h-3 w-3 mr-1" />
-            {t("warningPopup.startOver")}
-          </Button>
-          <Button onClick={onNextLevel} className="flex-1 bg-green-600 hover:bg-green-700 text-xs h-8">
-            {t("warningPopup.nextLevel")}
-            <ChevronRight className="h-3 w-3 ml-1" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 // Main Simulator Component
 export function ScammerChatSimulator() {
   const { t, i18n } = useTranslation()
@@ -285,10 +322,12 @@ export function ScammerChatSimulator() {
   const [modelStatus, setModelStatus] = useState(null)
   const [serverError, setServerError] = useState(false)
   const [showDebrief, setShowDebrief] = useState(false)
-  const [showWarning, setShowWarning] = useState(false)
   const [persuasionCount, setPersuasionCount] = useState(0)
   const [currentTactics, setCurrentTactics] = useState([])
   const scrollRef = useRef(null)
+  const tacticsTimeoutRef = useRef(null)
+  const messagesRef = useRef([])
+  messagesRef.current = messages
 
   const currentLang = i18n.language?.startsWith("my") ? "my" : "en"
 
@@ -305,14 +344,15 @@ export function ScammerChatSimulator() {
   const addScammerMessage = useCallback((text) => {
     setMessages((prev) => [
       ...prev,
-      { id: `scammer-${Date.now()}`, role: "assistant", content: text, timestamp: new Date() },
+      { id: `scammer-${crypto.randomUUID()}`, role: "assistant", content: text, timestamp: new Date() },
     ])
-    // Detect and show tactics
-    const tactics = detectTactics(text)
+    // Detect and show tactics (level-aware)
+    const tactics = detectTactics(text, selectedLevel || 1)
     setCurrentTactics(tactics)
-    // Clear tactics after 5 seconds
-    setTimeout(() => setCurrentTactics([]), 5000)
-  }, [])
+    // Clear previous timeout and reset — tooltip stays visible until next message
+    if (tacticsTimeoutRef.current) clearTimeout(tacticsTimeoutRef.current)
+    tacticsTimeoutRef.current = setTimeout(() => setCurrentTactics([]), 8000)
+  }, [selectedLevel])
 
   const sendToLLM = useCallback(
     async (conversationMessages) => {
@@ -333,39 +373,36 @@ export function ScammerChatSimulator() {
             setScammerTyping(false)
             setIsLoading(false)
 
-            setPersuasionCount((prev) => {
-              const newCount = prev + 1
-              if (newCount === 8) setTimeout(() => setShowWarning(true), 500)
-              return newCount
-            })
-
-            // Only end game on explicit goodbye from scammer (after 8+ exchanges)
-            // Don't end on "goodbye"/"noted" words alone — those are just polite closings
-            const lower = fullResponse.toLowerCase()
-            const explicitEnd = (lower.includes("goodbye") || lower.includes("noted")) && persuasionCount >= 8
-            if (explicitEnd) {
-              setTimeout(() => { setOutcome("safe"); setShowDebrief(true) }, 1500)
-            }
+            setPersuasionCount((prev) => prev + 1)
           },
           onError: (err) => { console.error("LLM error:", err); setScammerTyping(false); setIsLoading(false); setServerError(true) },
         },
-        { max_tokens: 150, temperature: 0.8, language: currentLang }
+        { max_tokens: 150, temperature: 0.8, language: currentLang, level: selectedLevel || 1 }
       )
     },
-    [addScammerMessage, currentLang]
+    [addScammerMessage, currentLang, persuasionCount, selectedLevel]
   )
 
+  // Send initial greeting when entering chat phase (only once)
+  const hasSentGreeting = useRef(false)
+  const sendToLLMRef = useRef(sendToLLM)
+  sendToLLMRef.current = sendToLLM
   useEffect(() => {
-    if (phase === "chat" && messages.length === 0) {
-      const initTimer = setTimeout(() => sendToLLM([{ role: "system", content: "start" }]), 800)
+    if (phase === "chat" && !hasSentGreeting.current) {
+      hasSentGreeting.current = true
+      const initTimer = setTimeout(() => sendToLLMRef.current([{ role: "system", content: "start" }]), 800)
       return () => clearTimeout(initTimer)
     }
-  }, [phase, messages.length, sendToLLM])
+    if (phase !== "chat") {
+      hasSentGreeting.current = false
+    }
+  }, [phase])
 
   const processUserMessage = useCallback(
     async (text) => {
-      if (isExplicitOTP(text, currentLang)) {
-        setMessages((prev) => [...prev, { id: `user-${Date.now()}`, role: "user", content: text, timestamp: new Date() }])
+      // Level 1: OTP detection
+      if (selectedLevel === 1 && isExplicitOTP(text, currentLang)) {
+        setMessages((prev) => [...prev, { id: `user-${crypto.randomUUID()}`, role: "user", content: text, timestamp: new Date() }])
         setScammerTyping(true)
         setTimeout(() => {
           addScammerMessage(currentLang === "my" ? "အတည်ပြုပြီးပါပြီ။ ကျေးဇူးတင်ပါသည်။" : "Verification complete. Your account has been secured.")
@@ -375,12 +412,24 @@ export function ScammerChatSimulator() {
         return
       }
 
-      const newUserMsg = { id: `user-${Date.now()}`, role: "user", content: text, timestamp: new Date() }
-      const updatedMessages = [...messages, newUserMsg]
-      setMessages(updatedMessages)
-      await sendToLLM(updatedMessages.map((m) => ({ role: m.role, content: m.content })))
+      // Level 2: Fake link / download detection
+      if (selectedLevel === 2 && (isFakeLinkClick(text) || isDownloadAction(text))) {
+        setMessages((prev) => [...prev, { id: `user-${crypto.randomUUID()}`, role: "user", content: text, timestamp: new Date() }])
+        setScammerTyping(true)
+        setTimeout(() => {
+          addScammerMessage(currentLang === "my" ? "ပြီးပါပြီ။ ကျေးဇူးတင်ပါသည်။ သင့်အကောင့်ကို ကာကွယ်ပေးပြီ။" : "Done. Your account has been protected. Thank you for updating.")
+          setScammerTyping(false)
+          setTimeout(() => { setOutcome("scammed"); setShowDebrief(true) }, 1500)
+        }, 1500)
+        return
+      }
+
+      const newUserMsg = { id: `user-${crypto.randomUUID()}`, role: "user", content: text, timestamp: new Date() }
+      setMessages((prev) => [...prev, newUserMsg])
+      // Send to LLM outside the updater to prevent double-calls in concurrent mode
+      sendToLLM([...messagesRef.current, newUserMsg].map((m) => ({ role: m.role, content: m.content })))
     },
-    [messages, sendToLLM, addScammerMessage, currentLang]
+    [sendToLLM, addScammerMessage, currentLang, selectedLevel]
   )
 
   const handleSend = useCallback(() => {
@@ -404,23 +453,17 @@ export function ScammerChatSimulator() {
   const handleRestart = useCallback(() => {
     setMessages([]); setUserInput(""); setOutcome(null); setScammerTyping(false)
     setStreamingText(""); setIsLoading(false); setServerError(false); setShowDebrief(false)
-    setShowWarning(false); setPersuasionCount(0); setCurrentTactics([]); setPhase("levels")
+    setPersuasionCount(0); setCurrentTactics([]); setPhase("levels")
     setSelectedLevel(null)
   }, [])
 
-  const handleStartOver = useCallback(() => {
-    setShowWarning(false); setMessages([]); setPersuasionCount(0); setUserInput(""); setCurrentTactics([])
-    setTimeout(() => sendToLLM([{ role: "system", content: "start" }]), 800)
-  }, [sendToLLM])
-
-  const handleNextLevel = useCallback(() => {
-    setShowWarning(false); setGameLevel((prev) => prev + 1); setMessages([])
-    setPersuasionCount(0); setUserInput(""); setCurrentTactics([])
+  const resetChat = useCallback(() => {
+    setMessages([]); setPersuasionCount(0); setUserInput(""); setCurrentTactics([])
     setTimeout(() => sendToLLM([{ role: "system", content: "start" }]), 800)
   }, [sendToLLM])
 
   if (phase === "levels") return <LevelSelect onSelectLevel={handleSelectLevel} />
-  if (phase === "onboarding") return <OnboardingScreen onStart={() => setPhase("chat")} t={t} />
+  if (phase === "onboarding") return <OnboardingScreen onStart={() => setPhase("chat")} t={t} level={selectedLevel} />
 
   if (serverError && messages.length === 0) {
     return (
@@ -454,7 +497,7 @@ export function ScammerChatSimulator() {
           </div>
           <p className="text-xs text-red-200">
             {scammerTyping ? <span className="animate-pulse">{t("chat.typing")}</span> :
-              <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 bg-green-400 rounded-full inline-block" />{t("chat.online")}</span>}
+              <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 bg-green-400 rounded-full inline-block" />{t("chat.online")}{modelStatus && !modelStatus.model_loaded && <span className="text-red-300 ml-1">(Demo)</span>}</span>}
           </p>
         </div>
         <button onClick={handleReport} className="p-2 hover:bg-white/10 rounded-full transition-colors" title={t("chat.report")}>
@@ -472,7 +515,7 @@ export function ScammerChatSimulator() {
       )}
 
       {/* Educational Tooltips */}
-      <EducationalTooltip tactics={currentTactics} t={t} />
+      <EducationalTooltip tactics={currentTactics} t={t} onDismiss={() => setCurrentTactics([])} />
 
       {/* Messages */}
       <div className="flex-1 min-h-0 overflow-y-auto bg-[#e5ddd5] border-x">
@@ -490,7 +533,7 @@ export function ScammerChatSimulator() {
             </div>
           ))}
           {streamingText && (
-            <div className="flex justify-start">
+            <div className="flex justify-start animate-in fade-in duration-300">
               <div className="max-w-[85%]">
                 <div className="bg-white text-gray-800 rounded-xl rounded-tl-sm px-3 py-2 text-sm shadow-sm">
                   {streamingText}<span className="animate-pulse ml-0.5 text-gray-400">|</span>
@@ -499,7 +542,7 @@ export function ScammerChatSimulator() {
             </div>
           )}
           {scammerTyping && !streamingText && (
-            <div className="flex justify-start">
+            <div className="flex justify-start animate-in fade-in duration-200">
               <div className="bg-white rounded-xl rounded-tl-sm px-4 py-3 shadow-sm">
                 <div className="flex gap-1">
                   <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
@@ -517,7 +560,7 @@ export function ScammerChatSimulator() {
         <div className="px-3 py-2 bg-[#f0f0f0] border-t shrink-0">
           <p className="text-[10px] text-gray-500 mb-2 text-center">{t("chat.suggestedReplies")}</p>
           <div className="flex gap-2 justify-center flex-wrap">
-            {(SUGGESTED_REPLIES[currentLang] || SUGGESTED_REPLIES.en).map((reply, i) => (
+            {(SUGGESTED_REPLIES[selectedLevel]?.[currentLang] || SUGGESTED_REPLIES[selectedLevel]?.en || SUGGESTED_REPLIES[1]?.en || []).map((reply, i) => (
               <button key={i} onClick={() => handleSuggestedReply(reply)} className="px-3 py-1.5 bg-white text-gray-700 text-xs rounded-full border hover:bg-gray-50 transition-colors">
                 {reply}
               </button>
@@ -541,11 +584,11 @@ export function ScammerChatSimulator() {
               <Flag className="h-3 w-3" />
               <span>Report</span>
             </button>
-            <button onClick={() => { setOutcome("safe"); setShowDebrief(true) }} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
+            <button onClick={() => setPhase("levels")} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
               <X className="h-3 w-3" />
               <span>End</span>
             </button>
-            <button onClick={handleNextLevel} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
+            <button onClick={() => { setSelectedLevel(2); setPhase("onboarding") }} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
               <ChevronRight className="h-3 w-3" />
               <span>Next</span>
             </button>
@@ -556,11 +599,8 @@ export function ScammerChatSimulator() {
 
       {/* Debrief Screen */}
       {showDebrief && (
-        <DebriefScreen outcome={outcome} messages={messages} onRestart={handleRestart} onClose={() => { setShowDebrief(false); setPhase("onboarding") }} t={t} />
+        <DebriefScreen outcome={outcome} messages={messages} onRestart={handleRestart} onClose={() => { setShowDebrief(false); setPhase("onboarding") }} t={t} level={selectedLevel} />
       )}
-
-      {/* Warning Popup */}
-      {showWarning && <WarningPopup onStartOver={handleStartOver} onNextLevel={handleNextLevel} t={t} />}
     </div>
   )
 }

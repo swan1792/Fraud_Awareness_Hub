@@ -12,7 +12,7 @@ import apiClient from './axios'
  * @returns {Promise<Object>} - { message: { role, content }, usage }
  */
 export async function sendChatMessage(messages, options = {}) {
-  const { max_tokens = 150, temperature = 0.8, language = 'en' } = options
+  const { max_tokens = 150, temperature = 0.8, language = 'en', level = 1 } = options
 
   const response = await apiClient.post('/simulator/chat', {
     messages,
@@ -20,6 +20,7 @@ export async function sendChatMessage(messages, options = {}) {
     temperature,
     stream: false,
     language,
+    level,
   })
 
   return response.data
@@ -34,7 +35,7 @@ export async function sendChatMessage(messages, options = {}) {
  * @param {Object} options - { max_tokens, temperature, language }
  */
 export async function streamChatMessage(messages, { onToken, onDone, onError }, options = {}) {
-  const { max_tokens = 150, temperature = 0.8, language = 'en' } = options
+  const { max_tokens = 150, temperature = 0.8, language = 'en', level = 1 } = options
 
   try {
     const response = await fetch(`${apiClient.defaults.baseURL}/simulator/chat/stream`, {
@@ -47,6 +48,7 @@ export async function streamChatMessage(messages, { onToken, onDone, onError }, 
         max_tokens,
         temperature,
         language,
+        level,
       }),
     })
 
@@ -57,13 +59,16 @@ export async function streamChatMessage(messages, { onToken, onDone, onError }, 
 
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
+    let buffer = ""
 
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
 
-      const chunk = decoder.decode(value, { stream: true })
-      const lines = chunk.split('\n')
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      // Keep the last (possibly incomplete) line in the buffer
+      buffer = lines.pop() || ""
 
       for (const line of lines) {
         if (line.startsWith('data: ')) {
