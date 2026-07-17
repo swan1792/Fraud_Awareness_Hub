@@ -30,6 +30,7 @@ export class MissionTracker extends Phaser.Scene {
 
   create() {
     const { width } = this.cameras.main
+    this.t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
 
     // ─── MISSION PANEL (top-right) ───
     const panelWidth = 220
@@ -44,7 +45,7 @@ export class MissionTracker extends Phaser.Scene {
     this.panelBg.strokeRoundedRect(panelX, panelY, panelWidth, 100, 8)
 
     // Mission title
-    this.titleText = this.add.text(panelX + 10, panelY + 8, "No Active Mission", {
+    this.titleText = this.add.text(panelX + 10, panelY + 8, this.t("mission.noMission"), {
       font: "bold 10px Arial",
       color: "#00bcd4",
       wordWrap: { width: panelWidth - 20 },
@@ -160,7 +161,7 @@ export class MissionTracker extends Phaser.Scene {
         220, panelHeight, 8
       )
     } else {
-      this.titleText.setText("No Active Mission")
+      this.titleText.setText(this.t("mission.noMission"))
       this.titleText.setColor("#888888")
       this.objectiveTexts.forEach(t => t.setText(""))
     }

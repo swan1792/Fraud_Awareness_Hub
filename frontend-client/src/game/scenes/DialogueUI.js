@@ -30,6 +30,7 @@ export class DialogueUI extends Phaser.Scene {
     this.onComplete = data?.onComplete
     this.currentLineIndex = 0
     this.selectedChoice = 0
+    this.t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
   }
 
   create() {

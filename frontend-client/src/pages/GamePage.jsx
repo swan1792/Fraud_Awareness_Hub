@@ -8,7 +8,7 @@ import { AnimatedBackground } from "@/components/section/animated-background"
 import { useWorldsQuery } from "@/lib/api"
 
 export function GamePage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [mode, setMode] = useState(null) // null = select, "shooter", "rpg", "runner"
   const [selectedWorld, setSelectedWorld] = useState(null)
 
@@ -295,6 +295,7 @@ export function GamePage() {
       <div className="min-h-screen bg-zinc-50">
         <section className="relative z-20 px-4 py-8">
           <WorldGame
+            key={`rpg-${selectedWorld}-${i18n.language}`}
             worldId={selectedWorld}
             onNpcInteract={handleNpcInteract}
             onObjectInteract={handleObjectInteract}

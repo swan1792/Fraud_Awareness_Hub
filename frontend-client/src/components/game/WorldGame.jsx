@@ -21,7 +21,7 @@ import { useWorldsQuery, useWorldQuery, useWorldObjectsQuery, useWorldNpcsQuery 
 export function WorldGame({ worldId, onNpcInteract, onObjectInteract, onBack }) {
   const gameRef = useRef(null)
   const containerRef = useRef(null)
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
 
   const { data: world } = useWorldQuery(worldId)
   const { data: objects = [] } = useWorldObjectsQuery(worldId)
@@ -41,9 +41,22 @@ export function WorldGame({ worldId, onNpcInteract, onObjectInteract, onBack }) 
     window.__WORLD_OBJECTS = objects
     window.__WORLD_NPCS = npcs
 
-    // Pass translations
+    // Pass translations (flatten nested keys)
     const bundle = i18n.getResourceBundle(i18n.language, "translation")
-    window.__GAME_TRANSLATIONS = bundle?.game?.phaser || {}
+    const phaser = bundle?.game?.phaser || {}
+    const flat = {}
+    function flatten(obj, prefix = '') {
+      for (const [key, val] of Object.entries(obj)) {
+        const fullKey = prefix ? `${prefix}.${key}` : key
+        if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+          flatten(val, fullKey)
+        } else {
+          flat[fullKey] = val
+        }
+      }
+    }
+    flatten(phaser)
+    window.__GAME_TRANSLATIONS = flat
 
     // Create game
     const config = {
@@ -112,12 +125,12 @@ export function WorldGame({ worldId, onNpcInteract, onObjectInteract, onBack }) 
         onClick={onBack}
         className="absolute top-2 right-2 bg-black/60 text-white px-3 py-1.5 rounded-lg text-sm hover:bg-black/80 transition-colors backdrop-blur-sm"
       >
-        ← Back
+        {t("worldGame.back")}
       </button>
 
       {/* Controls Help */}
       <div className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/60 text-white px-3 py-1 rounded-lg text-xs backdrop-blur-sm">
-        Arrow Keys: Move | Shift: Run | E: Interact
+        {t("worldGame.controls")}
       </div>
     </div>
   )

@@ -20,6 +20,7 @@ export class EvidenceBoard extends Phaser.Scene {
 
   create() {
     const { width, height } = this.cameras.main
+    this.t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
 
     // Dark overlay
     this.overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x000000, 0.7)
@@ -47,7 +48,7 @@ export class EvidenceBoard extends Phaser.Scene {
     }
 
     // Title
-    this.add.text(width / 2, boardY + 15, "🔍 Evidence Board", {
+    this.add.text(width / 2, boardY + 15, this.t("evidence.title"), {
       font: "bold 16px Arial",
       color: "#ffd700",
       stroke: "#000000",
@@ -55,7 +56,7 @@ export class EvidenceBoard extends Phaser.Scene {
     }).setOrigin(0.5)
 
     // Evidence count
-    this.add.text(width / 2, boardY + 35, `${this.evidenceItems.length} items collected`, {
+    this.add.text(width / 2, boardY + 35, this.t("evidence.itemsCollected").replace("{{count}}", this.evidenceItems.length), {
       font: "10px Arial",
       color: "#aaaaaa",
     }).setOrigin(0.5)

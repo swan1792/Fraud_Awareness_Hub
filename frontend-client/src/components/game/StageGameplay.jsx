@@ -11,7 +11,7 @@ import { PhaserGame } from "./PhaserGame"
  * @param {function} onComplete - Called with result when stage ends
  */
 export function StageGameplay({ stage, onComplete }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   // Game state
   const [score, setScore] = useState(0)
@@ -45,7 +45,7 @@ export function StageGameplay({ stage, onComplete }) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <Crosshair className="h-5 w-5 text-red-600" />
-            <span className="font-bold text-red-700">STOP THE SCAMMER</span>
+            <span className="font-bold text-red-700">{t("game.stopScammer")}</span>
           </div>
           {score > 0 && (
             <div className="flex items-center gap-2">
@@ -62,16 +62,16 @@ export function StageGameplay({ stage, onComplete }) {
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Target className="h-4 w-4" />
-          <span>Tap the RIGHT intervention!</span>
+          <span>{t("game.tapRight")}</span>
         </div>
       </div>
 
-      {/* Phaser Game */}
-      <PhaserGame stage={stage} onComplete={handleGameComplete} />
+      {/* Phaser Game - key forces remount on language change */}
+      <PhaserGame key={`shooter-${i18n.language}`} stage={stage} onComplete={handleGameComplete} />
 
       {/* Instructions */}
       <div className="text-center text-sm text-gray-500">
-        🎯 Shoot the correct intervention at the scammer before time runs out!
+        {t("game.shootInstruction")}
       </div>
     </div>
   )

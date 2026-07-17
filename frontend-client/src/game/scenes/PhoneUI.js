@@ -22,6 +22,7 @@ export class PhoneUI extends Phaser.Scene {
 
   create() {
     const { width, height } = this.cameras.main
+    this.t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
 
     // ─── PHONE FRAME ───
     const phoneW = Math.min(320, width - 40)
@@ -51,7 +52,7 @@ export class PhoneUI extends Phaser.Scene {
     this.phoneFrame.fillRoundedRect(screenX, screenY, screenW, screenH, 12)
 
     // Status bar
-    this.statusBar = this.add.text(screenX + 10, screenY + 5, "📱 Fraud City Phone", {
+    this.statusBar = this.add.text(screenX + 10, screenY + 5, this.t("phone.title"), {
       font: "bold 9px Arial",
       color: "#00bcd4",
     })
@@ -67,7 +68,7 @@ export class PhoneUI extends Phaser.Scene {
     this.createAppGrid(screenX, screenY + 20, screenW, screenH - 30)
 
     // ─── BACK BUTTON ───
-    this.backButton = this.add.text(width / 2, phoneY + phoneH - 15, "◀ Back", {
+    this.backButton = this.add.text(width / 2, phoneY + phoneH - 15, this.t("phone.back"), {
       font: "bold 11px Arial",
       color: "#00bcd4",
       backgroundColor: "#222222",
@@ -87,13 +88,13 @@ export class PhoneUI extends Phaser.Scene {
     this.appGrid = this.add.container(0, 0)
 
     const apps = [
-      { id: "messages", name: "Messages", icon: "💬", color: 0x4caf50 },
-      { id: "contacts", name: "Contacts", icon: "👤", color: 0x2196f3 },
+      { id: "messages", name: this.t("phone.messages"), icon: "💬", color: 0x4caf50 },
+      { id: "contacts", name: this.t("phone.contacts"), icon: "👤", color: 0x2196f3 },
       { id: "skills", name: "Skills", icon: "⭐", color: 0xffd700 },
-      { id: "camera", name: "Camera", icon: "📷", color: 0xff9800 },
-      { id: "scanner", name: "Scanner", icon: "📱", color: 0x9c27b0 },
-      { id: "notebook", name: "Notebook", icon: "📝", color: 0x795548 },
-      { id: "map", name: "Map", icon: "🗺️", color: 0x009688 },
+      { id: "camera", name: this.t("phone.camera"), icon: "📷", color: 0xff9800 },
+      { id: "scanner", name: this.t("phone.scanner"), icon: "📱", color: 0x9c27b0 },
+      { id: "notebook", name: this.t("phone.notebook"), icon: "📝", color: 0x795548 },
+      { id: "map", name: this.t("phone.map"), icon: "🗺️", color: 0x009688 },
       { id: "evidence", name: "Evidence", icon: "🔍", color: 0xf44336 },
       { id: "save", name: "Save", icon: "💾", color: 0x607d8b },
       { id: "load", name: "Load", icon: "📂", color: 0x3f51b5 },
