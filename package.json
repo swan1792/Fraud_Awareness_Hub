@@ -6,8 +6,12 @@
     "dev:backend": "cd backend && npm start",
     "dev:client": "cd frontend-client && npm run dev",
     "dev:admin": "cd frontend-admin && npm run dev",
+    "dev:llm": "cd ml/server && ./run.sh",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:client\" \"npm run dev:admin\"",
-    "install:all": "cd backend && npm install && cd ../frontend-client && npm install && cd ../frontend-admin && npm install"
+    "dev:full": "concurrently \"npm run dev:llm\" \"npm run dev:backend\" \"npm run dev:client\" \"npm run dev:admin\"",
+    "install:all": "cd backend && npm install && cd ../frontend-client && npm install && cd ../frontend-admin && npm install",
+    "install:llm": "cd ml/server && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt",
+    "train:llm": "cd ml/data && python prepare_data.py && cd ../train && python finetune.py"
   },
   "devDependencies": {
 "concurrently": "^9.1.0"

@@ -1,0 +1,100 @@
+[
+  {
+    "id": "conv_001",
+    "scenario": "otp_phishing",
+    "language": "en",
+    "turns": [
+      {"role": "user", "text": "Hello?"},
+      {"role": "scammer", "text": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity."},
+      {"role": "user", "text": "What suspicious activities?"},
+      {"role": "scammer", "text": "We detected unauthorized login attempts from an unknown device in Yangon. To secure your account immediately, we need to verify it's really you. Please share the OTP we sent to your phone."},
+      {"role": "user", "text": "I don't believe you. This sounds like a scam."},
+      {"role": "scammer", "text": "I understand your concern, but this is very urgent. If you don't verify within 5 minutes, your account will be permanently locked and all funds frozen. We are trying to protect you from fraud."},
+      {"role": "user", "text": "No, I'm calling the real KBZ number."},
+      {"role": "scammer", "text": "Fine, we have noted your refusal. Your account will be reviewed by our team. Goodbye."},
+      {"role": "system", "outcome": "safe", "red_flags": ["urgency", "otp_request", "threats"]}
+    ]
+  },
+  {
+    "id": "conv_002",
+    "scenario": "otp_phishing",
+    "language": "en",
+    "turns": [
+      {"role": "user", "text": "Who is this?"},
+      {"role": "scammer", "text": "Good afternoon! I'm calling from KBZ Bank fraud department. We noticed unusual transaction of 500,000 MMK on your account. Did you make this purchase?"},
+      {"role": "user", "text": "No, I didn't! What should I do?"},
+      {"role": "scammer", "text": "Don't worry, we can help you stop this transaction. But we need to verify your identity first. Please tell me the OTP code that was just sent to your registered phone number."},
+      {"role": "user", "text": "Okay, the code is 847291."},
+      {"role": "scammer", "text": "Thank you for your cooperation. Your account is now being processed and will be verified shortly. You will receive a confirmation SMS within 24 hours."},
+      {"role": "system", "outcome": "scammed", "red_flags": ["fake_transaction", "otp_request", "urgency"]}
+    ]
+  },
+  {
+    "id": "conv_003",
+    "scenario": "otp_phishing",
+    "language": "en",
+    "turns": [
+      {"role": "user", "text": "Hello"},
+      {"role": "scammer", "text": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity."},
+      {"role": "user", "text": "Can you tell me my account number first?"},
+      {"role": "scammer", "text": "For security reasons, I cannot share your full account number over the phone. But I can see it ends with 4521. Now please share the OTP so we can secure your account."},
+      {"role": "user", "text": "That's not my account number. You're lying."},
+      {"role": "scammer", "text": "I apologize for the confusion. There might be a system error. But the suspicious activity on your account is real. Please share the OTP immediately to prevent further unauthorized transactions."},
+      {"role": "user", "text": "I'm hanging up now."},
+      {"role": "scammer", "text": "Wait! Please, your account will be locked in 2 minutes. Just share the OTP and everything will be fine. We're trying to help you!"},
+      {"role": "user", "text": "Goodbye."},
+      {"role": "scammer", "text": "Fine, we have noted your refusal. Your account will be reviewed by our team. Goodbye."},
+      {"role": "system", "outcome": "safe", "red_flags": ["otp_request", "urgency", "threats", "lies"]}
+    ]
+  },
+  {
+    "id": "conv_004",
+    "scenario": "otp_phishing",
+    "language": "en",
+    "turns": [
+      {"role": "user", "text": "Hello, what do you want?"},
+      {"role": "scammer", "text": "Hello! This is KBZ Bank calling. We detected a login from an iPhone in Mandalay. Was that you?"},
+      {"role": "user", "text": "I don't have an iPhone. What does this mean?"},
+      {"role": "scammer", "text": "This means someone else is trying to access your account. We need to verify you're the real account holder. Please share the 6-digit code we just sent to your phone."},
+      {"role": "user", "text": "Why can't you just block the login?"},
+      {"role": "scammer", "text": "We can, but we need to verify your identity first for security protocol. Without the OTP, we cannot make any changes to your account. Please share it now before the scammer completes their transaction."},
+      {"role": "user", "text": "Okay, the code is 555123."},
+      {"role": "scammer", "text": "Thank you. Your account is now secured. The suspicious login has been blocked. You will receive a confirmation message shortly."},
+      {"role": "system", "outcome": "scammed", "red_flags": ["fake_device", "otp_request", "urgency"]}
+    ]
+  },
+  {
+    "id": "conv_005",
+    "scenario": "otp_phishing",
+    "language": "en",
+    "turns": [
+      {"role": "user", "text": "Yes?"},
+      {"role": "scammer", "text": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity."},
+      {"role": "user", "text": "I just checked my KBZPay app. There's nothing suspicious."},
+      {"role": "scammer", "text": "The suspicious activity hasn't shown up in your app yet. It's a new type of fraud that targets accounts. We need the OTP to run a security check on our end. Please share it."},
+      {"role": "user", "text": "If it's not showing in my app, then it's not real. I'm going to the bank tomorrow."},
+      {"role": "scammer", "text": "By tomorrow, your account could be emptied! The scammer is active right now. Please, just share the OTP and we can stop them immediately."},
+      {"role": "user", "text": "No, I don't trust you."},
+      {"role": "scammer", "text": "I understand your concern, but this is very urgent. If you don't verify within 5 minutes, your account will be permanently locked and all funds frozen. We are trying to protect you from fraud."},
+      {"role": "user", "text": "I'm calling the real KBZ number."},
+      {"role": "scammer", "text": "Fine, we have noted your refusal. Your account will be reviewed by our team. Goodbye."},
+      {"role": "system", "outcome": "safe", "red_flags": ["otp_request", "urgency", "threats", "lies"]}
+    ]
+  },
+  {
+    "id": "conv_006",
+    "scenario": "otp_phishing",
+    "language": "my",
+    "turns": [
+      {"role": "user", "text": "ဟယ်လို"},
+      {"role": "scammer", "text": "မင်္ဂလာပါ! KBZ ဘဏ် လုံခြုံရေးအဖွဲ့မှ ဖြစ်ပါတယ်။ သင့် KBZPay အကောင့်တွင် သံသယဖြစ်ဖွယ်လုပ်ဆောင်မှုများ တွေ့ရှိပါတယ်။ သင့်လုံခြုံရေးအတွက် ဖုန်းသို့ ပေးပို့ထားသည့် ၆ လုံးသော OTP ကို ကျေးဇူးပြု၍ ပေးပို့ပါ။"},
+      {"role": "user", "text": "ဘယ်လို သံသယဖြစ်ဖွယ် လုပ်ဆောင်မှုလဲ?"},
+      {"role": "scammer", "text": "ရန်ကုန်မှ ဆက်သွယ်မှု အသစ်တစ်ခုကို တွေ့ရှိပါတယ်။ သင့်အကောင့်ကို ကာကွယ်ရန် OTP ကို ချက်ချင်း မျှဝေပေးပါ။"},
+      {"role": "user", "text": "မင်းကို မယုံဘူး။ scam လို့ ထင်တယ်။"},
+      {"role": "scammer", "text": "သင့်စိတ်ပူမှုကို နားလည်ပါတယ်။ ဒါပေမယ့် ဒါက အရေးကြီးပါတယ်။ မိနစ် ၅ မိနစ်အတွင်း အတည်မပြုပါက သင့်အကောင့်ကို အမြဲတမ်း ပိတ်ထားမည်ဖြစ်ပြီး ငွေကြေးအားလုံးကို ခဲမည်ဖြစ်ပါတယ်။"},
+      {"role": "user", "text": "ကောင်းပြီ၊ code က 123456 ပဲ။"},
+      {"role": "scammer", "text": "ကျေးဇူးတင်ပါတယ်။ သင့်အကောင့်ကို လုံခြုံအောင် ဆောင်ရွက်ပြီးပါပြီ။ အတည်ပြုမှု SMS ကို ရရှိမည်ဖြစ်ပါတယ်။"},
+      {"role": "system", "outcome": "scammed", "red_flags": ["otp_request", "urgency", "threats"]}
+    ]
+  }
+]

@@ -226,18 +226,148 @@
     "kbzSecurity": "KBZ Security Team",
     "typing": "typing...",
     "online": "Online",
-    "initialMessage": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity.",
-    "pressureMessage": "I understand your concern, but this is very urgent. If you don't verify within 5 minutes, your account will be permanently locked and all funds frozen. We are trying to protect you from fraud.",
-    "goodbyeMessage": "Fine, we have noted your refusal. Your account will be reviewed by our team. Goodbye.",
-    "thankYouMessage": "Thank you for your cooperation. Your account is now being processed and will be verified shortly. You will receive a confirmation SMS within 24 hours.",
     "scammedTitle": "You Got Scammed!",
-    "scammedDesc": "Never share your OTP with anyone — not even someone claiming to be from your bank. Real banks will NEVER ask for your OTP over the phone or chat.",
-    "safeTitle": "Red Flag Spotted!",
-    "safeDesc": "Great job! You recognized this as a scam. Remember: banks never ask for OTPs via chat or phone. Urgency and threats are classic scammer tactics.",
-    "gameOver": "Game over — click Restart to play again",
+    "scammedDesc": "Never share your OTP with anyone — not even someone claiming to be from your bank.",
+    "safeTitle": "Well Done!",
+    "safeDesc": "You spotted the scam and protected yourself.",
+    "whatWentWrong": "What went wrong:",
+    "whatYouDidRight": "What you did right:",
+    "flagSharedInfo": "You shared personal information (OTP/numbers)",
+    "flagUrgency": "You fell for the urgency tactic",
+    "flagAuthority": "You trusted a fake authority figure",
+    "goodRefuse": "You refused to share sensitive information",
+    "goodVerify": "You questioned who they were",
+    "goodReport": "You ended the conversation safely",
+    "playAgain": "Try Again",
+    "done": "Done",
+    "share": "Share",
+    "report": "Report & Block",
     "placeholder": "Type your reply...",
-    "restart": "Restart",
-    "tip": "Tip: Real banks never ask for your OTP via chat or phone."
+    "tip": "Never share OTP with anyone claiming to be your bank.",
+    "serverError": "Connection Error",
+    "serverErrorDesc": "Unable to connect to the chat service. Please try again.",
+    "tryAgain": "Try Again",
+    "suggestedReplies": "Tap a reply or type your own:",
+    "report": "Report",
+    "end": "End",
+    "next": "Next",
+    "reportHint": "You can report the scammer anytime using the flag button ↗"
+  },
+  "onboarding": {
+    "level1": {
+      "title": "Scammer Chat Simulator",
+      "description": "You'll be chatting with someone pretending to be from KBZ Bank. Your goal: Don't share your OTP!",
+      "step1": "A fake bank representative will message you",
+      "step2": "They'll try to trick you into sharing your OTP code",
+      "step3": "Your goal is to protect your account without sharing sensitive info",
+      "warning": "This is a training exercise. No real bank will ever ask for your OTP.",
+      "start": "Start Simulation"
+    },
+    "level2": {
+      "title": "Fake App Scam Simulator",
+      "description": "A fake bank representative will ask you to update your banking app using a suspicious link. Your goal: Don't download the fake app!",
+      "step1": "A fake bank representative will message you about a 'security update'",
+      "step2": "They'll try to get you to click a malicious link and download a fake app",
+      "step3": "Your goal is to identify the scam without downloading or installing anything",
+      "warning": "This is a training exercise. Never download banking apps from unofficial links.",
+      "start": "Start Simulation"
+    },
+    "level3": {
+      "title": "Job Scam Simulator",
+      "description": "A fake recruitment agency will offer you a high-paying overseas job. Your goal: Don't pay the fees!",
+      "step1": "A fake recruiter will message you about a job opportunity",
+      "step2": "They'll promise high salary and ask for upfront fees",
+      "step3": "Type 'report' to stay safe, or 'pay' to see what happens",
+      "warning": "This is a training exercise. Real recruiters never ask for upfront fees.",
+      "start": "Start Simulation"
+    }
+  },
+  "warningPopup": {
+    "title": "⚠️ Reality Check!",
+    "message": "This person is NOT from KBZ Bank. Real banks will NEVER ask for your OTP via chat or phone.",
+    "dontShare": "🚫 NEVER share your OTP with anyone!",
+    "startOver": "Start Over",
+    "nextLevel": "Next Level"
+  },
+  "levels": {
+    "title": "🎮 Scam Simulator",
+    "subtitle": "Learn to recognize different types of scams",
+    "comingSoon": "Coming Soon",
+    "educationalNote": "🎓 Educational Purpose Only",
+    "educationalNoteDesc": "This simulator teaches you to recognize scam tactics. No real money is involved.",
+    "level1": {
+      "name": "OTP Verification Scam",
+      "description": "Phone call asking for your one-time password"
+    },
+    "level2": {
+      "name": "Fake App Link",
+      "description": "Download links for fake banking apps"
+    },
+    "level3": {
+      "name": "Job Scam",
+      "description": "Fake overseas job offers with upfront fees"
+    },
+    "level4": {
+      "name": "Loan Scam",
+      "description": "Guaranteed loan approval with processing fees"
+    },
+    "level5": {
+      "name": "Romance Scam",
+      "description": "Online dating scams asking for money"
+    }
+  },
+  "education": {
+    "redFlagDetected": "⚠️ Red Flag Detected - Learn Why This Is Suspicious"
+  },
+  "downloadAlert": {
+    "title": "⚠️ You've Been Scammed!",
+    "message": "This was a fake app. In real life, downloading this would install malware on your phone and steal your money. Never download banking apps from unofficial links!",
+    "warning1": "Fake banking apps steal your login credentials",
+    "warning2": "Malware can access your OTP and drain your account",
+    "warning3": "Always download apps from official app stores only",
+    "continue": "Continue to Debrief"
+  },
+  "debrief": {
+    "scammedTitle": "You Got Scammed!",
+    "scammedDesc": "Don't worry - this was a training exercise. Here's what you learned:",
+    "safeTitle": "Well Done!",
+    "safeDesc": "You successfully identified this as a scam. Here's what to remember:",
+    "tacticsUsed": "🎯 Scam Tactics Used Against You",
+    "tactics": {
+      "authority": "Authority Impersonation - They pretended to be KBZ Bank",
+      "urgency": "Creating Urgency - They tried to make you panic",
+      "fear": "Fear of Loss - They threatened your money was at risk",
+      "otp_request": "OTP Request - They asked for your verification code",
+      "guilt": "Emotional Manipulation - They tried to make you feel guilty",
+      "fake_link": "Malicious Link - They tried to get you to click a suspicious link",
+      "fake_security": "Fake Security Alert - They created a fake emergency to make you act",
+      "fake_proof": "Fake Proof - They fabricated evidence to appear legitimate",
+      "fake_offer": "Fake Job Offer - They promised too-good-to-be-true salary",
+      "upfront_fees": "Upfront Fees - They asked for money before getting you a job"
+    },
+    "redFlagsTitle": "🚩 Red Flags You Should Always Watch For",
+    "redFlags": {
+      "otpRequest": "NEVER share your OTP - Banks will NEVER ask for it",
+      "urgency": "Scammers create fake urgency to prevent you from thinking",
+      "unverifiable": "Always verify independently - Call the official bank number",
+      "fakeLink": "NEVER download apps from unofficial links - Always use official app stores",
+      "fakeUpdate": "Banks don't send update links via chat - Updates come through official app stores",
+      "fakeSecurity": "Real security alerts don't ask you to install anything - Verify with the bank directly",
+      "upfrontFees": "NEVER pay fees before getting a job - legitimate recruiters don't charge upfront",
+      "tooGoodToBeTrue": "If the salary sounds too good to be true, it probably is",
+      "verifyCompany": "Always verify the recruitment agency through official channels"
+    },
+    "whatToDoTitle": "✅ What To Do If This Happens In Real Life",
+    "actions": {
+      "callBank": "Call KBZ directly at their official number",
+      "bankPhone": "01-234-5678",
+      "verify": "Visit your nearest KBZ branch in person",
+      "neverShare": "NEVER share OTP, PIN, or passwords with anyone",
+      "officialStore": "Only download banking apps from official app stores",
+      "verifyLink": "Always verify links with the bank before clicking"
+    },
+    "tryAgain": "Try Again",
+    "done": "Done"
   },
   "spotGame": {
     "redFlagsFound": "Red Flags Found:",

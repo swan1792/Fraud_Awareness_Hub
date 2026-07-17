@@ -182,6 +182,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', uptime: process.uptime(), timestamp: new Date().toISOString() })
 })
 
+// ─── Simulator Routes ─────────────────────────────────────────
+const simulatorRouter = require('./routes/simulator')
+app.use('/api/simulator', simulatorRouter)
+
 // ─── Auth Routes ──────────────────────────────────────────────
 
 // POST /api/auth/login — login and get JWT
