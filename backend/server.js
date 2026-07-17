@@ -2167,6 +2167,29 @@ app.delete('/api/saves/:id', (req, res) => {
   })
 })
 
+
+// ─── Adventure Scenarios (read-only) ──────────────────────────
+
+app.get('/api/adventure/scenarios', (req, res) => {
+  db.all('SELECT * FROM adventure_scenarios ORDER BY act, scene', [], (err, rows) => {
+    if (err) {
+      logger.error('GET /api/adventure/scenarios error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    res.json(rows.map(toCamel))
+  })
+})
+
+app.get('/api/adventure/scenarios/:id', (req, res) => {
+  db.get('SELECT * FROM adventure_scenarios WHERE id = ?', [req.params.id], (err, row) => {
+    if (err) {
+      logger.error('GET /api/adventure/scenarios/:id error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (!row) return res.status(404).json({ error: 'Adventure scenario not found' })
+    res.json(toCamel(row))
+  })
+})
 // ─── Hub Stats (static) ──────────────────────────────────────
 app.get('/api/stats', (req, res) => {
   res.json([

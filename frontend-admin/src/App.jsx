@@ -10,6 +10,7 @@ import { NpcsPage } from "@/pages/NpcsPage"
 import { WorldMapsPage } from "@/pages/WorldMapsPage"
 import { PlayerProgressPage } from "@/pages/PlayerProgressPage"
 import { AdminsPage } from "@/pages/AdminsPage"
+import { AnalyticsPage } from "@/pages/AnalyticsPage"
 import { NotFoundPage } from "@/pages/NotFoundPage"
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/stages" element={<StagesPage />} />
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/missions" element={<MissionsPage />} />
