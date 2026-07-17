@@ -43,6 +43,7 @@ export class WorldScene extends Phaser.Scene {
     this.worldData = data?.world || window.__WORLD_DATA
     this.worldObjects = data?.objects || window.__WORLD_OBJECTS || []
     this.worldNpcs = data?.npcs || window.__WORLD_NPCS || []
+    this.t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
   }
 
   create() {
@@ -284,7 +285,7 @@ export class WorldScene extends Phaser.Scene {
 
   createHUD() {
     // Location name
-    this.locationText = this.add.text(10, 10, this.worldData.displayName || "Unknown", {
+    this.locationText = this.add.text(10, 10, this.worldData.displayName || this.t("world.unknown"), {
       font: "bold 8px Arial",
       color: "#ffffff",
       stroke: "#000000",
@@ -486,7 +487,7 @@ export class WorldScene extends Phaser.Scene {
       this.interactIndicator.setVisible(true)
       this.interactIndicator.x = this.interactTarget.sprite?.x || this.interactTarget.data._px + 16
       this.interactIndicator.y = (this.interactTarget.sprite?.y || this.interactTarget.data._py) - 20
-      this.hudText.setText(`Press E to interact with ${this.interactTarget.data.name || this.interactTarget.data.npcType || "object"}`)
+      this.hudText.setText(this.t("world.interactPrompt").replace("{{name}}", this.interactTarget.data.name || this.interactTarget.data.npcType || this.t("world.unknown")))
     } else {
       this.interactIndicator.setVisible(false)
       this.hudText.setText("")
@@ -712,14 +713,14 @@ export class WorldScene extends Phaser.Scene {
     overlay.fillStyle(0x000000, 0.6)
     overlay.fillRect(0, 0, width, height)
 
-    const levelText = this.add.text(width / 2, height / 2 - 30, `⬆️ LEVEL UP! ⬆️`, {
+    const levelText = this.add.text(width / 2, height / 2 - 30, this.t("world.levelUp"), {
       font: "bold 24px Arial",
       color: "#ffd700",
       stroke: "#000000",
       strokeThickness: 4,
     }).setOrigin(0.5).setScrollFactor(0).setDepth(201)
 
-    const levelNum = this.add.text(width / 2, height / 2 + 10, `Level ${newLevel}`, {
+    const levelNum = this.add.text(width / 2, height / 2 + 10, this.t("world.level").replace("{{level}}", newLevel), {
       font: "bold 18px Arial",
       color: "#ffffff",
     }).setOrigin(0.5).setScrollFactor(0).setDepth(201)
@@ -727,7 +728,7 @@ export class WorldScene extends Phaser.Scene {
     const elements = [overlay, levelText, levelNum]
 
     if (newTitle) {
-      const titleText = this.add.text(width / 2, height / 2 + 40, `New Title: "${newTitle}"`, {
+      const titleText = this.add.text(width / 2, height / 2 + 40, this.t("world.newTitle").replace("{{title}}", newTitle), {
         font: "12px Arial",
         color: "#00bcd4",
       }).setOrigin(0.5).setScrollFactor(0).setDepth(201)

@@ -19,6 +19,12 @@ export function StageResult({ success, stage, score = 0, reactionTime = 0, strea
 
   if (!stage) return null
 
+  // Get translated stage data
+  const translated = t(`game.stages.${stage.id}`, { returnObjects: true })
+  const whyText = translated?.whyText || stage.whyText
+  const doText = translated?.doText || stage.doText
+  const dontText = translated?.dontText || stage.dontText
+
   // Determine rating based on reaction time
   const getRating = () => {
     if (!success) return null
@@ -119,7 +125,7 @@ export function StageResult({ success, stage, score = 0, reactionTime = 0, strea
                 <h3 className="font-semibold text-yellow-800 text-sm uppercase tracking-wide">
                   {t("game.why")}
                 </h3>
-                <p className="text-yellow-700 text-sm mt-1">{stage.whyText}</p>
+                <p className="text-yellow-700 text-sm mt-1">{whyText}</p>
               </div>
             </div>
           </div>
@@ -134,7 +140,7 @@ export function StageResult({ success, stage, score = 0, reactionTime = 0, strea
                 <h3 className="font-semibold text-green-800 text-sm uppercase tracking-wide">
                   {t("game.do")}
                 </h3>
-                <p className="text-green-700 text-sm mt-1">{stage.doText}</p>
+                <p className="text-green-700 text-sm mt-1">{doText}</p>
               </div>
             </div>
           </div>
@@ -149,7 +155,7 @@ export function StageResult({ success, stage, score = 0, reactionTime = 0, strea
                 <h3 className="font-semibold text-red-800 text-sm uppercase tracking-wide">
                   {t("game.dont")}
                 </h3>
-                <p className="text-red-700 text-sm mt-1">{stage.dontText}</p>
+                <p className="text-red-700 text-sm mt-1">{dontText}</p>
               </div>
             </div>
           </div>

@@ -33,6 +33,7 @@ export class BossBattle extends Phaser.Scene {
     this.maxHp = this.bossData?.hp || 3
     this.onComplete = data?.onComplete || null
     this.isDefeated = false
+    this.t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
   }
 
   create() {
@@ -210,7 +211,7 @@ export class BossBattle extends Phaser.Scene {
 
     // Show hint if no relevant evidence
     if (relevantEvidence.length === 0) {
-      this.add.text(width / 2, startY + 30, "No relevant evidence collected.\nExplore and gather clues first!", {
+      this.add.text(width / 2, startY + 30, this.t("boss.noEvidence"), {
         font: "10px Arial",
         color: "#888888",
         align: "center",
@@ -227,7 +228,7 @@ export class BossBattle extends Phaser.Scene {
   }
 
   showBossIntro() {
-    this.dialogueText.setText(`"${this.bossData.name}" is ready to fight!\nPresent evidence to deal damage!`)
+    this.dialogueText.setText(this.t("boss.readyToFight").replace("{{name}}", this.bossData.name))
     this.cameras.main.shake(300, 0.01)
   }
 
@@ -286,12 +287,12 @@ export class BossBattle extends Phaser.Scene {
 
     // Show feedback
     const isWeakness = evidence.evidenceType === this.bossData.weakness
-    const damage = isWeakness ? "Critical Hit!" : "Evidence Presented!"
+    const damage = isWeakness ? this.t("boss.criticalHit") : this.t("boss.evidencePresented")
     const color = isWeakness ? "#ffd700" : "#4caf50"
     this.showFeedback(`💥 ${damage} (${result.evidencePresented}/${result.evidenceRequired})`, color)
 
     // Update dialogue
-    this.dialogueText.setText(`"${this.bossData.name}" is losing confidence...\n${result.evidenceRequired - result.evidencePresented} more pieces of evidence needed!`)
+    this.dialogueText.setText(this.t("boss.losingConfidence").replace("{{name}}", this.bossData.name).replace("{{remaining}}", result.evidenceRequired - result.evidencePresented))
 
     // Mark evidence as used
     if (!this.bossData._presentedEvidence) this.bossData._presentedEvidence = []
@@ -323,7 +324,7 @@ export class BossBattle extends Phaser.Scene {
 
     // Victory text
     const { width, height } = this.cameras.main
-    const victoryText = this.add.text(width / 2, height / 2 - 40, "🎉 BOSS DEFEATED! 🎉", {
+    const victoryText = this.add.text(width / 2, height / 2 - 40, this.t("boss.defeated"), {
       font: "bold 20px Arial",
       color: "#ffd700",
       stroke: "#000000",

@@ -15,7 +15,8 @@ export function PublicLayout() {
   ]
 
   const toggleLanguage = () => {
-    i18n.changeLanguage(i18n.language === "en" ? "my" : "en")
+    const current = i18n.language?.split('-')[0] // handle 'en-US' etc
+    i18n.changeLanguage(current === "en" ? "my" : "en")
   }
 
   return (
@@ -79,7 +80,7 @@ export function PublicLayout() {
                 className="flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 min-h-11 text-xs font-semibold text-zinc-300 transition hover:border-orange-400/40 hover:bg-orange-500/15 hover:text-orange-200"
               >
                 <Globe className="size-3.5" />
-                {i18n.language === "en" ? "မြန်မာ" : "EN"}
+                {i18n.language?.split('-')[0] === "en" ? "မြန်မာ" : "EN"}
               </button>
 
               {/* Desktop CTA */}

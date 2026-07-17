@@ -56,6 +56,11 @@ export function StageSelect({ onSelectStage }) {
         {stages.map((stage) => {
           const category = categoryConfig[stage.category] || categoryConfig["Phishing Link"]
           const CategoryIcon = category.icon
+          // Use translated stage data if available
+          const translated = t(`game.stages.${stage.id}`, { returnObjects: true })
+          const title = translated?.title || stage.title
+          const description = translated?.description || stage.description
+          const categoryLabel = translated?.category || stage.category
 
           return (
             <Card
@@ -67,17 +72,17 @@ export function StageSelect({ onSelectStage }) {
                 <div className="flex items-center justify-between mb-2">
                   <Badge variant="secondary" className={category.color}>
                     <CategoryIcon className="h-3 w-3 mr-1" />
-                    {stage.category}
+                    {categoryLabel}
                   </Badge>
                   <span className="text-xs text-gray-500">
-                    {difficultyLabels[stage.difficulty] || "Medium"}
+                    {t(`game.difficulty.${stage.difficulty}`, difficultyLabels[stage.difficulty] || "Medium")}
                   </span>
                 </div>
-                <CardTitle className="text-lg">{stage.title}</CardTitle>
+                <CardTitle className="text-lg">{title}</CardTitle>
               </CardHeader>
               <CardContent>
                 <CardDescription className="text-sm line-clamp-2">
-                  {stage.description}
+                  {description}
                 </CardDescription>
               </CardContent>
             </Card>

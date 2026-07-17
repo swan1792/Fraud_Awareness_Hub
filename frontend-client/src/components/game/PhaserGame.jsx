@@ -30,13 +30,47 @@ export function PhaserGame({ stage, onComplete }) {
       gameRef.current = null
     }
 
-    // Store stage data globally for scenes to access
-    window.__GAME_STAGE_DATA = stage
+    // Store stage data globally for scenes to access (with translations)
+    const t = (key) => window.__GAME_TRANSLATIONS?.[key] || key
+    const translated = i18n.getResourceBundle(i18n.language, "translation")?.game?.stages?.[stage.id]
+    window.__GAME_STAGE_DATA = {
+      ...stage,
+      title: translated?.title || stage.title,
+      description: translated?.description || stage.description,
+      scammerLine: translated?.scammerLine || stage.scammerLine,
+      correctIntervention: translated?.correctIntervention || stage.correctIntervention,
+      whyText: translated?.whyText || stage.whyText,
+      doText: translated?.doText || stage.doText,
+      dontText: translated?.dontText || stage.dontText,
+      targetLines: translated?.targetLines
+        ? translated.targetLines.map((line, i) => ({ lineText: line, lineOrder: i + 1 }))
+        : stage.targetLines,
+      interventions: translated?.interventions
+        ? translated.interventions.map((int, i) => ({
+            interventionText: int.text,
+            isCorrect: int.correct,
+            displayOrder: i + 1,
+          }))
+        : stage.interventions,
+    }
     window.__GAME_ON_COMPLETE = (...args) => onCompleteRef.current?.(...args)
 
-    // Pass current language translations to Phaser
+    // Pass current language translations to Phaser (flatten nested keys)
     const bundle = i18n.getResourceBundle(i18n.language, "translation")
-    window.__GAME_TRANSLATIONS = bundle?.game?.phaser || {}
+    const phaser = bundle?.game?.phaser || {}
+    const flat = {}
+    function flatten(obj, prefix = '') {
+      for (const [key, val] of Object.entries(obj)) {
+        const fullKey = prefix ? `${prefix}.${key}` : key
+        if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+          flatten(val, fullKey)
+        } else {
+          flat[fullKey] = val
+        }
+      }
+    }
+    flatten(phaser)
+    window.__GAME_TRANSLATIONS = flat
 
     // Create new game with stage data
     const config = {
@@ -62,7 +96,7 @@ export function PhaserGame({ stage, onComplete }) {
       delete window.__GAME_ON_COMPLETE
       delete window.__GAME_TRANSLATIONS
     }
-  }, [stage, i18n]) // only re-create when stage changes, NOT when onComplete changes
+  }, [stage, i18n.language]) // re-create when stage or language changes, NOT when onComplete changes
 
   return (
     <div className="relative">
