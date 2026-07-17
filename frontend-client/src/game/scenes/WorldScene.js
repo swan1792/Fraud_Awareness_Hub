@@ -1,5 +1,7 @@
 import Phaser from "phaser"
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
 /**
  * WorldScene - Top-down exploration scene for Fraud City
  * Player walks around, talks to NPCs, investigates locations
@@ -514,7 +516,7 @@ export class WorldScene extends Phaser.Scene {
 
   fetchAndShowDialogue(npcData) {
     // Fetch dialogue from API
-    fetch(`http://localhost:3001/api/npcs/${npcData.id}/dialogue`)
+    fetch(`${API_URL}/api/npcs/${npcData.id}/dialogue`)
       .then(res => {
         if (!res.ok) throw new Error("No dialogue")
         return res.json()
@@ -526,7 +528,7 @@ export class WorldScene extends Phaser.Scene {
           onComplete: (result) => {
             // Record the talk event
             if (result.trustChange) {
-              fetch(`http://localhost:3001/api/npcs/${npcData.id}/talk`, {
+              fetch(`${API_URL}/api/npcs/${npcData.id}/talk`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ trustChange: result.trustChange }),
@@ -541,7 +543,7 @@ export class WorldScene extends Phaser.Scene {
 
             // If choice leads to another dialogue, fetch it
             if (result.nextDialogueId) {
-              fetch(`http://localhost:3001/api/npcs/${npcData.id}/dialogue`)
+              fetch(`${API_URL}/api/npcs/${npcData.id}/dialogue`)
                 .then(res => res.json())
                 .then(nextDlg => {
                   this.scene.launch("DialogueUI", {
@@ -571,7 +573,7 @@ export class WorldScene extends Phaser.Scene {
           },
           onComplete: (result) => {
             if (result.trustChange) {
-              fetch(`http://localhost:3001/api/npcs/${npcData.id}/talk`, {
+              fetch(`${API_URL}/api/npcs/${npcData.id}/talk`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ trustChange: result.trustChange }),
@@ -610,7 +612,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   loadPlayerStats() {
-    fetch("http://localhost:3001/api/player/stats")
+    fetch(`${API_URL}/api/player/stats`)
       .then(res => res.json())
       .then(stats => {
         this.playerStats = stats
@@ -674,7 +676,7 @@ export class WorldScene extends Phaser.Scene {
   addXp(amount) {
     if (!this.playerStats) return
 
-    fetch("http://localhost:3001/api/player/xp", {
+    fetch(`${API_URL}/api/player/xp`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount }),
@@ -753,13 +755,13 @@ export class WorldScene extends Phaser.Scene {
 
   autoAcceptMission() {
     // Fetch available missions and auto-accept the first one
-    fetch("http://localhost:3001/api/missions")
+    fetch(`${API_URL}/api/missions`)
       .then(res => res.json())
       .then(missions => {
         const available = missions.find(m => m.playerStatus === "available" || m.playerStatus === "locked")
         if (available) {
           // Accept the mission
-          fetch(`http://localhost:3001/api/missions/${available.id}/accept`, {
+          fetch(`${API_URL}/api/missions/${available.id}/accept`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({}),
@@ -780,7 +782,7 @@ export class WorldScene extends Phaser.Scene {
 
   checkMissionObjectives(type, target) {
     // Fetch current mission progress and check for matching objectives
-    fetch("http://localhost:3001/api/missions")
+    fetch(`${API_URL}/api/missions`)
       .then(res => res.json())
       .then(missions => {
         const active = missions.find(m => m.playerStatus === "active")
@@ -791,7 +793,7 @@ export class WorldScene extends Phaser.Scene {
           if (active.objectivesComplete.includes(obj.id)) return
           if (obj.type === type && obj.target === target) {
             // Complete this objective
-            fetch(`http://localhost:3001/api/missions/${active.id}/complete`, {
+            fetch(`${API_URL}/api/missions/${active.id}/complete`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ objectiveId: obj.id }),
