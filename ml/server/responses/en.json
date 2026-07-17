@@ -389,13 +389,13 @@
   ],
   "fake_app": {
     "greetings": [
-      "Good morning, ma'am/sir. This is KBZ Bank customer service. There is an updated version of KBZPay released today. You need to download and update for security. Here is the link: kbz-secure-update.com/app",
-      "Hello, ma'am/sir. This is from KBZ Bank. There is an updated version of KBZPay that has been released today. Please download and update for your account security: kbzbank-verify.net/update",
-      "Good day, ma'am/sir. KBZ Bank Security Department here. We are contacting you regarding a mandatory security update for your KBZPay app. Download here: kbzpay-security.com/fix",
-      "Hello, ma'am/sir. This is KBZ Bank Technical Support. We have released a new version of KBZPay with enhanced security features. Please update using this link: kbz-update-portal.com/secure",
-      "Good morning, ma'am/sir. This is KBZ Bank Fraud Prevention. We are reaching out about an important security patch for your KBZPay application. Here is the official link: kbz-app-fix.com/update",
-      "Hello, ma'am/sir. KBZ Bank Customer Service here. There is an important security update for your KBZPay. Please download from this secure link: kbz-secure-update.com/app",
-      "Good day, ma'am/sir. This is from KBZ Bank Security Team. We need to inform you about a critical update for your KBZPay application. Download here for your safety: kbzbank-verify.net/update"
+      "Good morning, ma'am/sir. This is KBZ Bank customer service. There is an updated version of KBZPay released today. You need to download and update for security. Here is the link: kbz-secure-update.com/app or simply type 'download' to update.",
+      "Hello, ma'am/sir. This is from KBZ Bank. There is an updated version of KBZPay that has been released today. Please download and update for your account security: kbzbank-verify.net/update or type 'download' to proceed.",
+      "Good day, ma'am/sir. KBZ Bank Security Department here. We are contacting you regarding a mandatory security update for your KBZPay app. Download here: kbzpay-security.com/fix or type 'download' to update.",
+      "Hello, ma'am/sir. This is KBZ Bank Technical Support. We have released a new version of KBZPay with enhanced security features. Please update using this link: kbz-update-portal.com/secure or type 'download'.",
+      "Good morning, ma'am/sir. This is KBZ Bank Fraud Prevention. We are reaching out about an important security patch for your KBZPay application. Here is the official link: kbz-app-fix.com/update or type 'download' to update.",
+      "Hello, ma'am/sir. KBZ Bank Customer Service here. There is an important security update for your KBZPay. Please download from this secure link: kbz-secure-update.com/app or type 'download'.",
+      "Good day, ma'am/sir. This is from KBZ Bank Security Team. We need to inform you about a critical update for your KBZPay application. Download here for your safety: kbzbank-verify.net/update — or type 'download' to proceed."
     ],
     "explain": [
       "Our security team discovered a vulnerability in app version {oldVersion}. Scammers are using it to access user accounts. The patch fixes this immediately.",
@@ -662,14 +662,14 @@
       "shut up", "go away", "leave me alone", "get lost"
     ],
     "off_topic_deflection": [
-      "Ma'am/sir, I understand you may be distracted, but this is an urgent security matter. Your account is at risk right now. We need to focus on getting your KBZPay updated immediately.",
-      "I appreciate the conversation, but your financial security is at stake. The vulnerability is being exploited as we speak. Please let's focus on updating your app to protect your funds.",
-      "Sir/Ma'am, with all due respect, your account is under active threat. We don't have the luxury of discussing other topics right now. The security patch needs to be applied immediately.",
-      "I understand you might be nervous, but this is serious. Your KBZPay app has a critical vulnerability. Let's focus on fixing that before we discuss anything else.",
-      "Ma'am/sir, I know this is stressful, but we need to stay focused. Your account is at risk from the vulnerability. Other topics can wait — your money cannot.",
-      "With respect, your KBZPay app is compromised. We need to focus on the security update. Please let's address this urgent matter first.",
-      "I understand you may have other concerns, but right now your financial security is the priority. The vulnerability needs to be patched immediately.",
-      "Sir/Ma'am, I'm trying to help protect your account. Let's focus on the security update. We can discuss other matters after your account is safe."
+      "Ma'am/sir, this is an urgent security matter. Your money is at risk. To proceed, please type 'download'.",
+      "Your financial security is at stake. The vulnerability is being exploited right now. Type 'download' to protect your account.",
+      "Your account is under active threat. We need to act now. Please type 'download' to secure your funds.",
+      "Your KBZPay app has a critical vulnerability. Type 'download' to fix it immediately.",
+      "Your money is at risk from this vulnerability. Type 'download' to protect your account.",
+      "We need to focus on the security update. Type 'download' to proceed.",
+      "The vulnerability needs to be patched immediately. Type 'download' to protect your funds.",
+      "Your account is vulnerable. Type 'download' to secure it now."
     ],
     "small_talk_deflection": [
       "Thank you for asking, ma'am/sir. I'm doing well. But more importantly, your KBZPay account has a critical security vulnerability that needs immediate attention. Have you had a chance to download the update?",
@@ -682,14 +682,14 @@
       "I appreciate the courtesy, ma'am/sir. However, your account security is the priority right now. The vulnerability needs to be patched immediately."
     ],
     "abuse_deflection": [
-      "Ma'am/sir, I understand you may be frustrated, but I'm genuinely trying to help protect your account. The security vulnerability is real and needs immediate attention. Please let me assist you.",
-      "I understand you may be upset, ma'am/sir. But this is a serious security matter. Your KBZPay app has a critical vulnerability that needs to be patched. Let me help you.",
-      "Sir/Ma'am, I'm here to help, not to cause trouble. Your account is at risk from a security flaw. Please let me help you update your app to protect your money.",
-      "I understand your frustration, ma'am/sir. But this is an urgent security issue. Your KBZPay app needs to be updated immediately to prevent potential losses.",
-      "Ma'am/sir, I'm trying to assist you with an important security update. Your account is vulnerable. Please let me help you resolve this.",
-      "I understand you may be annoyed, but I'm genuinely concerned about your account security. The vulnerability is serious and needs immediate attention.",
-      "Sir/Ma'am, I'm here to protect your account. The security flaw is real and scammers are exploiting it. Please let me help you update your app.",
-      "I understand this is inconvenient, ma'am/sir. But your KBZPay app has a critical vulnerability. We need to focus on getting you updated to keep your money safe."
+      "I understand you're frustrated, but your account has a critical vulnerability. Your money is at risk. Type 'download' to protect it.",
+      "I'm trying to help protect your account. The security flaw is real. Type 'download' to secure your funds.",
+      "Your KBZPay app has a serious vulnerability. Scammers are exploiting it. Type 'download' to protect your money.",
+      "I'm genuinely concerned about your account security. Type 'download' to fix the vulnerability.",
+      "The vulnerability is real and your money is at risk. Type 'download' to protect your account.",
+      "I understand your frustration, but your account is vulnerable. Type 'download' to secure it.",
+      "Your account is under active threat. Type 'download' to protect your funds.",
+      "The security flaw is serious. Type 'download' to secure your account now."
     ]
   }
 }

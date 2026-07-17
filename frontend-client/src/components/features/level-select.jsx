@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import { Shield, Lock, ChevronRight, Star, Clock, AlertTriangle } from "lucide-react"
+import { Shield, Lock, ChevronRight, Star, Clock, AlertTriangle, ShieldCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const LEVELS = [
@@ -67,6 +67,17 @@ export function LevelSelect({ onSelectLevel }) {
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">{t("levels.title")}</h1>
         <p className="text-sm text-gray-500">{t("levels.subtitle")}</p>
+      </div>
+
+      {/* Safety Reassurance */}
+      <div className="mb-4 p-3 bg-green-50 rounded-xl border border-green-200">
+        <div className="flex items-start gap-2">
+          <ShieldCheck className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="text-xs font-medium text-green-800">{t("levels.safeNotice") || "\u{1F393} This is a safe educational tool"}</p>
+            <p className="text-[10px] text-green-700 mt-0.5">{t("levels.safeNoticeDesc") || "No real money or personal data is involved. Practice identifying scams in a safe environment."}</p>
+          </div>
+        </div>
       </div>
 
       {/* Levels Grid */}

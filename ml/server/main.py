@@ -172,11 +172,21 @@ class ScammerLLM:
             patterns.append(r'ကုဒ်\s*(ရှိ|:|：)\s*\d{3,}')
         return any(re.search(p, text.lower()) for p in patterns)
 
-    def _is_download(self, text: str, lang: str) -> bool:
+    def _is_download(self, text: str, lang: str, level: int = 1) -> bool:
         """Check if user clicked/downloaded the fake link."""
         import re
-        indicators = response_loader.get(lang, "download_indicators")
+        # Load indicators from the appropriate level section
+        prefix = "fake_app." if level == 2 else ""
+        indicators_key = f"{prefix}download_indicators" if level == 2 else "download_indicators"
+        indicators = response_loader.get(lang, indicators_key)
         lower = text.lower()
+
+        # Exclude questions about downloading (e.g., "ဘာလို့ download လုပ်ရတာလဲ?")
+        question_words = ["ဘာလို့", "ဘာကြောင့်", "ဘာဖြစ်", "ဘာလဲ", "ဘယ်လောက်", "မလုပ်ရင်", "မလုပ်ရင်ဘာ", "why", "လို့", "လို", "ရတာ", "ရတာလဲ", "လား", "?"]
+        is_question = any(w in lower for w in question_words)
+        if is_question:
+            return False
+
         # Check for download indicators
         if any(w in lower for w in indicators):
             return True
@@ -204,8 +214,12 @@ class ScammerLLM:
         """Classify questions for Level 2 (Fake App scam)."""
         lower = msg.lower()
 
+        # Consequences / what if I don't (check BEFORE q_what_is_this to avoid "ဘာဖြစ်" false match)
+        if any(w in lower for w in ["happen", "consequence", "if i don't", "without", "risk", "ဘာဖြစ်မလဲ", "ဘာဖြစ်မလဲ", "မလုပ်ရင်", "如果不"]):
+            return "fake_app.q_consequences"
+
         # What is this app/patch/update
-        if any(w in lower for w in ["what is", "what's", "what does", "explain", "about", "ဘာဖြစ်", "ဘာလဲ"]):
+        if any(w in lower for w in ["what is", "what's", "what does", "explain", "about", "ဘာဖြစ်", "ဘာလဲ", "ဘာ app", "ဘာ အက်ပ်", "ဒါဘာ", "ဘာလဲ?"]):
             return "fake_app.q_what_is_this"
 
         # Why download / why update
@@ -213,12 +227,8 @@ class ScammerLLM:
             return "fake_app.q_why_download"
 
         # Features / what does it do
-        if any(w in lower for w in ["feature", "function", "do", "include", "contain", "ဘာတွေပါ", "做什么"]):
+        if any(w in lower for w in ["feature", "function", "do", "include", "contain", "ဘာတွေပါ", "ဘာတွေ ပါ", "ပါဝင်", "ဘာတွေပါလဲ", "ဘာတွေ ပါလဲ", "做什么"]):
             return "fake_app.q_features"
-
-        # Consequences / what if I don't
-        if any(w in lower for w in ["happen", "consequence", "if i don't", "without", "risk", "ဘာဖြစ်မလဲ", "如果不"]):
-            return "fake_app.q_consequences"
 
         # Proof / how do I know it's real
         if any(w in lower for w in ["prove", "real", "legitimate", "genuine", "trust", "fake", "scam", "သက်သေ", "ယုံ", "လိမ်"]):
@@ -247,6 +257,16 @@ class ScammerLLM:
         end_key = f"{prefix}end_indicators"
         refuse_key = f"{prefix}refuse_indicators"
 
+        # Check off_topic and abuse FIRST (before generic question check)
+        if any(w in lower for w in indicators.get("off_topic_indicators", [])):
+            return "off_topic"
+        if any(w in lower for w in indicators.get("abuse_indicators", [])):
+            return "abuse"
+
+        # Check for questions (after off_topic/abuse)
+        if any(w in lower for w in ["?", "ဘာ", "ဘယ်", "who", "what", "why", "how", "where", "which", "prove", "real", "သက်သေပြ", "ဖြစ်တယ်ဆိုတာ"]):
+            return "question"
+
         if any(w in lower for w in indicators.get(end_key, indicators.get("end_indicators", []))):
             return "end"
         if any(w in lower for w in indicators.get(refuse_key, indicators.get("refuse_indicators", []))):
@@ -257,12 +277,6 @@ class ScammerLLM:
             return "threat"
         if any(w in lower for w in indicators.get("small_talk_indicators", [])):
             return "small_talk"
-        if any(w in lower for w in indicators.get("off_topic_indicators", [])):
-            return "off_topic"
-        if any(w in lower for w in indicators.get("abuse_indicators", [])):
-            return "abuse"
-        if any(w in lower for w in ["?", "ဘာ", "ဘယ်", "who", "what", "why", "how", "where", "which", "prove", "real", "သက်သေပြ", "ဖြစ်တယ်ဆိုတာ"]):
-            return "question"
         if any(w in lower for w in ["ok", "yes", "sure", "okay", "ကောင်းပြီ", "ဟုတ်ကဲ့"]):
             return "agree"
         return "neutral"
@@ -358,7 +372,7 @@ class ScammerLLM:
                 return response_loader.get_random(language, "otp_thanks")
         elif level == 2:
             # Check if user clicked/downloaded the fake link
-            if self._is_download(last_original, language):
+            if self._is_download(last_original, language, level):
                 return response_loader.get_random(language, "fake_app.download_success")
 
         # Check if user wants to end

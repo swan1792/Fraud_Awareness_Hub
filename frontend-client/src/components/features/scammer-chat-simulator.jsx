@@ -46,16 +46,30 @@ function isFakeLinkClick(text) {
 
 // Helper: detect if user downloaded/opened the fake app (Level 2)
 function isDownloadAction(text) {
-  const lower = text.toLowerCase()
-  // Only match explicit confirmation — NOT questions like "why download?"
+  const lower = text.toLowerCase().trim()
+
+  // Exclude questions (contains ? or question words)
+  const questionPatterns = ["?", "ဘာလို့", "ဘာကြောင့်", "ဘာဖြစ်", "ဘာလဲ", "ဘယ်လောက်", "မလုပ်ရင်", "why", "how", "what"]
+  if (questionPatterns.some(w => lower.includes(w))) return false
+
+  // Only match explicit confirmation
   const explicit = [
     "downloaded it", "i downloaded", "i opened it", "i clicked it",
     "i installed", "installed it", "opened the app", "clicked the link",
     "done it", "yes i downloaded", "yes i installed", "yes i opened",
     "yes i clicked", "i have downloaded", "i already downloaded",
     "just downloaded", "just installed", "just opened", "just clicked",
+    // Burmese patterns
+    "download ဆွဲပြီး", "download လုပ်ပြီး", "download ရပြီ", "downloadပြီ",
+    "ဆွဲပြီးပါပြီ", "လုပ်ပြီးပါပြီ", "ရပြီပါပြီ", "ပြီပါပြီ",
+    "installed", "open", "click",
   ]
-  return explicit.some(w => lower.includes(w))
+  if (explicit.some(w => lower.includes(w))) return true
+
+  // Match standalone "download" word (not part of a question)
+  if (/^download$/i.test(lower)) return true
+
+  return false
 }
 
 // Helper: detect scam tactics in scammer message (level-aware)
@@ -116,7 +130,7 @@ function EducationalTooltip({ tactics, t, onDismiss }) {
     <div className="mx-3 mb-1 px-3 py-2 bg-amber-50/90 backdrop-blur border border-amber-200/60 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
       <AlertTriangle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-medium text-amber-800 truncate">
+        <p className="text-xs font-medium text-amber-800">
           {tactics.map(t => t.label).join(" · ")}
         </p>
       </div>
@@ -260,18 +274,37 @@ function DebriefScreen({ outcome, messages, onRestart, onClose, t, level }) {
         <div className="mb-4">
           <h4 className="text-xs font-semibold text-gray-800 mb-2">{t("debrief.redFlagsTitle")}</h4>
           <div className="space-y-1">
-            <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
-              <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
-              <p className="text-[10px] text-red-700">{t("debrief.redFlags.otpRequest")}</p>
-            </div>
-            <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
-              <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
-              <p className="text-[10px] text-red-700">{t("debrief.redFlags.urgency")}</p>
-            </div>
-            <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
-              <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
-              <p className="text-[10px] text-red-700">{t("debrief.redFlags.unverifiable")}</p>
-            </div>
+            {level === 2 ? (
+              <>
+                <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
+                  <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                  <p className="text-[10px] text-red-700">{t("debrief.redFlags.fakeLink")}</p>
+                </div>
+                <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
+                  <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                  <p className="text-[10px] text-red-700">{t("debrief.redFlags.fakeUpdate")}</p>
+                </div>
+                <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
+                  <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                  <p className="text-[10px] text-red-700">{t("debrief.redFlags.fakeSecurity")}</p>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
+                  <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                  <p className="text-[10px] text-red-700">{t("debrief.redFlags.otpRequest")}</p>
+                </div>
+                <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
+                  <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                  <p className="text-[10px] text-red-700">{t("debrief.redFlags.urgency")}</p>
+                </div>
+                <div className="flex items-center gap-2 p-1.5 bg-red-50 rounded">
+                  <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                  <p className="text-[10px] text-red-700">{t("debrief.redFlags.unverifiable")}</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -286,10 +319,23 @@ function DebriefScreen({ outcome, messages, onRestart, onClose, t, level }) {
                 <p className="text-[9px] text-green-600">{t("debrief.actions.bankPhone")}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 p-1.5 bg-green-50 rounded">
-              <ShieldCheck className="h-3 w-3 text-green-600 flex-shrink-0" />
-              <p className="text-[10px] text-green-700">{t("debrief.actions.neverShare")}</p>
-            </div>
+            {level === 2 ? (
+              <>
+                <div className="flex items-center gap-2 p-1.5 bg-green-50 rounded">
+                  <ShieldCheck className="h-3 w-3 text-green-600 flex-shrink-0" />
+                  <p className="text-[10px] text-green-700">{t("debrief.actions.officialStore")}</p>
+                </div>
+                <div className="flex items-center gap-2 p-1.5 bg-green-50 rounded">
+                  <ShieldCheck className="h-3 w-3 text-green-600 flex-shrink-0" />
+                  <p className="text-[10px] text-green-700">{t("debrief.actions.verifyLink")}</p>
+                </div>
+              </>
+            ) : (
+              <div className="flex items-center gap-2 p-1.5 bg-green-50 rounded">
+                <ShieldCheck className="h-3 w-3 text-green-600 flex-shrink-0" />
+                <p className="text-[10px] text-green-700">{t("debrief.actions.neverShare")}</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -303,6 +349,51 @@ function DebriefScreen({ outcome, messages, onRestart, onClose, t, level }) {
             {t("debrief.done")}
           </Button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Download Alert Popup - Shows when user falls for fake download
+function DownloadAlertPopup({ onClose, t }) {
+  return (
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-[320px] w-full p-6 shadow-xl text-center">
+        {/* Warning Icon */}
+        <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <AlertTriangle className="h-8 w-8 text-red-600" />
+        </div>
+
+        {/* Title */}
+        <h3 className="text-lg font-bold text-red-800 mb-2">
+          {t("downloadAlert.title") || "⚠️ You've Been Scammed!"}
+        </h3>
+
+        {/* Message */}
+        <p className="text-sm text-gray-600 mb-4">
+          {t("downloadAlert.message") || "This was a fake app. In real life, downloading this would install malware on your phone and steal your money. Never download banking apps from unofficial links!"}
+        </p>
+
+        {/* Warning Points */}
+        <div className="bg-red-50 rounded-lg p-3 mb-4 text-left">
+          <div className="flex items-start gap-2 mb-2">
+            <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-red-700">{t("downloadAlert.warning1") || "Fake banking apps steal your login credentials"}</p>
+          </div>
+          <div className="flex items-start gap-2 mb-2">
+            <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-red-700">{t("downloadAlert.warning2") || "Malware can access your OTP and drain your account"}</p>
+          </div>
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <p className="text-xs text-red-700">{t("downloadAlert.warning3") || "Always download apps from official app stores only"}</p>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <Button onClick={onClose} className="w-full bg-red-600 hover:bg-red-700 text-white">
+          {t("downloadAlert.continue") || "Continue to Debrief"}
+        </Button>
       </div>
     </div>
   )
@@ -322,6 +413,7 @@ export function ScammerChatSimulator() {
   const [modelStatus, setModelStatus] = useState(null)
   const [serverError, setServerError] = useState(false)
   const [showDebrief, setShowDebrief] = useState(false)
+  const [showDownloadAlert, setShowDownloadAlert] = useState(false)
   const [persuasionCount, setPersuasionCount] = useState(0)
   const [currentTactics, setCurrentTactics] = useState([])
   const scrollRef = useRef(null)
@@ -351,7 +443,7 @@ export function ScammerChatSimulator() {
     setCurrentTactics(tactics)
     // Clear previous timeout and reset — tooltip stays visible until next message
     if (tacticsTimeoutRef.current) clearTimeout(tacticsTimeoutRef.current)
-    tacticsTimeoutRef.current = setTimeout(() => setCurrentTactics([]), 8000)
+    tacticsTimeoutRef.current = setTimeout(() => setCurrentTactics([]), 15000)
   }, [selectedLevel])
 
   const sendToLLM = useCallback(
@@ -361,6 +453,13 @@ export function ScammerChatSimulator() {
       setIsLoading(true)
       setServerError(false)
 
+      // Add timeout - reset after 30 seconds
+      const timeoutId = setTimeout(() => {
+        setScammerTyping(false)
+        setIsLoading(false)
+        setServerError(true)
+      }, 30000)
+
       let fullResponse = ""
 
       await streamChatMessage(
@@ -368,6 +467,7 @@ export function ScammerChatSimulator() {
         {
           onToken: (token) => { fullResponse += token; setStreamingText(fullResponse) },
           onDone: () => {
+            clearTimeout(timeoutId)
             if (fullResponse) addScammerMessage(fullResponse)
             setStreamingText("")
             setScammerTyping(false)
@@ -375,7 +475,10 @@ export function ScammerChatSimulator() {
 
             setPersuasionCount((prev) => prev + 1)
           },
-          onError: (err) => { console.error("LLM error:", err); setScammerTyping(false); setIsLoading(false); setServerError(true) },
+          onError: (err) => {
+            clearTimeout(timeoutId)
+            console.error("LLM error:", err); setScammerTyping(false); setIsLoading(false); setServerError(true)
+          },
         },
         { max_tokens: 150, temperature: 0.8, language: currentLang, level: selectedLevel || 1 }
       )
@@ -419,7 +522,7 @@ export function ScammerChatSimulator() {
         setTimeout(() => {
           addScammerMessage(currentLang === "my" ? "ပြီးပါပြီ။ ကျေးဇူးတင်ပါသည်။ သင့်အကောင့်ကို ကာကွယ်ပေးပြီ။" : "Done. Your account has been protected. Thank you for updating.")
           setScammerTyping(false)
-          setTimeout(() => { setOutcome("scammed"); setShowDebrief(true) }, 1500)
+          setTimeout(() => { setOutcome("scammed"); setShowDownloadAlert(true) }, 1500)
         }, 1500)
         return
       }
@@ -452,7 +555,7 @@ export function ScammerChatSimulator() {
 
   const handleRestart = useCallback(() => {
     setMessages([]); setUserInput(""); setOutcome(null); setScammerTyping(false)
-    setStreamingText(""); setIsLoading(false); setServerError(false); setShowDebrief(false)
+    setStreamingText(""); setIsLoading(false); setServerError(false); setShowDebrief(false); setShowDownloadAlert(false)
     setPersuasionCount(0); setCurrentTactics([]); setPhase("levels")
     setSelectedLevel(null)
   }, [])
@@ -555,6 +658,15 @@ export function ScammerChatSimulator() {
         </div>
       </div>
 
+      {/* Inline error when messages exist */}
+      {serverError && messages.length > 0 && (
+        <div className="mx-3 mb-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
+          <p className="text-xs text-red-700 flex-1">{t("chat.connectionLost") || "Connection lost. Please try again."}</p>
+          <button onClick={handleRestart} className="text-xs text-red-600 underline">{t("chat.retry") || "Retry"}</button>
+        </div>
+      )}
+
       {/* Suggested Replies */}
       {showSuggestions && !scammerTyping && messages.length > 0 && (
         <div className="px-3 py-2 bg-[#f0f0f0] border-t shrink-0">
@@ -580,26 +692,34 @@ export function ScammerChatSimulator() {
             </Button>
           </div>
           <div className="flex items-center justify-center gap-3 mt-2">
-            <button onClick={handleReport} className="flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-600 text-xs rounded-full hover:bg-red-100 transition-colors border border-red-200">
+            <button onClick={handleReport} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
               <Flag className="h-3 w-3" />
-              <span>Report</span>
+              <span>{t("chat.report")}</span>
             </button>
             <button onClick={() => setPhase("levels")} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
               <X className="h-3 w-3" />
-              <span>End</span>
+              <span>{t("chat.end")}</span>
             </button>
-            <button onClick={() => { setSelectedLevel(2); setPhase("onboarding") }} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
+            <button onClick={() => { setSelectedLevel(selectedLevel < 5 ? selectedLevel + 1 : 1); setPhase("onboarding") }} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
               <ChevronRight className="h-3 w-3" />
-              <span>Next</span>
+              <span>{t("chat.next")}</span>
             </button>
           </div>
           <p className="text-[10px] text-gray-400 text-center mt-1.5">{t("chat.tip")}</p>
         </div>
       )}
 
+      {/* Download Alert Popup */}
+      {showDownloadAlert && (
+        <DownloadAlertPopup
+          onClose={() => { setShowDownloadAlert(false); setShowDebrief(true) }}
+          t={t}
+        />
+      )}
+
       {/* Debrief Screen */}
       {showDebrief && (
-        <DebriefScreen outcome={outcome} messages={messages} onRestart={handleRestart} onClose={() => { setShowDebrief(false); setPhase("onboarding") }} t={t} level={selectedLevel} />
+        <DebriefScreen outcome={outcome} messages={messages} onRestart={handleRestart} onClose={() => { setShowDebrief(false); setPhase("levels") }} t={t} level={selectedLevel} />
       )}
     </div>
   )
