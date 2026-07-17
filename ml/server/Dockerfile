@@ -25,8 +25,8 @@ if [ -n "$MODEL_URL" ] && [ ! -f "/app/models/scammer-llm/model.gguf" ]; then\n\
   curl -L -o /app/models/scammer-llm/model.gguf "$MODEL_URL"\n\
   echo "Model downloaded!"\n\
 fi\n\
-exec uvicorn main:app --host 0.0.0.0 --port 8000' > /app/run.sh && chmod +x /app/run.sh
+exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}' > /app/run.sh && chmod +x /app/run.sh
 
-EXPOSE 8000
+EXPOSE ${PORT:-8000}
 
 CMD ["/app/run.sh"]
