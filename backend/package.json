@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.11.1",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
@@ -21,7 +20,6 @@
     "winston": "^3.19.0"
   },
   "allowScripts": {
-    "sqlite3@6.0.1": true,
-    "better-sqlite3@12.11.1": true
+    "sqlite3@6.0.1": true
   }
 }
