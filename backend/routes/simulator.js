@@ -44,11 +44,17 @@ router.post('/chat', validateChatRequest, async (req, res) => {
   try {
     const { messages, max_tokens = 150, temperature = 0.8, language = 'en', level = 1 } = req.body
 
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 120000) // 120s timeout
+
     const response = await fetch(`${PYTHON_SIDECAR}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages, max_tokens, temperature, stream: false, language, level }),
+      signal: controller.signal,
     })
+
+    clearTimeout(timeout)
 
     if (!response.ok) {
       const error = await response.json()
@@ -59,6 +65,10 @@ router.post('/chat', validateChatRequest, async (req, res) => {
     res.json(data)
   } catch (err) {
     console.error('Simulator chat error:', err.message)
+
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'LLM service timeout' })
+    }
 
     if (err.code === 'ECONNREFUSED') {
       return res.status(503).json({ error: 'LLM service unavailable' })
@@ -76,11 +86,17 @@ router.post('/chat/stream', validateChatRequest, async (req, res) => {
   try {
     const { messages, max_tokens = 150, temperature = 0.8, language = 'en', level = 1 } = req.body
 
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 120000) // 120s timeout
+
     const response = await fetch(`${PYTHON_SIDECAR}/chat/stream`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages, max_tokens, temperature, language, level }),
+      signal: controller.signal,
     })
+
+    clearTimeout(timeout)
 
     if (!response.ok) {
       const error = await response.json()
@@ -107,6 +123,10 @@ router.post('/chat/stream', validateChatRequest, async (req, res) => {
     res.end()
   } catch (err) {
     console.error('Simulator stream error:', err.message)
+
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'LLM service timeout' })
+    }
 
     if (err.code === 'ECONNREFUSED') {
       return res.status(503).json({ error: 'LLM service unavailable' })

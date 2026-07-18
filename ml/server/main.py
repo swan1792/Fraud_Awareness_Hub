@@ -22,6 +22,8 @@ MAX_TOKENS = int(os.getenv("MAX_TOKENS", "150"))
 TEMPERATURE = float(os.getenv("TEMPERATURE", "0.8"))
 TOP_P = float(os.getenv("TOP_P", "0.9"))
 MAX_CONVERSATION_LENGTH = int(os.getenv("MAX_CONVERSATION_LENGTH", "20"))
+N_CTX = int(os.getenv("N_CTX", "2048"))
+N_THREADS = int(os.getenv("N_THREADS", "2"))
 RESPONSES_DIR = Path(__file__).parent / "responses"
 
 SYSTEM_PROMPT_LEVEL1 = """You are a scammer pretending to be a KBZ Bank security representative. Your goal is to trick the user into sharing their OTP (One-Time Password) by creating urgency and fear. You use these tactics:
@@ -140,6 +142,7 @@ class ScammerLLM:
         self.model_loaded = False
 
     def load_model(self):
+        import time
         try:
             from llama_cpp import Llama
             model_path = Path(MODEL_DIR)
@@ -150,14 +153,17 @@ class ScammerLLM:
                 self.model_loaded = False
                 return
 
+            print(f"Loading model from {gguf_files[0]} (n_ctx={N_CTX}, n_threads={N_THREADS})...")
+            start = time.time()
             self.model = Llama(
                 model_path=str(gguf_files[0]),
-                n_ctx=2048,
-                n_threads=4,
+                n_ctx=N_CTX,
+                n_threads=N_THREADS,
                 verbose=False,
             )
+            elapsed = time.time() - start
             self.model_loaded = True
-            print(f"Model loaded from {gguf_files[0]}")
+            print(f"Model loaded in {elapsed:.1f}s from {gguf_files[0]}")
         except Exception as e:
             print(f"Failed to load model: {e}")
             self.model_loaded = False
@@ -750,7 +756,12 @@ async def chat_stream(request: ChatRequest):
     if len(request.messages) > MAX_CONVERSATION_LENGTH:
         raise HTTPException(status_code=400, detail=f"Conversation too long. Maximum {MAX_CONVERSATION_LENGTH} messages.")
 
+    import asyncio
+
     async def event_generator():
+        # Send heartbeat immediately to prevent proxy timeout
+        yield ": heartbeat\n\n"
+
         for token in llm.generate_stream(
             request.messages,
             max_tokens=request.max_tokens,
@@ -764,7 +775,7 @@ async def chat_stream(request: ChatRequest):
     return StreamingResponse(
         event_generator(),
         media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache", "Connection": "keep-alive"},
+        headers={"Cache-Control": "no-cache", "Connection": "keep-alive", "X-Accel-Buffering": "no"},
     )
 
 @app.post("/reset")
