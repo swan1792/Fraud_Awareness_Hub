@@ -61,11 +61,13 @@ app.use(express.json({ limit: '10kb' }))
 // CORS
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || CORS_ORIGINS.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
+    if (!origin) return callback(null, true)
+    // Allow exact matches, localhost, and *.vercel.app / *.railway.app
+    const allowed = CORS_ORIGINS.some(o => origin === o)
+      || /localhost/.test(origin)
+      || /\.vercel\.app$/.test(origin)
+      || /\.railway\.app$/.test(origin)
+    callback(null, allowed)
   },
 }))
 
