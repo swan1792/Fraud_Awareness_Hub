@@ -501,28 +501,49 @@ export function ScammerChatSimulator() {
     tacticsTimeoutRef.current = setTimeout(() => setCurrentTactics([]), 15000)
   }, [selectedLevel])
 
+  const [waitingPhase, setWaitingPhase] = useState("") // "connecting" | "warming" | "generating"
+
   const sendToLLM = useCallback(
     async (conversationMessages) => {
       setScammerTyping(true)
       setStreamingText("")
       setIsLoading(true)
       setServerError(false)
+      setWaitingPhase("connecting")
 
-      // Add timeout - reset after 30 seconds
+      // Phase progression: connecting → warming → generating
+      const phaseTimer1 = setTimeout(() => setWaitingPhase("warming"), 5000)
+      const phaseTimer2 = setTimeout(() => setWaitingPhase("generating"), 15000)
+
+      // 120s timeout to match backend
       const timeoutId = setTimeout(() => {
+        clearTimeout(phaseTimer1)
+        clearTimeout(phaseTimer2)
         setScammerTyping(false)
         setIsLoading(false)
         setServerError(true)
-      }, 30000)
+        setWaitingPhase("")
+      }, 120000)
 
       let fullResponse = ""
+      let firstTokenReceived = false
 
       await streamChatMessage(
         conversationMessages,
         {
-          onToken: (token) => { fullResponse += token; setStreamingText(fullResponse) },
+          onToken: (token) => {
+            if (!firstTokenReceived) {
+              firstTokenReceived = true
+              setWaitingPhase("")
+            }
+            fullResponse += token
+            setStreamingText(fullResponse)
+          },
           onDone: () => {
             clearTimeout(timeoutId)
+            clearTimeout(phaseTimer1)
+            clearTimeout(phaseTimer2)
+            setWaitingPhase("")
             if (fullResponse) addScammerMessage(fullResponse)
             setStreamingText("")
             setScammerTyping(false)
@@ -532,6 +553,9 @@ export function ScammerChatSimulator() {
           },
           onError: (err) => {
             clearTimeout(timeoutId)
+            clearTimeout(phaseTimer1)
+            clearTimeout(phaseTimer2)
+            setWaitingPhase("")
             console.error("LLM error:", err); setScammerTyping(false); setIsLoading(false); setServerError(true)
           },
         },
@@ -624,11 +648,21 @@ export function ScammerChatSimulator() {
     setMessages([]); setUserInput(""); setOutcome(null); setScammerTyping(false)
     setStreamingText(""); setIsLoading(false); setServerError(false); setShowDebrief(false); setShowDownloadAlert(false)
     setPersuasionCount(0); setCurrentTactics([]); setPhaseWithHistory("levels")
-    setSelectedLevel(null)
+    setSelectedLevel(null); setWaitingPhase("")
   }, [])
 
+  // Retry last failed message without restarting entire chat
+  const retryLastMessage = useCallback(() => {
+    setServerError(false)
+    // Find the last user message and resend it
+    const lastUserMsg = [...messages].reverse().find(m => m.role === "user")
+    if (lastUserMsg) {
+      sendToLLM(messages.map(m => ({ role: m.role, content: m.content })))
+    }
+  }, [messages, sendToLLM])
+
   const resetChat = useCallback(() => {
-    setMessages([]); setPersuasionCount(0); setUserInput(""); setCurrentTactics([])
+    setMessages([]); setPersuasionCount(0); setUserInput(""); setCurrentTactics([]); setWaitingPhase("")
     setTimeout(() => sendToLLM([{ role: "system", content: "start" }]), 800)
   }, [sendToLLM])
 
@@ -716,11 +750,18 @@ export function ScammerChatSimulator() {
           {scammerTyping && !streamingText && (
             <div className="flex justify-start animate-in fade-in duration-200">
               <div className="bg-white rounded-xl rounded-tl-sm px-4 py-3 shadow-sm">
-                <div className="flex gap-1">
+                <div className="flex gap-1 items-center">
                   <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
                   <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
                   <span className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
                 </div>
+                {waitingPhase && (
+                  <p className="text-[10px] text-gray-400 mt-1 animate-pulse">
+                    {waitingPhase === "connecting" && (currentLang === "my" ? "ချိတ်ဆက်နေသည်..." : "Connecting...")}
+                    {waitingPhase === "warming" && (currentLang === "my" ? "AI ပြင်ဆင်နေသည်..." : "AI is warming up...")}
+                    {waitingPhase === "generating" && (currentLang === "my" ? "စဉ်းစားနေသည်..." : "Thinking...")}
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -731,8 +772,8 @@ export function ScammerChatSimulator() {
       {serverError && messages.length > 0 && (
         <div className="mx-3 mb-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
           <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
-          <p className="text-xs text-red-700 flex-1">{t("chat.connectionLost") || "Connection lost. Please try again."}</p>
-          <button onClick={handleRestart} className="text-xs text-red-600 underline">{t("chat.retry") || "Retry"}</button>
+          <p className="text-xs text-red-700 flex-1">{t("chat.connectionLost") || "Connection timed out. The AI is taking longer than expected."}</p>
+          <button onClick={retryLastMessage} className="text-xs text-red-600 underline">{t("chat.retry") || "Retry"}</button>
         </div>
       )}
 
