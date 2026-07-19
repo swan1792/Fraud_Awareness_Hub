@@ -779,9 +779,9 @@ export function ScammerChatSimulator() {
         </div>
       )}
 
-      {/* Suggested Replies - absolute overlay at bottom of messages */}
+      {/* Suggested Replies - normal flow above input */}
       {showSuggestions && !scammerTyping && messages.length > 0 && (
-        <div className="absolute bottom-16 left-0 right-0 z-10 px-2 sm:px-3 py-2 bg-[#f0f0f0]/95 backdrop-blur border-t">
+        <div className="px-2 sm:px-3 py-2 bg-[#f0f0f0] border-t shrink-0">
           <p className="text-[10px] text-gray-500 mb-1.5 text-center">{t("chat.suggestedReplies")}</p>
           <div className="flex gap-1.5 justify-center flex-wrap">
             {(SUGGESTED_REPLIES[selectedLevel]?.[currentLang] || SUGGESTED_REPLIES[selectedLevel]?.en || SUGGESTED_REPLIES[1]?.en || []).map((reply, i) => (
