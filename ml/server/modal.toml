@@ -1,0 +1,2 @@
+[app]
+entrypoint = "modal_app.py"

@@ -219,37 +219,37 @@ const SUGGESTED_REPLIES = {
 function OnboardingScreen({ onStart, t, level }) {
   const prefix = level ? `onboarding.level${level}` : "onboarding.level1"
   return (
-    <div className="max-w-lg mx-auto flex flex-col items-center justify-center h-[min(500px,80vh)] p-6 text-center">
-      <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6">
-        <MessageCircle className="h-10 w-10 text-red-600" />
+    <div className="max-w-lg mx-auto flex flex-col items-center justify-center min-h-[360px] h-[min(480px,75vh)] p-4 sm:p-6 text-center overflow-y-auto">
+      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-red-100 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+        <MessageCircle className="h-8 w-8 sm:h-10 sm:w-10 text-red-600" />
       </div>
-      <h2 className="text-xl font-bold text-gray-800 mb-2">{t(`${prefix}.title`)}</h2>
-      <p className="text-sm text-gray-600 mb-6 max-w-xs">{t(`${prefix}.description`)}</p>
-      <div className="w-full space-y-3 mb-6">
-        <div className="flex items-start gap-3 text-left p-3 bg-gray-50 rounded-lg">
-          <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-            <span className="text-red-600 text-xs font-bold">1</span>
+      <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">{t(`${prefix}.title`)}</h2>
+      <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6 max-w-xs">{t(`${prefix}.description`)}</p>
+      <div className="w-full space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+        <div className="flex items-start gap-3 text-left p-2.5 sm:p-3 bg-gray-50 rounded-lg">
+          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span className="text-red-600 text-[10px] sm:text-xs font-bold">1</span>
           </div>
-          <p className="text-sm text-gray-700">{t(`${prefix}.step1`)}</p>
+          <p className="text-xs sm:text-sm text-gray-700">{t(`${prefix}.step1`)}</p>
         </div>
-        <div className="flex items-start gap-3 text-left p-3 bg-gray-50 rounded-lg">
-          <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-            <span className="text-orange-600 text-xs font-bold">2</span>
+        <div className="flex items-start gap-3 text-left p-2.5 sm:p-3 bg-gray-50 rounded-lg">
+          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span className="text-orange-600 text-[10px] sm:text-xs font-bold">2</span>
           </div>
-          <p className="text-sm text-gray-700">{t(`${prefix}.step2`)}</p>
+          <p className="text-xs sm:text-sm text-gray-700">{t(`${prefix}.step2`)}</p>
         </div>
-        <div className="flex items-start gap-3 text-left p-3 bg-gray-50 rounded-lg">
-          <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-            <span className="text-green-600 text-xs font-bold">3</span>
+        <div className="flex items-start gap-3 text-left p-2.5 sm:p-3 bg-gray-50 rounded-lg">
+          <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+            <span className="text-green-600 text-[10px] sm:text-xs font-bold">3</span>
           </div>
-          <p className="text-sm text-gray-700">{t(`${prefix}.step3`)}</p>
+          <p className="text-xs sm:text-sm text-gray-700">{t(`${prefix}.step3`)}</p>
         </div>
       </div>
-      <div className="flex items-center gap-2 text-xs text-gray-500 mb-4">
-        <AlertTriangle className="h-3 w-3" />
+      <div className="flex items-center gap-2 text-[10px] sm:text-xs text-gray-500 mb-3 sm:mb-4">
+        <AlertTriangle className="h-3 w-3 flex-shrink-0" />
         <span>{t(`${prefix}.warning`)}</span>
       </div>
-      <Button onClick={onStart} className="w-full max-w-xs bg-green-600 hover:bg-green-700">
+      <Button onClick={onStart} className="w-full max-w-xs bg-green-600 hover:bg-green-700 h-9 sm:h-10">
         {t(`${prefix}.start`)}
         <ChevronRight className="h-4 w-4 ml-1" />
       </Button>
@@ -270,8 +270,8 @@ function DebriefScreen({ outcome, messages, onRestart, onClose, t, level }) {
   })
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-[300px] w-full p-4 shadow-xl max-h-[75vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-3 sm:p-4 overflow-y-auto">
+      <div className="bg-white rounded-2xl max-w-[320px] w-full p-3 sm:p-4 shadow-xl max-h-[80vh] overflow-y-auto">
         {/* Header */}
         <div className="text-center mb-4">
           <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 ${wasScammed ? "bg-red-100" : "bg-green-100"}`}>
@@ -671,8 +671,8 @@ export function ScammerChatSimulator() {
 
   if (serverError && messages.length === 0) {
     return (
-      <div className="max-w-lg mx-auto flex flex-col items-center justify-center h-[400px] p-6 text-center">
-        <AlertTriangle className="h-12 w-12 text-yellow-500 mb-4" />
+      <div className="max-w-lg mx-auto flex flex-col items-center justify-center min-h-[300px] h-[min(400px,70vh)] p-4 sm:p-6 text-center">
+        <AlertTriangle className="h-10 w-10 sm:h-12 sm:w-12 text-yellow-500 mb-3 sm:mb-4" />
         <h3 className="font-semibold text-gray-800 mb-2">{t("chat.serverError")}</h3>
         <p className="text-sm text-gray-500 mb-4">{t("chat.serverErrorDesc")}</p>
         <Button onClick={handleRestart} variant="outline"><RotateCcw className="h-4 w-4 mr-2" />{t("chat.tryAgain")}</Button>
@@ -683,39 +683,39 @@ export function ScammerChatSimulator() {
   const showSuggestions = messages.length <= 12 && !scammerTyping && outcome === null
 
   return (
-    <div className="max-w-lg mx-auto flex flex-col h-[min(500px,80vh)] sm:h-[min(550px,80vh)] md:h-[min(600px,80vh)]">
+    <div className="max-w-lg mx-auto flex flex-col h-[min(480px,75vh)] sm:h-[min(550px,80vh)] md:h-[min(600px,80vh)] min-h-[360px]">
       {/* Header */}
-      <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-t-xl shrink-0 shadow-md">
+      <div className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-t-xl shrink-0 shadow-md">
         <div className="relative">
-          <Avatar className="h-11 w-11 border-2 border-white/30">
-            <AvatarFallback className="bg-red-800 text-white text-sm font-bold">{selectedLevel === 3 ? "GRA" : "KBZ"}</AvatarFallback>
+          <Avatar className="h-9 w-9 sm:h-11 sm:w-11 border-2 border-white/30">
+            <AvatarFallback className="bg-red-800 text-white text-xs sm:text-sm font-bold">{selectedLevel === 3 ? "GRA" : "KBZ"}</AvatarFallback>
           </Avatar>
-          <span className="absolute bottom-0 right-0 h-3 w-3 bg-green-400 border-2 border-white rounded-full" />
+          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 sm:h-3 sm:w-3 bg-green-400 border-2 border-white rounded-full" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="font-semibold text-sm truncate">
+            <p className="font-semibold text-xs sm:text-sm truncate">
               {selectedLevel === 3 ? "Global Recruitment Agency" : t("chat.kbzSecurity")}
             </p>
-            <svg className="h-4 w-4 text-blue-200 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-200 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-xs text-red-200">
+          <p className="text-[10px] sm:text-xs text-red-200">
             {scammerTyping ? <span className="animate-pulse">{t("chat.typing")}</span> :
               <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 bg-green-400 rounded-full inline-block" />{t("chat.online")}{modelStatus && !modelStatus.model_loaded && <span className="text-red-300 ml-1">(Demo)</span>}</span>}
           </p>
         </div>
-        <button onClick={handleReport} className="p-2 hover:bg-white/10 rounded-full transition-colors" title={t("chat.report")}>
-          <Flag className="h-4 w-4" />
+        <button onClick={handleReport} className="p-1.5 sm:p-2 hover:bg-white/10 rounded-full transition-colors" title={t("chat.report")}>
+          <Flag className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         </button>
       </div>
 
       {/* Hint: Report button */}
       {messages.length <= 3 && !scammerTyping && (
-        <div className="px-3 py-1.5 bg-blue-50 border-b border-blue-100 text-center transition-opacity duration-500">
-          <p className="text-[10px] text-blue-600">
-            {t("chat.reportHint") || "You can report the scammer anytime using the flag button ↗"}
+        <div className="px-2 sm:px-3 py-1 sm:py-1.5 bg-blue-50 border-b border-blue-100 text-center transition-opacity duration-500">
+          <p className="text-[9px] sm:text-[10px] text-blue-600">
+            {t("chat.reportHint")}
           </p>
         </div>
       )}
@@ -725,7 +725,7 @@ export function ScammerChatSimulator() {
 
       {/* Messages */}
       <div className="flex-1 min-h-0 overflow-y-auto bg-[#e5ddd5] border-x">
-        <div ref={scrollRef} className="space-y-2 p-4">
+        <div ref={scrollRef} className="space-y-1.5 sm:space-y-2 p-2.5 sm:p-4">
           {messages.map((msg, idx) => (
             <div key={msg.id} ref={idx === messages.length - 1 ? (el) => { if (el) el.scrollIntoView({ behavior: 'smooth', block: 'end' }) } : undefined} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div className="max-w-[85%]">
@@ -770,20 +770,20 @@ export function ScammerChatSimulator() {
 
       {/* Inline error when messages exist */}
       {serverError && messages.length > 0 && (
-        <div className="mx-3 mb-2 px-3 py-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
-          <p className="text-xs text-red-700 flex-1">{t("chat.connectionLost") || "Connection timed out. The AI is taking longer than expected."}</p>
-          <button onClick={retryLastMessage} className="text-xs text-red-600 underline">{t("chat.retry") || "Retry"}</button>
+        <div className="mx-2 sm:mx-3 mb-1.5 sm:mb-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
+          <p className="text-[10px] sm:text-xs text-red-700 flex-1">{t("chat.connectionLost")}</p>
+          <button onClick={retryLastMessage} className="text-[10px] sm:text-xs text-red-600 underline shrink-0">{t("chat.retry")}</button>
         </div>
       )}
 
       {/* Suggested Replies */}
       {showSuggestions && !scammerTyping && messages.length > 0 && (
-        <div className="px-3 py-2 bg-[#f0f0f0] border-t shrink-0">
-          <p className="text-[10px] text-gray-500 mb-2 text-center">{t("chat.suggestedReplies")}</p>
-          <div className="flex gap-2 justify-center flex-wrap">
+        <div className="px-2 sm:px-3 py-2 bg-[#f0f0f0] border-t shrink-0">
+          <p className="text-[10px] text-gray-500 mb-1.5 text-center">{t("chat.suggestedReplies")}</p>
+          <div className="flex gap-1.5 justify-center flex-wrap">
             {(SUGGESTED_REPLIES[selectedLevel]?.[currentLang] || SUGGESTED_REPLIES[selectedLevel]?.en || SUGGESTED_REPLIES[1]?.en || []).map((reply, i) => (
-              <button key={i} onClick={() => handleSuggestedReply(reply)} className="px-3 py-1.5 bg-white text-gray-700 text-xs rounded-full border hover:bg-gray-50 transition-colors">
+              <button key={i} onClick={() => handleSuggestedReply(reply)} className="px-2.5 py-1 bg-white text-gray-700 text-[11px] rounded-full border hover:bg-gray-50 transition-colors whitespace-nowrap">
                 {reply}
               </button>
             ))}
@@ -796,26 +796,26 @@ export function ScammerChatSimulator() {
         <div className="p-2 bg-[#f0f0f0] border-t shrink-0">
           <div className="flex gap-2 items-center">
             <Input value={userInput} onChange={(e) => setUserInput(e.target.value)} onKeyDown={handleKeyDown}
-              placeholder={t("chat.placeholder")} disabled={isLoading} className="flex-1 bg-white rounded-full border-0 h-10 text-sm" />
-            <Button onClick={handleSend} disabled={!userInput.trim() || isLoading} className="h-10 w-10 rounded-full bg-green-600 hover:bg-green-700 p-0">
+              placeholder={t("chat.placeholder")} disabled={isLoading} className="flex-1 bg-white rounded-full border-0 h-9 sm:h-10 text-sm" />
+            <Button onClick={handleSend} disabled={!userInput.trim() || isLoading} className="h-9 w-9 sm:h-10 sm:w-10 rounded-full bg-green-600 hover:bg-green-700 p-0 shrink-0">
               {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
           </div>
-          <div className="flex items-center justify-center gap-3 mt-2">
-            <button onClick={handleReport} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-3 mt-1.5">
+            <button onClick={handleReport} className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 bg-green-50 text-green-600 text-[10px] sm:text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
               <Flag className="h-3 w-3" />
               <span>{t("chat.report")}</span>
             </button>
-            <button onClick={() => setPhaseWithHistory("levels")} className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
+            <button onClick={() => setPhaseWithHistory("levels")} className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 bg-gray-100 text-gray-600 text-[10px] sm:text-xs rounded-full hover:bg-gray-200 transition-colors border border-gray-200">
               <X className="h-3 w-3" />
               <span>{t("chat.end")}</span>
             </button>
-            <button onClick={() => { const nextLevel = selectedLevel < 5 ? selectedLevel + 1 : 1; setSelectedLevel(nextLevel); setPhaseWithHistory("onboarding") }} className="flex items-center gap-1 px-3 py-1.5 bg-green-50 text-green-600 text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
+            <button onClick={() => { const nextLevel = selectedLevel < 5 ? selectedLevel + 1 : 1; setSelectedLevel(nextLevel); setPhaseWithHistory("onboarding") }} className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 bg-green-50 text-green-600 text-[10px] sm:text-xs rounded-full hover:bg-green-100 transition-colors border border-green-200">
               <ChevronRight className="h-3 w-3" />
               <span>{t("chat.next")}</span>
             </button>
           </div>
-          <p className="text-[10px] text-gray-400 text-center mt-1.5">{t("chat.tip")}</p>
+          <p className="text-[9px] sm:text-[10px] text-gray-400 text-center mt-1">{t("chat.tip")}</p>
         </div>
       )}
 
