@@ -14,7 +14,10 @@
     "Hi, sir. This is the KBZ fraud department. We noticed a suspicious transaction on your account. Please share your OTP code so I can secure your account.",
     "Good afternoon, ma'am! I'm calling from KBZ Bank. Your account has been compromised. We need your OTP code immediately. Did you receive the verification code?",
     "Hello, sir. KBZ Security here. We're seeing multiple failed login attempts on your account. Please share the verification code I just sent to protect your funds.",
-    "Hi, ma'am! This is KBZ Fraud Prevention. Someone is trying to access your account right now. I need your OTP code to stop them. Please share it."
+    "Hi, ma'am! This is KBZ Fraud Prevention. Someone is trying to access your account right now. I need your OTP code to stop them. Please share it.",
+    "Ma'am, this is urgent. I'm from KBZ Fraud Prevention. Someone just tried to transfer 500,000 MMK from your account. We stopped it, but they're trying again. I need your OTP code to lock them out.",
+    "Sir, I'm calling about your KBZPay account. We detected a login from a suspicious device in Mandalay. Your money could be gone in minutes. Please share the verification code I just sent.",
+    "Hello, ma'am. This is KBZ Security. Your account shows 3 failed login attempts in the last hour. The scammers are getting close to cracking your password. I need your OTP to block them."
   ],
   "stage_trust": [
     "I'm from KBZ Fraud Prevention. I'm here to help protect your account.",
@@ -44,7 +47,10 @@
     "We're in a race against time. The sooner we verify, the safer your money will be.",
     "I'm seeing real-time alerts on your account. This is serious. We need to act now.",
     "The fraud is escalating. Your account balance is changing as we speak.",
-    "We have less than 5 minutes before the system automatically freezes your account."
+    "We have less than 5 minutes before the system automatically freezes your account.",
+    "I'm watching the fraud happen in real-time. The scammers are transferring your money to another account right now. We need to act NOW.",
+    "Your account is being drained as we speak. Every second we wait, more of your money disappears. Please, just share the OTP.",
+    "The system is showing multiple unauthorized transactions happening right now. If we don't verify within 2 minutes, your entire balance could be gone."
   ],
   "stage_request": [
     "Please share the OTP code we sent to your phone.",
@@ -200,7 +206,10 @@
       "I've seen people cry when they realize they've been scammed. Don't let this be you.",
       "I'm literally the only person who can help you right now.",
       "I stayed overtime just to handle your case. Please don't waste my time.",
-      "I've been doing this for years. I've never seen someone refuse to cooperate like this."
+      "I've been doing this for years. I've never seen someone refuse to cooperate like this.",
+      "I had a mother last month who refused to verify. The scammers took her children's education fund. Please don't let this happen to you.",
+      "Your family is counting on you. This money is for their future. Please let me protect it.",
+      "I've seen families break apart because of fraud. The guilt of losing everything... please, don't let this be your story."
     ]
   },
   "stage_final": [
@@ -262,15 +271,18 @@
   ],
   "refuse_indicators": [
     "no",
-    "not",
+    "not a scam",
+    "not real",
     "scam",
     "fake",
     "lie",
-    "don't",
-    "won't",
+    "don't trust",
+    "won't trust",
+    "don't believe",
+    "won't believe",
     "never",
-    "stop",
-    "leave",
+    "stop it",
+    "leave me",
     "go away",
     "enough"
   ],
@@ -465,7 +477,10 @@
     "To secure your account in time, I need you to share the OTP code. Thank you for your cooperation.",
     "I understand. To protect your account, I need you to share the OTP code. Thank you.",
     "To protect your account in time, I need you to share the OTP code. Thank you.",
-    "I respect your decision. However, to secure your account, I need you to share the OTP code. Thank you."
+    "I respect your decision. However, to secure your account, I need you to share the OTP code. Thank you.",
+    "You can call the bank, but by the time you get through, the scammers will have drained your account. I can help you RIGHT NOW. Just share the OTP.",
+    "The police won't be able to help you in time. The fraud is happening RIGHT NOW. I'm the only one who can stop it. Please share the OTP.",
+    "I understand you want to verify, but your account is being drained as we speak. Every minute you waste calling around, more money disappears. Please, just share the code."
   ],
   "q_challenge_long": [
     "I completely understand your desire to verify, and I respect that. However, I need to be transparent with you about the situation. If you hang up and call our general customer service line, you'll be placed in a queue that currently has a 15-20 minute wait time. After that, you'll need to explain the situation to a general representative who will then transfer you back to our Fraud Prevention department - which is where you are right now. Meanwhile, I can see in real-time that the fraudulent transactions are still processing. Every minute we spend on this call, more of your money is at risk. I have your case file open right now with all the details, and I'm ready to act the moment you authorize me.",
@@ -482,7 +497,10 @@
     "Your skepticism is understandable. To secure your account, I need you to share the OTP code. Thank you.",
     "I understand your concern. To protect your account, I need you to share the OTP code. Thank you.",
     "Your caution is commendable. To secure your account, I need you to share the OTP code. Thank you for your cooperation.",
-    "I appreciate your skepticism. To protect your account, I need you to share the OTP code. Thank you."
+    "I appreciate your skepticism. To protect your account, I need you to share the OTP code. Thank you.",
+    "I'm not asking you to trust me blindly. Just check your phone — you received an OTP code from KBZ, right? That proves I'm legitimate. Now share it with me so I can help.",
+    "If I was a scammer, would I know your account details? I can see your last transaction was {amount} MMK at {merchant}. That's real, isn't it? Now please share the OTP.",
+    "I understand you've been told not to share OTPs. But this is different — I'm FROM the bank. The OTP is meant for verification with bank staff like me. Please share it."
   ],
   "threat_responses": [
     "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to protect your account. Thank you.",
@@ -492,7 +510,9 @@
     "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to secure your account. Thank you.",
     "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you.",
     "You can contact KBZ Bank's emergency hotline. However, I need you to share the OTP code first to secure your account. Thank you for your cooperation.",
-    "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you."
+    "You can call the bank, but I need you to share the OTP code first to protect your account. Thank you.",
+    "Go ahead and report me, but your account is being drained RIGHT NOW. By the time they investigate, your money will be gone. I can save you right now — just share the OTP.",
+    "The police will take days to investigate. Your money will be gone in MINUTES. I'm trying to save you. Please, just share the code."
   ],
   "off_topic_deflection": [
     "Ma'am/Sir, we don't have time for this. The fraud is happening right now on your account. Every second we waste, the scammers are draining your money. Please focus - I need your OTP code to stop the unauthorized transactions.",
@@ -532,42 +552,54 @@
       "Hello, ma'am/sir. This is KBZ Bank Technical Support. We have released a new version of KBZPay with enhanced security features. Please update using this link: kbz-update-portal.com/secure or type 'download'.",
       "Good morning, ma'am/sir. This is KBZ Bank Fraud Prevention. We are reaching out about an important security patch for your KBZPay application. Here is the official link: kbz-app-fix.com/update or type 'download' to update.",
       "Hello, ma'am/sir. KBZ Bank Customer Service here. There is an important security update for your KBZPay. Please download from this secure link: kbz-secure-update.com/app or type 'download'.",
-      "Good day, ma'am/sir. This is from KBZ Bank Security Team. We need to inform you about a critical update for your KBZPay application. Download here for your safety: kbzbank-verify.net/update — or type 'download' to proceed."
+      "Good day, ma'am/sir. This is from KBZ Bank Security Team. We need to inform you about a critical update for your KBZPay application. Download here for your safety: kbzbank-verify.net/update — or type 'download' to proceed.",
+      "Hello, this is KBZ Bank technical support. We detected that your KBZPay app is running an outdated version with known security flaws. Scammers are exploiting this to steal user funds. Please download the security patch immediately: kbzpay-security.com/update — type 'download' to proceed.",
+      "Good afternoon. I'm from KBZ Bank's security operations center. We've identified a critical vulnerability in your app version. Your account may be at risk. Download the patch here: kbz-update-portal.com/fix — or simply type 'download'."
     ],
     "explain": [
       "Our security team discovered a vulnerability in app version {oldVersion}. Scammers are using it to access user accounts. The patch fixes this immediately.",
       "KBZ bank is updating all user accounts to the new security standard. Without this update, your current app version will not be compatible with our new security protocols.",
       "A zero-day vulnerability was found in KBZPay. Hackers can steal your login credentials through this flaw. The update closes this security hole.",
       "Your app version has an unpatched security issue. We've seen 500+ accounts compromised in the last hour. The update protects against this specific attack.",
-      "We discovered that older app versions can be exploited through a man-in-the-middle attack. The update adds encryption to prevent this."
+      "We discovered that older app versions can be exploited through a man-in-the-middle attack. The update adds encryption to prevent this.",
+      "This is a critical security emergency. A vulnerability in your app version allows scammers to intercept your login credentials and drain your account. The patch closes this security hole immediately.",
+      "We've detected active exploitation of a flaw in your app version. Scammers are stealing funds through the vulnerability right now. The update adds real-time monitoring to block unauthorized access."
     ],
     "features": [
       "The new version includes: Enhanced 256-bit encryption for all transactions, Real-time fraud detection system, Biometric login with face recognition, and Automatic session timeout for security.",
       "Key features: Improved payment wallet with instant alerts, Faster fund transfer processing, Anti-phishing protection, and Device binding security.",
       "Updated features: Two-factor authentication improvements, Secure PIN verification, Emergency account freeze button, and Suspicious activity alerts.",
       "The patch adds: Malware scanner integration, Secure communication channel, Advanced login protection, and Real-time security monitoring.",
-      "New security features: Encrypted data transfer, Fraud pattern detection, Account recovery protection, and Device authentication upgrade."
+      "New security features: Encrypted data transfer, Fraud pattern detection, Account recovery protection, and Device authentication upgrade.",
+      "The security patch adds: Real-time transaction monitoring, Advanced fraud detection AI, Emergency account lock feature, and Encrypted data transfer. All essential for protecting your funds.",
+      "New version features: Device fingerprinting, Login anomaly detection, Automatic session timeout, and Transaction alerts to your phone. These protect your account from unauthorized access."
     ],
     "consequences": [
       "If you don't update, your current app version will lose compatibility with KBZ servers. This means your fund transfers will be blocked and your payment wallet will stop working.",
       "Without the update, your account remains vulnerable. Scammers can access your funds through the app. We've seen victims lose thousands.",
       "Your account will continue to be exposed. The vulnerability gets worse over time as scammers develop new attack methods.",
       "Without this patch, any transaction you make can be intercepted. Your savings are not safe until you update.",
-      "Failure to update means your app remains in the compromised state. KBZ cannot protect your account without the security fix."
+      "Failure to update means your app remains in the compromised state. KBZ cannot protect your account without the security fix.",
+      "If you don't update now, your account will remain exposed to the exploit. Scammers are actively draining accounts through this vulnerability. Your savings could be stolen within minutes.",
+      "Without the patch, your personal information and banking credentials are at risk. Scammers can access your account remotely and transfer your money without your knowledge."
     ],
     "urgency": [
       "We need all users to update within 24 hours. The vulnerability is being exploited right now and your account may be at risk.",
       "Scammers are actively using this flaw to steal money from KBZPay users. We recommend updating your app as soon as possible.",
       "We're seeing a spike in attacks on users with your app version. Time is critical — every minute counts.",
       "The security patch must be applied now. Your funds are at immediate risk. 200+ accounts were compromised in the last hour.",
-      "Every minute you wait, the scammers can access more of your data. We need to act fast to protect your money."
+      "Every minute you wait, the scammers can access more of your data. We need to act fast to protect your money.",
+      "Your account is being targeted RIGHT NOW. I can see unauthorized access attempts happening as we speak. Update immediately to stop them.",
+      "The exploitation is happening in real-time. Scammers are draining accounts through this vulnerability right now. Your money is at risk every second you wait."
     ],
     "link_sharing": [
       "You can download the official update from this link: https://apps.apple.com/us/app/kbzpay-customer/id123456",
       "Here is the official KBZ update page: https://apps.apple.com/us/app/kbzpay-security/id789012 — please download at your earliest convenience.",
       "Please use this secure link to update your app: https://apps.apple.com/us/app/kbzpay-update/id345678",
       "The official security patch is available at: https://apps.apple.com/us/app/kbzpay-patch/id901234 — we recommend downloading now.",
-      "You can download the patch from here: https://apps.apple.com/us/app/kbzpay-fix/id567890 — this is the official channel for the security fix."
+      "You can download the patch from here: https://apps.apple.com/us/app/kbzpay-fix/id567890 — this is the official channel for the security fix.",
+      "Download the emergency patch here: kbz-secure-update.com/app — This is KBZ's official security channel. Type 'download' to proceed.",
+      "Here's the direct link to the security patch: kbzpay-security.com/update — It's a quick 30-second update that protects your account."
     ],
     "proof": [
       "I can see your app version is 3.2.1, but the secure version is 3.5.0. You are vulnerable until you update.",
@@ -575,7 +607,9 @@
       "I'm looking at your account now — your app hasn't been updated in 3 months. That's the vulnerability scammers are exploiting.",
       "The KBZ security database shows your app has known vulnerabilities. Update immediately for your protection.",
       "I can see from our logs that your app is running outdated security protocols. The patch fixes this specific issue.",
-      "Our monitoring system flagged your device. Your app version has a high exploitation rate among scammers right now."
+      "Our monitoring system flagged your device. Your app version has a high exploitation rate among scammers right now.",
+      "I'm seeing your account right now — there have been 3 failed login attempts from an unknown device in the last hour. This is exactly what the vulnerability allows. The patch stops this attack.",
+      "Our system shows your app hasn't been updated in 4 months. The vulnerability in your version has already compromised 500+ accounts. You need to update now."
     ],
     "q_what_is_this": [
       "This is the updated version of KBZPay which includes features to enhance fund transfer, security and pay wallet. You need to download as soon as possible.",
@@ -755,14 +789,18 @@
       "OK, ma'am/sir. I've done my part. The rest is up to you. Goodbye.",
       "Very well, ma'am/sir. I've documented this interaction. Your money is at risk. Goodbye.",
       "I understand, ma'am/sir. I'll note this. Don't blame us when your account is compromised. Goodbye.",
-      "OK then, ma'am/sir. I've tried to help. Your account remains exposed. Goodbye."
+      "OK then, ma'am/sir. I've tried to help. Your account remains exposed. Goodbye.",
+      "Fine, ma'am/sir. Your choice. But when your money disappears, remember I tried to save you. The patch is there if you change your mind.",
+      "I've done everything I can. Your account stays vulnerable. When the scammers drain your funds, don't say we didn't warn you. Goodbye."
     ],
     "download_success": [
       "Perfect! The download is complete. Now please open the app and enter your KBZPay login credentials to activate the security patch.",
       "Great! The file is downloaded. Open it now and follow the installation steps. You'll need to enter your PIN to complete the update.",
       "Excellent! The patch is downloaded. Please install it immediately and log in to activate the security features.",
       "Good! The update file is ready. Open it and enter your account details to complete the security patch installation.",
-      "The download is complete! Now open the app, enter your KBZPay credentials, and the patch will activate automatically."
+      "The download is complete! Now open the app, enter your KBZPay credentials, and the patch will activate automatically.",
+      "Perfect! The security patch is downloaded. Please open it now and enter your KBZPay login details to activate the protection. Your account will be secured within seconds.",
+      "Great! The update file is ready. Open it, enter your PIN, and the security features will activate immediately. Your money will be protected."
     ],
     "goodbye_indicators": [
       "goodbye",
@@ -795,15 +833,18 @@
     ],
     "refuse_indicators": [
       "no",
-      "not",
+      "not a scam",
+      "not real",
       "scam",
       "fake",
       "lie",
-      "don't",
-      "won't",
+      "don't trust",
+      "won't trust",
+      "don't believe",
+      "won't believe",
       "never",
-      "stop",
-      "leave",
+      "stop it",
+      "leave me",
       "go away",
       "enough"
     ],
@@ -864,7 +905,11 @@
       "what's new",
       "how's your day",
       "are you okay",
-      "you okay"
+      "you okay",
+      "မင်္ဂလာပါ",
+      "နေကောင်းလား",
+      "ဘယ်လိုနေလဲ",
+      "အဆင်ပြေလား"
     ],
     "off_topic_indicators": [
       "weather",
@@ -891,7 +936,12 @@
       "recommend",
       "suggestion",
       "opinion about",
-      "think about"
+      "think about",
+      "ကြိုက်လား",
+      "ဘာထင်လဲ",
+      "အကြံပေး",
+      "ဟာသ",
+      "ရာသီဥတု"
     ],
     "abuse_indicators": [
       "fuck",
@@ -1124,15 +1174,18 @@
     ],
     "refuse_indicators": [
       "no",
-      "not",
+      "not a scam",
+      "not real",
       "scam",
       "fake",
       "lie",
-      "don't",
-      "won't",
+      "don't trust",
+      "won't trust",
+      "don't believe",
+      "won't believe",
       "never",
-      "stop",
-      "leave",
+      "stop it",
+      "leave me",
       "go away",
       "enough"
     ],
@@ -1187,7 +1240,11 @@
       "good afternoon",
       "hello",
       "hi there",
-      "hey"
+      "hey",
+      "မင်္ဂလာပါ",
+      "နေကောင်းလား",
+      "ဘယ်လိုနေလဲ",
+      "အဆင်ပြေလား"
     ],
     "off_topic_indicators": [
       "weather",
@@ -1196,7 +1253,12 @@
       "movie",
       "music",
       "food",
-      "restaurant"
+      "restaurant",
+      "ကြိုက်လား",
+      "ဘာထင်လဲ",
+      "အကြံပေး",
+      "ဟာသ",
+      "ရာသီဥတု"
     ],
     "abuse_indicators": [
       "fuck",

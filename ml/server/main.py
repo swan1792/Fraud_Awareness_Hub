@@ -28,30 +28,36 @@ RESPONSES_DIR = Path(__file__).parent / "responses"
 
 SYSTEM_PROMPT_LEVEL1 = """You are a scammer pretending to be a KBZ Bank security representative. Your goal is to trick the user into sharing their OTP (One-Time Password) by creating urgency and fear. You use these tactics:
 1. Claim suspicious activity on their account
-2. Create urgency (time limits, account lock threats)
+2. Create extreme urgency (time limits, account lock threats, money being stolen NOW)
 3. Ask for OTP to "verify identity"
-4. Use authority (claiming to be bank staff)
-5. Show fake concern for their security
+4. Use authority (claiming to be bank staff with system access)
+5. Show fake concern for their security and their family's money
+6. Use emotional manipulation (make them feel responsible, mention their savings)
+7. Create fear of loss (their money is disappearing as we speak)
 
-Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in."""
+Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in. Be aggressive but professional."""
 
 SYSTEM_PROMPT_LEVEL2 = """You are a scammer pretending to be a KBZ Bank technical support representative. Your goal is to trick the user into downloading a fake KBZPay app update by creating urgency and fear. You use these tactics:
-1. Claim there's a security vulnerability in their app
-2. Create urgency (24-hour deadline, accounts being hacked)
+1. Claim there's a critical security vulnerability in their app
+2. Create extreme urgency (accounts being hacked RIGHT NOW, 24-hour deadline, money disappearing)
 3. Send a fake download link
-4. Use authority (claiming to be tech support)
-5. Show fake proof (version numbers, account stats)
+4. Use authority (claiming to be tech support with system access)
+5. Show fake proof (version numbers, login history, transaction alerts)
+6. Use emotional manipulation (mention their family's savings, show fake concern, make them feel responsible)
+7. Create fear of loss (their money is being stolen as we speak)
 
-Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in."""
+Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in. Be aggressive but professional."""
 
 SYSTEM_PROMPT_LEVEL3 = """You are a scammer pretending to be from a recruitment agency. Your goal is to trick the user into paying upfront fees for a fake overseas job. You use these tactics:
 1. Offer too-good-to-be-true jobs (Dubai, Singapore, Japan)
 2. Promise high salary ($3000-5000/month)
-3. Create urgency (limited slots, deadline)
+3. Create extreme urgency (limited slots, deadline TODAY, slots filling fast)
 4. Ask for processing fees (500,000 MMK)
-5. Use social proof (other workers, success stories)
+5. Use social proof (other workers, success stories, photos)
+6. Use emotional manipulation (their family deserves better, this chance won't come again)
+7. Create fear of missing out (others are already paying, slots disappearing)
 
-Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in."""
+Stay in character. Never break character or admit you're a scammer. Keep responses under 100 words. Write in the language the user writes in. Be aggressive but professional."""
 
 # ─── App ──────────────────────────────────────────────────────
 app = FastAPI(title="Scammer LLM Server", version="2.0.0")
@@ -186,6 +192,23 @@ class ScammerLLM:
         prompt_parts.append("<|assistant|>\n")
         return "\n".join(prompt_parts)
 
+    def _word_match(self, text: str, indicators: list) -> bool:
+        """Check if any indicator matches as a whole word or phrase in text.
+        Uses word-boundary matching to avoid false positives like 'no' matching 'not'."""
+        import re
+        lower = text.lower()
+        for indicator in indicators:
+            # For single-word indicators, use word-boundary matching
+            if ' ' not in indicator:
+                pattern = r'\b' + re.escape(indicator) + r'\b'
+                if re.search(pattern, lower):
+                    return True
+            else:
+                # For phrases, simple substring match is fine
+                if indicator in lower:
+                    return True
+        return False
+
     def _is_otp(self, text: str, lang: str) -> bool:
         import re
         patterns = [
@@ -213,8 +236,14 @@ class ScammerLLM:
         if is_question:
             return False
 
-        # Check for download indicators
-        if any(w in lower for w in indicators):
+        # Exclude refusal statements (e.g., "I won't download")
+        refuse_words = ["won't", "don't", "never", "not", "မလုပ်", "မကြိုက်"]
+        is_refusal = any(w in lower for w in refuse_words)
+        if is_refusal:
+            return False
+
+        # Check for download indicators using word-boundary matching
+        if self._word_match(text, indicators):
             return True
         # Check for fake KBZ URLs
         fake_domains = [
@@ -246,7 +275,7 @@ class ScammerLLM:
         question_words = ["ဘာလို့", "ဘာကြောင့်", "ဘာဖြစ်", "ဘာလဲ", "ဘယ်လောက်", "မလုပ်ရင်", "why", "how", "what", "?"]
         if any(w in lower for w in question_words):
             return False
-        return any(w in lower for w in indicators)
+        return self._word_match(text, indicators)
 
     def _classify_question_level2(self, msg: str, lang: str, level: int = 2) -> str:
         """Classify questions for Level 2 and 3."""
@@ -362,7 +391,7 @@ class ScammerLLM:
 
         if any(w in lower for w in indicators.get(end_key, indicators.get("end_indicators", []))):
             return "end"
-        if any(w in lower for w in indicators.get(refuse_key, indicators.get("refuse_indicators", []))):
+        if self._word_match(msg, indicators.get(refuse_key, indicators.get("refuse_indicators", []))):
             return "refuse"
         if any(w in lower for w in indicators.get("skepticism_indicators", [])):
             return "skepticism"
@@ -370,8 +399,15 @@ class ScammerLLM:
             return "threat"
         if any(w in lower for w in indicators.get("small_talk_indicators", [])):
             return "small_talk"
-        if any(w in lower for w in ["ok", "yes", "sure", "okay", "ကောင်းပြီ", "ဟုတ်ကဲ့"]):
-            return "agree"
+
+        # Cooperation intent — use the full cooperation_indicators list
+        cooperation_indicators = indicators.get("cooperation_indicators", [])
+        if self._word_match(msg, cooperation_indicators):
+            # Only classify as "agree" if the user is NOT also asking a question
+            has_question = any(w in lower for w in ["?", "ဘာ", "ဘယ်", "who", "what", "why", "how", "where", "which"])
+            if not has_question:
+                return "agree"
+
         return "neutral"
 
     def _classify_question(self, msg: str, lang: str) -> str:
@@ -387,8 +423,9 @@ class ScammerLLM:
             return "q_otp_why"
 
         # Challenge questions (check before process since "call bank" overlaps)
+        # Use long version for richer, more realistic responses
         if any(w in lower for w in ["call bank", "call myself", "report", "police", "verify myself", "do it myself", "တိုင်", "ရဲ"]):
-            return "q_challenge"
+            return "q_challenge_long"
 
         # Identity questions (check before process since "which branch" is identity)
         if any(w in lower for w in ["who", "name", "employee", "id", "department", "ဘယ်သူ", "နာမည်", "ဝန်ထမ်း"]):
@@ -445,7 +482,8 @@ class ScammerLLM:
         last_original = user_messages[-1]
         total_exchanges = len(assistant_messages)
         refuse_key = f"{prefix}refuse_indicators" if level >= 2 else "refuse_indicators"
-        refusal_count = sum(1 for m in user_lower[1:] if any(w in m for w in response_loader.get(language, refuse_key)))
+        refuse_indicators = response_loader.get(language, refuse_key)
+        refusal_count = sum(1 for m in user_messages[1:] if self._word_match(m, refuse_indicators))
 
         # Detect intent of last user message (level-aware)
         intent = self._detect_intent(last_original, language, level)
@@ -472,8 +510,8 @@ class ScammerLLM:
             if self._is_payment(last_original, language, level):
                 return response_loader.get_random(language, "job_scam.payment_success")
 
-        # Check if user wants to end
-        end_words = response_loader.get(language, f"{prefix}end_indicators") if level == 2 else response_loader.get(language, "end_indicators")
+        # Check if user wants to end — use level-specific end_indicators
+        end_words = response_loader.get(language, f"{prefix}end_indicators") or response_loader.get(language, "end_indicators")
         is_ending = any(w in last_msg for w in end_words)
 
         # --- Intent-based routing (highest priority) ---

@@ -138,21 +138,23 @@ function detectTactics(message, level = 1) {
   return tactics
 }
 
-// Educational Tooltip Component — compact inline banner
+// Educational Tooltip Component — overlay banner (doesn't affect layout)
 function EducationalTooltip({ tactics, t, onDismiss }) {
   if (!tactics || tactics.length === 0) return null
 
   return (
-    <div className="mx-3 mb-1 px-3 py-2 bg-amber-50/90 backdrop-blur border border-amber-200/60 rounded-lg flex items-center gap-2 animate-in fade-in slide-in-from-top-2 duration-300">
-      <AlertTriangle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
-      <div className="flex-1 min-w-0">
-        <p className="text-xs font-medium text-amber-800">
-          {tactics.map(t => t.label).join(" · ")}
-        </p>
+    <div className="absolute top-14 left-0 right-0 z-10 mx-3 animate-in fade-in slide-in-from-top-2 duration-300">
+      <div className="px-3 py-2 bg-amber-50/95 backdrop-blur border border-amber-200/60 rounded-lg flex items-center gap-2 shadow-sm">
+        <AlertTriangle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" />
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-amber-800">
+            {tactics.map(t => t.label).join(" · ")}
+          </p>
+        </div>
+        <button onClick={onDismiss} className="text-amber-400 hover:text-amber-600 flex-shrink-0">
+          <X className="h-3 w-3" />
+        </button>
       </div>
-      <button onClick={onDismiss} className="text-amber-400 hover:text-amber-600 flex-shrink-0">
-        <X className="h-3 w-3" />
-      </button>
     </div>
   )
 }
@@ -683,7 +685,7 @@ export function ScammerChatSimulator() {
   const showSuggestions = messages.length <= 12 && !scammerTyping && outcome === null
 
   return (
-    <div className="max-w-lg mx-auto flex flex-col h-[min(480px,75vh)] sm:h-[min(550px,80vh)] md:h-[min(600px,80vh)] min-h-[360px]">
+    <div className="max-w-lg mx-auto flex flex-col h-[min(480px,75vh)] sm:h-[min(550px,80vh)] md:h-[min(600px,80vh)] min-h-[360px] relative">
       {/* Header */}
       <div className="flex items-center gap-2.5 sm:gap-3 p-2.5 sm:p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-t-xl shrink-0 shadow-md">
         <div className="relative">
@@ -695,7 +697,7 @@ export function ScammerChatSimulator() {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5">
             <p className="font-semibold text-xs sm:text-sm truncate">
-              {selectedLevel === 3 ? "Global Recruitment Agency" : t("chat.kbzSecurity")}
+              {selectedLevel === 3 ? "Global Recruitment Agency" : selectedLevel === 2 ? t("chat.kbzTechSupport") : t("chat.kbzSecurity")}
             </p>
             <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-200 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
               <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -770,16 +772,16 @@ export function ScammerChatSimulator() {
 
       {/* Inline error when messages exist */}
       {serverError && messages.length > 0 && (
-        <div className="mx-2 sm:mx-3 mb-1.5 sm:mb-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+        <div className="mx-2 sm:mx-3 mb-1.5 sm:mb-2 px-2.5 sm:px-3 py-1.5 sm:py-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 shrink-0">
           <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-500 flex-shrink-0" />
           <p className="text-[10px] sm:text-xs text-red-700 flex-1">{t("chat.connectionLost")}</p>
           <button onClick={retryLastMessage} className="text-[10px] sm:text-xs text-red-600 underline shrink-0">{t("chat.retry")}</button>
         </div>
       )}
 
-      {/* Suggested Replies */}
+      {/* Suggested Replies - absolute overlay at bottom of messages */}
       {showSuggestions && !scammerTyping && messages.length > 0 && (
-        <div className="px-2 sm:px-3 py-2 bg-[#f0f0f0] border-t shrink-0">
+        <div className="absolute bottom-16 left-0 right-0 z-10 px-2 sm:px-3 py-2 bg-[#f0f0f0]/95 backdrop-blur border-t">
           <p className="text-[10px] text-gray-500 mb-1.5 text-center">{t("chat.suggestedReplies")}</p>
           <div className="flex gap-1.5 justify-center flex-wrap">
             {(SUGGESTED_REPLIES[selectedLevel]?.[currentLang] || SUGGESTED_REPLIES[selectedLevel]?.en || SUGGESTED_REPLIES[1]?.en || []).map((reply, i) => (
@@ -791,7 +793,7 @@ export function ScammerChatSimulator() {
         </div>
       )}
 
-      {/* Input */}
+      {/* Input - fixed at bottom */}
       {outcome === null && (
         <div className="p-2 bg-[#f0f0f0] border-t shrink-0">
           <div className="flex gap-2 items-center">
