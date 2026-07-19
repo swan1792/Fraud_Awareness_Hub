@@ -368,6 +368,7 @@
   },
   "chat": {
     "kbzSecurity": "KBZ Security Team",
+    "kbzTechSupport": "KBZ Technical Support",
     "typing": "typing...",
     "online": "Online",
     "initialMessage": "Mingalabar! This is KBZ Bank security team. Your KBZPay account has suspicious activities detected. For your safety, please send us the 6-digit OTP we just sent to your phone to verify your identity.",
