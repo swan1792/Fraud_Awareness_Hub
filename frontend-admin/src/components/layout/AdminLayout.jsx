@@ -1,5 +1,5 @@
 import { Link, Outlet, useNavigate } from "react-router-dom"
-import { ShieldAlert, LayoutDashboard, AlertTriangle, Gamepad2, BookOpen, Target, Users, Map, BarChart3, LogOut } from "lucide-react"
+import { ShieldAlert, LayoutDashboard, AlertTriangle, Gamepad2, BookOpen, Target, Users, Map, BarChart3, LogOut, Newspaper } from "lucide-react"
 import { useAuth } from "@/lib/auth"
 
 export function AdminLayout() {
@@ -26,6 +26,9 @@ export function AdminLayout() {
           </Link>
           <Link to="/alerts" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm">
             <AlertTriangle className="h-4 w-4" /> Scam Alerts
+          </Link>
+          <Link to="/news" className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-800 transition-colors text-sm">
+            <Newspaper className="h-4 w-4" /> News
           </Link>
 
           {/* Fraud City Section */}

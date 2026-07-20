@@ -7,6 +7,7 @@
     "home": "Home",
     "chatSim": "Chat Sim",
     "spotFake": "Spot Fake",
+    "news": "News",
     "playGame": "Play Game",
     "brand": "Fraud Awareness Hub",
     "tagline": "Learn · Detect · Prevent"
@@ -593,10 +594,24 @@
     "phishingQuiz": "Phishing quiz",
     "chatSimulator": "Chat simulator",
     "spotFakeSlip": "Spot a fake slip",
+    "news": "Scam News",
     "remember": "Remember",
     "bankWarning": "A legitimate bank will never ask for your OTP, PIN, or password through chat or phone.",
     "copyright": "Digital Fraud Pattern & Awareness Hub. Educational use only.",
     "adminAccess": "Admin access"
+  },
+  "news": {
+    "badge": "Stay informed",
+    "title": "Scam",
+    "titleHighlight": "News",
+    "description": "Stay up to date with the latest scam alerts, fraud trends, and security news from around the world and Myanmar.",
+    "tabs": {
+      "international": "International",
+      "myanmar": "Myanmar"
+    },
+    "loading": "Loading news...",
+    "emptyTitle": "No news articles yet",
+    "emptyDesc": "Check back soon for the latest scam news and alerts."
   },
   "notFound": {
     "title": "Page Not Found",

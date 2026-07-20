@@ -2201,6 +2201,150 @@ app.get('/api/stats', (req, res) => {
   ])
 })
 
+// ─── News CRUD ──────────────────────────────────────────────────
+
+function newsToCamel(row) {
+  if (!row) return null
+  return {
+    id: row.id,
+    title: row.title,
+    summary: row.summary,
+    content: row.content,
+    category: row.category,
+    sourceUrl: row.source_url,
+    sourceName: row.source_name,
+    imageUrl: row.image_url,
+    publishedAt: row.published_at,
+    createdAt: row.created_at,
+  }
+}
+
+const VALID_NEWS_CATEGORIES = ['international', 'myanmar']
+
+// GET /api/news — list news (public, filterable by category)
+app.get('/api/news', (req, res) => {
+  const { category } = req.query
+  let query = 'SELECT * FROM news'
+  const params = []
+  if (category && VALID_NEWS_CATEGORIES.includes(category)) {
+    query += ' WHERE category = ?'
+    params.push(category)
+  }
+  query += ' ORDER BY published_at DESC'
+  db.all(query, params, (err, rows) => {
+    if (err) {
+      logger.error('GET /api/news error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    res.json(rows.map(newsToCamel))
+  })
+})
+
+// GET /api/news/:id — get single news article (public)
+app.get('/api/news/:id', (req, res) => {
+  db.get('SELECT * FROM news WHERE id = ?', [req.params.id], (err, row) => {
+    if (err) {
+      logger.error('GET /api/news/:id error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (!row) return res.status(404).json({ error: 'News article not found' })
+    res.json(newsToCamel(row))
+  })
+})
+
+// POST /api/news — create news article (admin)
+app.post('/api/news',
+  authenticate,
+  body('title').trim().notEmpty().withMessage('Title is required').isLength({ max: 300 }).withMessage('Title must be under 300 characters'),
+  body('category').isIn(VALID_NEWS_CATEGORIES).withMessage(`Category must be one of: ${VALID_NEWS_CATEGORIES.join(', ')}`),
+  body('summary').optional().trim().isLength({ max: 500 }).withMessage('Summary must be under 500 characters'),
+  body('content').optional().trim(),
+  body('sourceUrl').optional().trim().isURL().withMessage('Source URL must be a valid URL'),
+  body('sourceName').optional().trim(),
+  body('imageUrl').optional().trim(),
+  body('publishedAt').optional().isISO8601().withMessage('Published date must be a valid ISO 8601 date'),
+  handleValidation,
+  (req, res) => {
+    const { title, summary, content, category, sourceUrl, sourceName, imageUrl, publishedAt } = req.body
+    const id = `news-${Date.now()}`
+    const now = new Date().toISOString()
+    const pubDate = publishedAt || now
+    db.run(
+      'INSERT INTO news (id, title, summary, content, category, source_url, source_name, image_url, published_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [id, title, summary || null, content || null, category, sourceUrl || null, sourceName || null, imageUrl || null, pubDate, now],
+      function (err) {
+        if (err) {
+          logger.error('POST /api/news error:', err.message)
+          return res.status(500).json({ error: 'Internal server error' })
+        }
+        logger.info(`News created: ${id}`)
+        res.status(201).json({ id, title, createdAt: now })
+      }
+    )
+  }
+)
+
+// PUT /api/news/:id — update news article (admin)
+app.put('/api/news/:id',
+  authenticate,
+  body('title').optional().trim().notEmpty().isLength({ max: 300 }).withMessage('Title must be under 300 characters'),
+  body('category').optional().isIn(VALID_NEWS_CATEGORIES).withMessage(`Category must be one of: ${VALID_NEWS_CATEGORIES.join(', ')}`),
+  body('summary').optional().trim().isLength({ max: 500 }).withMessage('Summary must be under 500 characters'),
+  body('content').optional().trim(),
+  body('sourceUrl').optional().trim(),
+  body('sourceName').optional().trim(),
+  body('imageUrl').optional().trim(),
+  body('publishedAt').optional().isISO8601().withMessage('Published date must be a valid ISO 8601 date'),
+  handleValidation,
+  (req, res) => {
+    const { title, summary, content, category, sourceUrl, sourceName, imageUrl, publishedAt } = req.body
+    const fields = []
+    const values = []
+    if (title !== undefined) { fields.push('title = ?'); values.push(title) }
+    if (summary !== undefined) { fields.push('summary = ?'); values.push(summary || null) }
+    if (content !== undefined) { fields.push('content = ?'); values.push(content || null) }
+    if (category !== undefined) { fields.push('category = ?'); values.push(category) }
+    if (sourceUrl !== undefined) { fields.push('source_url = ?'); values.push(sourceUrl || null) }
+    if (sourceName !== undefined) { fields.push('source_name = ?'); values.push(sourceName || null) }
+    if (imageUrl !== undefined) { fields.push('image_url = ?'); values.push(imageUrl || null) }
+    if (publishedAt !== undefined) { fields.push('published_at = ?'); values.push(publishedAt) }
+    if (fields.length === 0) return res.status(400).json({ error: 'No fields to update' })
+    values.push(req.params.id)
+    db.run(
+      `UPDATE news SET ${fields.join(', ')} WHERE id = ?`,
+      values,
+      function (err) {
+        if (err) {
+          logger.error('PUT /api/news/:id error:', err.message)
+          return res.status(500).json({ error: 'Internal server error' })
+        }
+        if (this.changes === 0) return res.status(404).json({ error: 'News article not found' })
+        db.get('SELECT * FROM news WHERE id = ?', [req.params.id], (err2, row) => {
+          if (err2) {
+            logger.error('PUT /api/news/:id fetch error:', err2.message)
+            return res.status(500).json({ error: 'Internal server error' })
+          }
+          logger.info(`News updated: ${req.params.id}`)
+          res.json(newsToCamel(row))
+        })
+      }
+    )
+  }
+)
+
+// DELETE /api/news/:id — delete news article (admin)
+app.delete('/api/news/:id', authenticate, (req, res) => {
+  db.run('DELETE FROM news WHERE id = ?', [req.params.id], function (err) {
+    if (err) {
+      logger.error('DELETE /api/news/:id error:', err.message)
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+    if (this.changes === 0) return res.status(404).json({ error: 'News article not found' })
+    logger.info(`News deleted: ${req.params.id}`)
+    res.json({ success: true })
+  })
+})
+
 // ─── 404 Handler ──────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' })

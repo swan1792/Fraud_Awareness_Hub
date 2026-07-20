@@ -222,3 +222,39 @@ export function useDeleteMissionMutation() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['missions'] }),
   })
 }
+
+// ─── News ─────────────────────────────────────────────────────
+
+export function useNewsQuery() {
+  return useQuery({
+    queryKey: ['news'],
+    queryFn: () => apiClient.get('/news').then((res) => res.data),
+  })
+}
+
+export function useCreateNewsMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (body) =>
+      apiClient.post('/news', body).then((res) => res.data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['news'] }),
+  })
+}
+
+export function useUpdateNewsMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, ...body }) =>
+      apiClient.put(`/news/${id}`, body).then((res) => res.data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['news'] }),
+  })
+}
+
+export function useDeleteNewsMutation() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id) =>
+      apiClient.delete(`/news/${id}`).then((res) => res.data),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['news'] }),
+  })
+}

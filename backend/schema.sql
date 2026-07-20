@@ -58,6 +58,28 @@ CREATE TABLE IF NOT EXISTS game_scenarios (
   red_flags TEXT NOT NULL -- JSON array
 );
 
+-- News (admin-managed articles)
+CREATE TABLE IF NOT EXISTS news (
+  id TEXT PRIMARY KEY,
+  title TEXT NOT NULL,
+  summary TEXT,
+  content TEXT,
+  category TEXT NOT NULL CHECK(category IN ('international', 'myanmar')),
+  source_url TEXT,
+  source_name TEXT,
+  image_url TEXT,
+  published_at TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+-- Seed: news
+INSERT OR IGNORE INTO news (id, title, summary, content, category, source_url, source_name, image_url, published_at) VALUES
+('news-001', 'Global Scam Networks Target Southeast Asian Users', 'A massive phishing operation spanning multiple countries has been uncovered, targeting banking customers across Southeast Asia with fake payment apps.', 'Law enforcement agencies from six Southeast Asian countries have dismantled a major phishing network that targeted over 50,000 banking customers. The operation used fake banking apps distributed through messaging platforms to steal credentials and OTP codes. Myanmar users were among the primary targets, with fake KBZ and Wave Money apps circulating in Viber groups.', 'international', 'https://www.reuters.com/technology/cybersecurity', 'Reuters', NULL, '2026-07-18'),
+('news-002', 'AI-Powered Scam Calls on the Rise Globally', 'Scammers are increasingly using AI voice cloning technology to impersonate bank officials and family members in phone scams worldwide.', 'A new report from the FBI reveals that AI-generated voice clones are being used in phone scams at an alarming rate. Scammers can now replicate a person''s voice with just a few seconds of audio. In Myanmar, several cases have been reported where scammers impersonated bank officials using AI-generated voices to trick victims into sharing OTP codes.', 'international', 'https://www.fbi.gov/news/stories', 'FBI', NULL, '2026-07-15'),
+('news-003', 'Myanmar Police Crack Down on Online Scam Operations', 'Myanmar authorities have arrested 12 individuals linked to a large-scale online scam operation targeting local banking customers.', 'The Myanmar Police Force''s Cybercrime Division has arrested 12 suspects involved in operating fake banking websites and distributing malicious APK files. The operation, which targeted KBZ Bank and Wave Money users, was running from offices in Yangon. Authorities seized over 50 mobile phones and multiple computers used in the scam.', 'myanmar', 'https://www.globalnewsmm.com', 'Global News Myanmar', NULL, '2026-07-17'),
+('news-004', 'New Report: Global Scam Losses Exceed $100 Billion in 2026', 'The Global Anti-Scam Organization reports that worldwide losses from digital fraud have surpassed $100 billion in the first half of 2026.', 'The Global Anti-Scam Organization (GASO) has released its mid-year report showing that digital fraud losses have reached unprecedented levels. The report highlights that Southeast Asia remains a hotbed for scam operations, with Myanmar, Cambodia, and Laos being primary source countries for scam compounds. The report recommends increased international cooperation and public awareness campaigns.', 'international', 'https://www.weforum.org/agenda/cybersecurity', 'World Economic Forum', NULL, '2026-07-14'),
+('news-005', 'Myanmar Banks Implement New OTP Security Measures', 'Major Myanmar banks are rolling out enhanced OTP security features to combat the rising wave of phishing attacks targeting customers.', 'KBZ Bank, Wave Money, and several other financial institutions in Myanmar have announced new security measures including app-based OTP generation, biometric verification, and real-time transaction alerts. The move comes after a significant increase in OTP-related scams targeting Myanmar users. Banks are also partnering with telecom companies to block known scam numbers.', 'myanmar', 'https://www.myanmar-business.com', 'Myanmar Business Review', NULL, '2026-07-12');
+
 -- Seed: scam_alerts
 INSERT OR IGNORE INTO scam_alerts (id, title, title_my, category, description, description_my, date, status) VALUES
 ('alert-001', 'Fake KPay APK Spreading via Viber', 'Viber တွင် ဖြန့်ဝေနေသော KPay APK အတု', 'Fake APK', 'A malicious APK disguised as a KPay update is being shared in Viber groups across Yangon. The app steals login credentials and OTP codes.', 'KPay update အဖြစ် ထိုးဖောက်ထားသော malware APK တစ်ခုကို ရန်ကုန်တစ်ဝိုက်ရှိ Viber ဂရုပ်များတွင် ဖြန့်ဝေနေပါသည်။ အဆိုပါ app သည် login credentials နှင့် OTP codes များကို ခိုးယူပါသည်။', '2026-07-01', 'published'),

@@ -1,7 +1,8 @@
 import { useState } from "react"
 import { Link, Outlet, useLocation } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { ShieldAlert, Gamepad2, MessageSquareWarning, FileSearch, Home, Menu, X, LockKeyhole, Globe } from "lucide-react"
+import { ShieldAlert, Gamepad2, FileSearch, Home, Menu, X, LockKeyhole, Globe, Newspaper } from "lucide-react"
+// MessageSquareWarning — used by chatsim feature (disabled)
 
 export function PublicLayout() {
   const { t, i18n } = useTranslation()
@@ -10,8 +11,9 @@ export function PublicLayout() {
 
   const navItems = [
     { label: t("nav.home"), href: "/", icon: Home, umamiEvent: "nav-home" },
-    { label: t("nav.chatSim"), href: "/simulator", icon: MessageSquareWarning, umamiEvent: "nav-chat-simulator" },
+    // { label: t("nav.chatSim"), href: "/simulator", icon: MessageSquareWarning, umamiEvent: "nav-chat-simulator" },
     { label: t("nav.spotFake"), href: "/spot-fake", icon: FileSearch, umamiEvent: "nav-spot-fake" },
+    { label: t("nav.news"), href: "/news", icon: Newspaper, umamiEvent: "nav-news" },
   ]
 
   const toggleLanguage = () => {
@@ -178,8 +180,9 @@ export function PublicLayout() {
               <nav className="mt-4 space-y-3">
                 {[
                   { to: "/game", label: t("footer.phishingQuiz"), icon: Gamepad2, umamiEvent: "footer-phishing-quiz" },
-                  { to: "/simulator", label: t("footer.chatSimulator"), icon: MessageSquareWarning, umamiEvent: "footer-chat-simulator" },
+                  // { to: "/simulator", label: t("footer.chatSimulator"), icon: MessageSquareWarning, umamiEvent: "footer-chat-simulator" },
                   { to: "/spot-fake", label: t("footer.spotFakeSlip"), icon: FileSearch, umamiEvent: "footer-spot-fake-slip" },
+                  { to: "/news", label: t("footer.news"), icon: Newspaper, umamiEvent: "footer-news" },
                 ].map((item) => (
                   <Link key={item.to} to={item.to} data-umami-event={item.umamiEvent} className="group flex w-fit items-center gap-2.5 py-2 text-sm text-zinc-400 transition hover:text-white">
                     <item.icon className="size-4 text-zinc-600 transition group-hover:text-orange-400" />

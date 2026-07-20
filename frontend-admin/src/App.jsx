@@ -11,6 +11,7 @@ import { NpcsPage } from "@/pages/NpcsPage"
 import { WorldMapsPage } from "@/pages/WorldMapsPage"
 import { PlayerProgressPage } from "@/pages/PlayerProgressPage"
 import { AdminsPage } from "@/pages/AdminsPage"
+import { NewsPage } from "@/pages/NewsPage"
 import { NotFoundPage } from "@/pages/NotFoundPage"
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<DashboardPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/alerts" element={<ScamAlertsPage />} />
+          <Route path="/news" element={<NewsPage />} />
           <Route path="/stages" element={<StagesPage />} />
           <Route path="/chapters" element={<ChaptersPage />} />
           <Route path="/missions" element={<MissionsPage />} />
