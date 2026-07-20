@@ -19,7 +19,7 @@ from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from trl import SFTTrainer, SFTConfig
 
 # ─── Config ───────────────────────────────────────────────────
-BASE_MODEL = "Qwen/Qwen2-0.5B"  # or "Qwen/Qwen2-1.5B"
+BASE_MODEL = "Qwen/Qwen2-1.5B"  # Upgraded from 0.5B for better performance
 TRAINING_DATA = Path(__file__).parent.parent / "data" / "training_data.jsonl"
 OUTPUT_DIR = Path(__file__).parent / "output"
 FINAL_MODEL_DIR = Path(__file__).parent / "models" / "scammer-llm"

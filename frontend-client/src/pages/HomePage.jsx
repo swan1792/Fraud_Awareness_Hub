@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
-import { MessageSquareWarning, Gamepad2, FileSearch, ArrowUpRight } from "lucide-react"
+import { Gamepad2, FileSearch, ArrowUpRight } from "lucide-react"
+// MessageSquareWarning — used by chatsim feature (disabled)
 import { HeroSection } from "@/components/features/hero-section"
 import { ScamPatternsGrid } from "@/components/features/scam-patterns-grid"
 
@@ -20,18 +21,18 @@ export function HomePage() {
       glow: "group-hover:shadow-red-200/70",
       gradient: "from-red-500 to-orange-500",
     },
-    {
-      to: "/simulator",
-      umamiEvent: "click-chat-simulator",
-      title: t("home.games.simulator.title"),
-      description: t("home.games.simulator.description"),
-      eyebrow: t("home.games.simulator.eyebrow"),
-      icon: MessageSquareWarning,
-      accent: "text-purple-700",
-      iconBg: "bg-purple-100",
-      glow: "group-hover:shadow-purple-200/70",
-      gradient: "from-purple-500 to-pink-500",
-    },
+    // {
+    //   to: "/simulator",
+    //   umamiEvent: "click-chat-simulator",
+    //   title: t("home.games.simulator.title"),
+    //   description: t("home.games.simulator.description"),
+    //   eyebrow: t("home.games.simulator.eyebrow"),
+    //   icon: MessageSquareWarning,
+    //   accent: "text-purple-700",
+    //   iconBg: "bg-purple-100",
+    //   glow: "group-hover:shadow-purple-200/70",
+    //   gradient: "from-purple-500 to-pink-500",
+    // },
     {
       to: "/spot-fake",
       umamiEvent: "click-spot-fake-slip",

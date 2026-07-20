@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { PublicLayout } from "@/components/layout/PublicLayout"
 import { HomePage } from "@/pages/HomePage"
 import { GamePage } from "@/pages/GamePage"
-import { SimulatorPage } from "@/pages/SimulatorPage"
+// import { SimulatorPage } from "@/pages/SimulatorPage"
 import { SpotFakePage } from "@/pages/SpotFakePage"
+import { NewsPage } from "@/pages/NewsPage"
 import { NotFoundPage } from "@/pages/NotFoundPage"
 
 function App() {
@@ -13,8 +14,9 @@ function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/game" element={<GamePage />} />
-          <Route path="/simulator" element={<SimulatorPage />} />
+          {/* <Route path="/simulator" element={<SimulatorPage />} /> */}
           <Route path="/spot-fake" element={<SpotFakePage />} />
+          <Route path="/news" element={<NewsPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Route>
       </Routes>

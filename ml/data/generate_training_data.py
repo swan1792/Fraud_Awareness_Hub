@@ -415,7 +415,7 @@ def main():
     for level in ["level1", "level2", "level3"]:
         for intent in USER_INTENTS[level]:
             # Generate multiple variations per intent
-            num_variations = 8 if intent in ["skeptical", "questioning", "refusing"] else 5
+            num_variations = 20 if intent in ["skeptical", "questioning", "refusing", "threat"] else 15
             for _ in range(num_variations):
                 conv = generate_conversation(level, intent, responses)
                 conversations.append(conv)

@@ -316,3 +316,23 @@ export function useDeleteSaveMutation() {
     },
   })
 }
+
+// ─── News ─────────────────────────────────────────────────────
+
+export function useNewsQuery(category) {
+  return useQuery({
+    queryKey: ['news', category],
+    queryFn: () => {
+      const params = category ? `?category=${category}` : ''
+      return apiClient.get(`/news${params}`).then((res) => res.data)
+    },
+  })
+}
+
+export function useNewsDetailQuery(id) {
+  return useQuery({
+    queryKey: ['newsDetail', id],
+    queryFn: () => apiClient.get(`/news/${id}`).then((res) => res.data),
+    enabled: !!id,
+  })
+}
